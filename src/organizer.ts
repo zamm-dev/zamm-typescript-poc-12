@@ -171,3 +171,172 @@ export function organizeAllFiles(): void {
     organizeFile(filePath);
   }
 }
+
+export interface FileInfo {
+  id: string;
+  type: string;
+  filePath: string;
+  absolutePath: string;
+  gitRoot: string;
+}
+
+export interface Implementation {
+  id: string;
+  name: string;
+}
+
+export function findFileById(id: string): string | null {
+  const gitRoot = findGitRoot(process.cwd());
+  if (!gitRoot) {
+    throw new Error('Not in a git repository');
+  }
+
+  const docsPath = path.join(gitRoot, 'docs');
+  if (!fs.existsSync(docsPath)) {
+    throw new Error('docs/ directory not found');
+  }
+
+  const markdownFiles = findMarkdownFiles(docsPath);
+
+  for (const filePath of markdownFiles) {
+    try {
+      const fileContent = fs.readFileSync(filePath, 'utf8');
+      const { frontmatter } = parseFrontmatter(fileContent);
+
+      if (frontmatter.id === id) {
+        return filePath;
+      }
+    } catch {
+      continue;
+    }
+  }
+
+  return null;
+}
+
+export function getFileInfo(filePath: string): FileInfo {
+  const absolutePath = path.resolve(filePath);
+
+  if (!fs.existsSync(absolutePath)) {
+    throw new Error(`File not found: ${filePath}`);
+  }
+
+  const gitRoot = findGitRoot(absolutePath);
+  if (!gitRoot) {
+    throw new Error('Not in a git repository');
+  }
+
+  const fileContent = fs.readFileSync(absolutePath, 'utf8');
+  const { frontmatter } = parseFrontmatter(fileContent);
+
+  if (!frontmatter.id) {
+    throw new Error(
+      'File does not have proper YAML frontmatter with an id field'
+    );
+  }
+
+  const relativePath = path.relative(gitRoot, absolutePath);
+  const fileType = detectFileType(absolutePath, gitRoot);
+
+  return {
+    id: frontmatter.id,
+    type: fileType,
+    filePath: `/${relativePath}`,
+    absolutePath,
+    gitRoot,
+  };
+}
+
+export function getProjectImplementations(gitRoot: string): Implementation[] {
+  const implsPath = path.join(gitRoot, 'docs', 'impls');
+
+  if (!fs.existsSync(implsPath)) {
+    return [];
+  }
+
+  const implementations: Implementation[] = [];
+  const implFiles = findMarkdownFiles(implsPath);
+
+  for (const filePath of implFiles) {
+    try {
+      const fileContent = fs.readFileSync(filePath, 'utf8');
+      const { frontmatter, body } = parseFrontmatter(fileContent);
+
+      if (frontmatter.id && frontmatter.type === 'implementation') {
+        const lines = body.split('\n');
+        const titleLine = lines.find(line => line.trim().startsWith('# '));
+        const name = titleLine
+          ? titleLine.replace(/^#\s*/, '').trim()
+          : 'Unknown Implementation';
+
+        implementations.push({
+          id: frontmatter.id,
+          name,
+        });
+      }
+    } catch {
+      continue;
+    }
+  }
+
+  return implementations.sort((a, b) => a.id.localeCompare(b.id));
+}
+
+function formatFileType(type: string): string {
+  switch (type) {
+    case 'project':
+      return 'Project';
+    case 'implementation':
+      return 'Implementation';
+    case 'implementation-note':
+      return 'Implementation Note';
+    case 'test':
+      return 'Test';
+    case 'spec':
+      return 'Specification';
+    default:
+      return type;
+  }
+}
+
+export function formatFileInfo(
+  fileInfo: FileInfo,
+  implementations?: Implementation[]
+): string {
+  const typeFormatted = formatFileType(fileInfo.type);
+  let output = `ID: ${fileInfo.id}\nType: ${typeFormatted}\nFile Path: ${fileInfo.filePath}`;
+
+  if (implementations && implementations.length > 0) {
+    output += '\nImplementations:';
+    for (const impl of implementations) {
+      output += `\n  - ${impl.id}: ${impl.name}`;
+    }
+  }
+
+  return output;
+}
+
+export function getInfoByIdOrPath(idOrPath: string): string {
+  let filePath: string;
+
+  if (fs.existsSync(path.resolve(idOrPath))) {
+    filePath = path.resolve(idOrPath);
+  } else {
+    const foundPath = findFileById(idOrPath);
+    if (!foundPath) {
+      throw new Error(
+        `No file found matching the given ID or path: ${idOrPath}`
+      );
+    }
+    filePath = foundPath;
+  }
+
+  const fileInfo = getFileInfo(filePath);
+
+  let implementations: Implementation[] | undefined;
+  if (fileInfo.type === 'project') {
+    implementations = getProjectImplementations(fileInfo.gitRoot);
+  }
+
+  return formatFileInfo(fileInfo, implementations);
+}

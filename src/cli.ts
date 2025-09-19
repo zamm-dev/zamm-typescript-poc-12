@@ -8,6 +8,7 @@ import {
   organizeAllFiles,
   setIdProvider,
   resetIdProvider,
+  getInfoByIdOrPath,
 } from './organizer';
 
 const program = new Command();
@@ -54,6 +55,23 @@ program
     'file to organize (if not provided, organizes all files in docs/)'
   )
   .action(organizeFileWithErrorHandling);
+
+function infoWithErrorHandling(idOrPath: string): void {
+  try {
+    const info = getInfoByIdOrPath(idOrPath);
+    console.log(info);
+  } catch (error) {
+    const errorMessage = error instanceof Error ? error.message : String(error);
+    console.error(chalk.red(`Error: ${errorMessage}`));
+    process.exit(1);
+  }
+}
+
+program
+  .command('info')
+  .description('Display structured information about a file by ID or path')
+  .argument('<id-or-path>', 'file ID or file path to get information about')
+  .action(infoWithErrorHandling);
 
 export { setIdProvider, resetIdProvider };
 
