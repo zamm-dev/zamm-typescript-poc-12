@@ -18,6 +18,9 @@ On commit, the above lint, format, and build commands should be run. (The build 
 
 On push, the tests should be run as well.
 
+> [!NOTE]
+> Make sure to document how to install these Git hooks in your project setup steps for users that are cloning it for the first time.
+
 ## Git ignore
 
 Make sure that `.gitignore` ignores all appropriate files and folders for this tech stack. Avoid placing trailing slashes after ignored folder names in order to prevent VS Code from highlighting them as a new folder.

@@ -152,3 +152,36 @@ type: test
 
 Test specifications and results.
 ```
+
+## Organize with Existing Frontmatter
+
+Given a Markdown file `docs/example.md` with existing frontmatter:
+
+```md
+---
+id: ABC123
+other: value
+---
+
+# Existing Content
+```
+
+then the command
+
+```bash
+zamm organize docs/example.md
+```
+
+should rewrite `docs/example.md` as
+
+```md
+---
+id: ABC123
+type: spec
+other: value
+---
+
+# Existing Content
+```
+
+with existing frontmatter properties preserved.
