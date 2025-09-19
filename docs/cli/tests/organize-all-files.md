@@ -1,3 +1,8 @@
+---
+id: LLM115
+type: test
+---
+
 # Test cases for organizing all files
 
 This test should be run inside a temp test directory with a Git repo already initialized. The temp directory should be initialized with all of the "before" test resource files from [`organize-single-file.md`](./organize-single-file.md), and the test should check that all the files in that temp directory match the "after" test resource files.

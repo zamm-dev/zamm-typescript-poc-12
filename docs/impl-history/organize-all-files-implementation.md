@@ -1,4 +1,6 @@
 ---
+id: GQH403
+type: implementation-note
 specs:
   - docs/cli/README.md
   - docs/cli/tests/organize-all-files.md

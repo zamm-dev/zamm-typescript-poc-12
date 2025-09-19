@@ -1,4 +1,6 @@
 ---
+id: LVH754
+type: implementation-note
 specs:
   - project-setup.md
 references:

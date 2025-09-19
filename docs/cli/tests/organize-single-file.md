@@ -1,3 +1,8 @@
+---
+id: MLM844
+type: test
+---
+
 # Test cases for organizing a single file
 
 These tests should be run inside a temp test directory with a Git repo already initialized.

@@ -1,3 +1,8 @@
+---
+id: FYR697
+type: spec
+---
+
 # ZAMM CLI
 
 This section documents all the CLI commands that the ZAMM implementation should handle.

@@ -1,3 +1,8 @@
+---
+id: HPF761
+type: spec
+---
+
 # ZAMM Implementation Project Setup
 
 Each implementation of ZAMM will have the following common operations defined for the given stack:
