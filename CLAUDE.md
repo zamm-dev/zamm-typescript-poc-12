@@ -12,7 +12,7 @@ docs/README.md
 
 Always follow this plan, asking for user feedback at each step:
 
-1. Plan. Think and create a new Markdown file in the appropriate `ref-impls/` folder
+1. Plan. Think and create a new Markdown file in the appropriate `impl-history/` folder
 2. Implement. As you go, update the previous Markdown plan file with the results of terminal command output, as well as any unexpected errors
 3. Verify (if applicable). Run tests, compile, do type-checking, etc., depending on the project stack.
 4. Commit
