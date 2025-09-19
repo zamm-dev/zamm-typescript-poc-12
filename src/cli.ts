@@ -9,7 +9,7 @@ import {
   setIdProvider,
   resetIdProvider,
   getInfoByIdOrPath,
-} from './organizer';
+} from './core';
 
 const program = new Command();
 

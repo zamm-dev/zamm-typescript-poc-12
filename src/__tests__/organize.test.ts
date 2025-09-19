@@ -5,7 +5,7 @@ import {
   resetIdProvider,
   organizeFile,
   organizeAllFiles,
-} from '../organizer';
+} from '../core';
 import {
   TestEnvironment,
   setupTestEnvironment,

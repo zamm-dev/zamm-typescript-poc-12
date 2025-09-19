@@ -19,8 +19,8 @@ src/
 │   ├── info.test.ts      # Info command tests
 │   └── test-utils.ts     # Shared test utilities
 ├── cli.ts                # Main CLI entry point with Commander.js
-├── organizer.ts       # Core organize and info command logic
-└── index.ts           # Library exports
+├── core.ts               # Core organize and info command logic
+└── index.ts              # Library exports
 ```
 
 ## Commands

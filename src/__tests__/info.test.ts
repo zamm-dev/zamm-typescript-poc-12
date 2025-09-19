@@ -6,7 +6,7 @@ import {
   getFileInfo,
   getProjectImplementations,
   formatFileInfo,
-} from '../organizer';
+} from '../core';
 import {
   TestEnvironment,
   setupTestEnvironment,
