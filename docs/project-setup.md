@@ -20,7 +20,7 @@ On push, the tests should be run as well.
 
 ## Git ignore
 
-Make sure that `.gitignore` ignores all appropriate files and folders for this tech stack.
+Make sure that `.gitignore` ignores all appropriate files and folders for this tech stack. Avoid placing trailing slashes after ignored folder names in order to prevent VS Code from highlighting them as a new folder.
 
 ## Implementation Notes
 
