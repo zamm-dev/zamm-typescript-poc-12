@@ -12,9 +12,14 @@ This is an implementation of the ZAMM CLI using NodeJS with TypeScript.
 ```
 src/
 ├── __tests__/          # Jest test files
-│   └── fixtures/       # Test fixture files for organize command
+│   ├── fixtures/       # Test fixture files
+│   │   ├── info/       # Fixtures for info command tests
+│   │   └── organize/   # Fixtures for organize command tests
+│   ├── cli.test.ts     # CLI command tests
+│   ├── info.test.ts    # Info command tests
+│   └── test-utils.ts   # Shared test utilities
 ├── cli.ts             # Main CLI entry point with Commander.js
-├── organizer.ts       # Core organize command logic with ID provider injection
+├── organizer.ts       # Core organize and info command logic
 └── index.ts           # Library exports
 ```
 
@@ -25,6 +30,11 @@ src/
 - **Build**: `npm run build` - Compile TypeScript to JavaScript
 - **Test**: `npm test` - Run Jest tests
 - **Run**: `npm start` - Execute the compiled CLI
+
+## CLI Commands
+
+- **organize/o**: Add proper YAML frontmatter to markdown files
+- **info**: Display structured information about a file by ID or path
 
 ## Development
 

@@ -8,7 +8,7 @@ type: test
 These tests should be run inside a temp test directory with a Git repo already initialized.
 
 > [!NOTE]
-> Test setup should include creating the necessary file structure with proper frontmatter. The test should verify the exact output format against expected strings.
+> See [`test-file-resources`](/docs/test-file-resources.md).
 
 ## Info for Spec File
 

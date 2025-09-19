@@ -17,6 +17,6 @@ Always follow this plan, asking for user feedback at each step:
 3. Implement. As you go, make note of any unexpected errors and surprises you encounter.
 4. Run tests
 5. Commit
-6. Update the plan Markdown file with any surprises, errors, and results from implementation.
+6. Update the plan Markdown file with any surprises, errors, and results from implementation, including any guidance the user provided along the way for you to end up with the final product.
 7. Update `docs/impls/` as appropriate with **concise** updates to implementation-specific development documentation (e.g. changes to project structure, dev commands, or anything else of note to future LLM agents working on this project). If there is nothing to update about the project from a development standpoint, then you may skip this step. You should **never** duplicate feature documentation in this step -- that information belongs in the specs in `docs/`.
 8. Commit again (if needed)
