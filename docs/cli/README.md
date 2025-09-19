@@ -4,7 +4,9 @@ This section documents all the CLI commands that the ZAMM implementation should 
 
 ## `organize`
 
-`organize` or `o` should take in a single file and ensure it has proper YAML frontmatter.
+## Single argument
+
+When given a single file as argument, `organize` or `o` should ensure it has proper YAML frontmatter.
 
 The frontmatter should consist at a minimum of:
 
@@ -19,3 +21,7 @@ The frontmatter should consist at a minimum of:
 If frontmatter already exists, ensure that no data from existing keys is lost.
 
 The root is determined relative to the `.git` directory. If none exists, the command should error out.
+
+## No arguments
+
+When given no files as argument, `organize` or `o` should organize all files under the `docs/` directory.

@@ -1,10 +1,12 @@
 ---
 specs:
   - docs/cli/README.md
+  - docs/cli/tests/organize-single-file.md
 references:
   - implementations/nodejs.md
 commits:
   - sha: 9b27159ce9b1f068526f413f669bf181c8bb9015
+note: Initial implementation of `organize` command that takes in single filename as argument.
 ---
 
 # Implementation Plan: CLI Organize Command
