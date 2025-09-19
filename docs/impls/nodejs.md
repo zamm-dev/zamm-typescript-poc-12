@@ -7,7 +7,9 @@ This is an implementation of the ZAMM CLI using NodeJS with TypeScript.
 ```
 src/
 ├── __tests__/          # Jest test files
+│   └── fixtures/       # Test fixture files for organize command
 ├── cli.ts             # Main CLI entry point with Commander.js
+├── organizer.ts       # Core organize command logic with ID provider injection
 └── index.ts           # Library exports
 ```
 

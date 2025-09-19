@@ -4,7 +4,8 @@
       "Bash(eza:*)",
       "Bash(npm install:*)",
       "Bash(npx eslint:*)",
-      "Bash(git add:*)"
+      "Bash(git add:*)",
+      "Bash(npm run build:*)"
     ],
     "deny": [],
     "ask": []
