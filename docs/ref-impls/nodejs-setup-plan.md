@@ -1,3 +1,12 @@
+---
+specs:
+  - project-setup.md
+references:
+  - implementations/nodejs.md
+commits:
+  - sha: e01be6ede9f0b95c5d15333eac9cda2e5f6d85b4
+---
+
 # Node.js Project Setup Plan for ZAMM
 
 This document outlines a comprehensive plan for setting up the Node.js implementation of ZAMM according to the project requirements in `docs/project-setup.md`.
