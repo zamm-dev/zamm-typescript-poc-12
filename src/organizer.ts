@@ -123,7 +123,51 @@ export function organizeFile(filePath: string): void {
     })
     .trim();
 
-  const newContent = `---\n${yamlFrontmatter}\n---\n\n${body}`;
+  const newContent = `---\n${yamlFrontmatter}\n---\n\n${body}\n`;
 
   fs.writeFileSync(absolutePath, newContent);
+}
+
+function findMarkdownFiles(dirPath: string): string[] {
+  const files: string[] = [];
+
+  function walkDir(currentPath: string): void {
+    const entries = fs
+      .readdirSync(currentPath, { withFileTypes: true })
+      .sort((a, b) => a.name.localeCompare(b.name));
+
+    for (const entry of entries) {
+      const fullPath = path.join(currentPath, entry.name);
+
+      if (entry.isDirectory()) {
+        walkDir(fullPath);
+      } else if (entry.isFile() && entry.name.endsWith('.md')) {
+        files.push(fullPath);
+      }
+    }
+  }
+
+  if (fs.existsSync(dirPath)) {
+    walkDir(dirPath);
+  }
+
+  return files.sort();
+}
+
+export function organizeAllFiles(): void {
+  const gitRoot = findGitRoot(process.cwd());
+  if (!gitRoot) {
+    throw new Error('Not in a git repository');
+  }
+
+  const docsPath = path.join(gitRoot, 'docs');
+  if (!fs.existsSync(docsPath)) {
+    throw new Error('docs/ directory not found');
+  }
+
+  const markdownFiles = findMarkdownFiles(docsPath);
+
+  for (const filePath of markdownFiles) {
+    organizeFile(filePath);
+  }
 }

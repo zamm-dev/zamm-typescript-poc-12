@@ -3,7 +3,12 @@
 import { Command } from 'commander';
 import chalk from 'chalk';
 import { version } from '../package.json';
-import { organizeFile, setIdProvider, resetIdProvider } from './organizer';
+import {
+  organizeFile,
+  organizeAllFiles,
+  setIdProvider,
+  resetIdProvider,
+} from './organizer';
 
 const program = new Command();
 
@@ -24,13 +29,18 @@ program
     );
   });
 
-function organizeFileWithErrorHandling(filePath: string): void {
+function organizeFileWithErrorHandling(filePath?: string): void {
   try {
-    organizeFile(filePath);
-    console.log(chalk.green(`✓ Organized ${filePath}`));
+    if (filePath) {
+      organizeFile(filePath);
+      console.log(chalk.green(`✓ Organized ${filePath}`));
+    } else {
+      organizeAllFiles();
+      console.log(chalk.green('✓ Organized all files in docs/'));
+    }
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : String(error);
-    console.error(chalk.red(`Error organizing file: ${errorMessage}`));
+    console.error(chalk.red(`Error organizing: ${errorMessage}`));
     process.exit(1);
   }
 }
@@ -39,7 +49,10 @@ program
   .command('organize')
   .alias('o')
   .description('Add proper YAML frontmatter to markdown files')
-  .argument('<file>', 'file to organize')
+  .argument(
+    '[file]',
+    'file to organize (if not provided, organizes all files in docs/)'
+  )
   .action(organizeFileWithErrorHandling);
 
 export { setIdProvider, resetIdProvider };
