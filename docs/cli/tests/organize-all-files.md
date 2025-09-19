@@ -13,4 +13,4 @@ This test should be run inside a temp test directory with a Git repo already ini
 > If the tests are erroring out because the wrong IDs are being assigned to the wrong files, then change the order of the IDs passed to the ID provider. So long as your files are processed in the same order every time, this should match the correct ID to the correct file.
 
 > [!NOTE]
-> See [`test-file-resources`](/docs/test-file-resources.md).
+> See [Spec MTW997](/docs/test-file-resources.md) on testing with test resource files.

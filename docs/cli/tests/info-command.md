@@ -1,5 +1,5 @@
 ---
-id: ABC123
+id: SOB239
 type: test
 ---
 
@@ -8,7 +8,7 @@ type: test
 These tests should be run inside a temp test directory with a Git repo already initialized.
 
 > [!NOTE]
-> See [`test-file-resources`](/docs/test-file-resources.md).
+> See [Spec MTW997](/docs/test-file-resources.md) on testing with test resource files.
 
 ## Info for Spec File
 

@@ -1,6 +1,16 @@
 ---
-id: INF001
+id: TIC979
 type: implementation-note
+specs:
+  - id: FYR697
+    path: docs/cli/README.md
+  - id: SOB239
+    path: docs/cli/tests/info-command.md
+references:
+  - id: IEU463
+    path: implementations/nodejs.md
+commits:
+  - sha: bcf3cddc149c19aa4bb8644b0101f316cea6261c
 ---
 
 # Implementation of Info Command

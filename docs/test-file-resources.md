@@ -1,3 +1,8 @@
+---
+id: MTW997
+type: spec
+---
+
 # Test files
 
 Test file contents should be stored as separate test resource files, instead of inline strings. This means that test setup can be accomplished by simply copying the before-file.

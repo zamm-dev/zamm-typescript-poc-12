@@ -11,7 +11,7 @@ These tests should be run inside a temp test directory with a Git repo already i
 > To control for randomness, we should allow for injection of an ID provider. In production code, the injected ID provider will produce random values. In tests, the injected ID provider will produce pre-determined values in the order set by each specific test. Each test should set a different value for its mock ID provider. (You may use an alternative to dependency injection if that is more idiomatic for the programming language you're working in.)
 
 > [!NOTE]
-> See [`test-file-resources`](/docs/test-file-resources.md).
+> See [Spec MTW997](/docs/test-file-resources.md) on testing with test resource files.
 
 ## Organize Spec
 
