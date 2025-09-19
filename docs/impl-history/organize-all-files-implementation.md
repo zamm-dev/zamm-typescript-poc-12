@@ -2,10 +2,13 @@
 id: GQH403
 type: implementation-note
 specs:
-  - docs/cli/README.md
-  - docs/cli/tests/organize-all-files.md
+  - id: FYR697
+    path: docs/cli/README.md
+  - id: LLM115
+    path: docs/cli/tests/organize-all-files.md
 references:
-  - implementations/nodejs.md
+  - id: IEU463
+    path: implementations/nodejs.md
 commits:
   - sha: 522ec78049fc801377ba0916dbe42ed284001861
 note: Update `organize` command to optionally take in no arguments.

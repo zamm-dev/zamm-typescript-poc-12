@@ -2,10 +2,13 @@
 id: USA133
 type: implementation-note
 specs:
-  - docs/cli/README.md
-  - docs/cli/tests/organize-single-file.md
+  - id: FYR697
+    path: docs/cli/README.md
+  - id: MLM844
+    path: docs/cli/tests/organize-single-file.md
 references:
-  - implementations/nodejs.md
+  - id: IEU463
+    path: implementations/nodejs.md
 commits:
   - sha: 9b27159ce9b1f068526f413f669bf181c8bb9015
 note: >-

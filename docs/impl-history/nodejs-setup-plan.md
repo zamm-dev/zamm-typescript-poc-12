@@ -2,9 +2,11 @@
 id: LVH754
 type: implementation-note
 specs:
-  - project-setup.md
+  - id: HPF761
+    path: project-setup.md
 references:
-  - implementations/nodejs.md
+  - id: IEU463
+    path: implementations/nodejs.md
 commits:
   - sha: e01be6ede9f0b95c5d15333eac9cda2e5f6d85b4
 ---
