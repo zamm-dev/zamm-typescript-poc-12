@@ -30,3 +30,36 @@ The root is determined relative to the `.git` directory. If none exists, the com
 ## No arguments
 
 When given no files as argument, `organize` or `o` should organize all files under the `docs/` directory.
+
+## `info`
+
+The `info` command displays structured information about a given file. The file can be specified by either its ID or file path.
+
+### Single argument
+
+When given a file identifier (ID or path), `info` should output the following information:
+
+#### General information (for all files):
+
+- **ID**: The unique identifier from the file's frontmatter
+- **Type**: The file type in proper English format:
+  - `project` → "Project"
+  - `implementation` → "Implementation"
+  - `implementation-note` → "Implementation Note"
+  - `test` → "Test"
+  - `spec` → "Specification"
+- **File Path**: The absolute path to the file, relative to the project root
+
+#### Additional information for project files:
+
+- **Implementations**: A list of all implementation files associated with this project, showing:
+  - Implementation ID
+  - Implementation name (as defined by the level 1 Markdown heading)
+
+### Error handling
+
+The command should error out if:
+
+- No file is found matching the given ID or path
+- The specified file does not have proper YAML frontmatter with an `id` field
+- The `.git` directory cannot be found (to determine the project root)
