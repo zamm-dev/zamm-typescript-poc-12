@@ -1,3 +1,14 @@
+## Run the following command to see project structure
+
+```bash
+eza . --tree --git-ignore
+```
+
+## Read the following files
+> Read the files below and nothing else.
+
+docs/README.md
+
 Always follow this plan, asking for user feedback at each step:
 
 1. Plan
