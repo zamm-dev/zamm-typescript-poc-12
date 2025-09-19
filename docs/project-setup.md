@@ -17,3 +17,14 @@ Git hooks should be set up by tooling (e.g. `pre-commit`, `husky`, or `lefthook`
 On commit, the above lint, format, and build commands should be run. (The build command can be skipped if inapplicable for the given stack.)
 
 On push, the tests should be run as well.
+
+## Git ignore
+
+Make sure that `.gitignore` ignores all appropriate files and folders for this tech stack.
+
+## Implementation Notes
+
+In order to verify the correct implementation of this spec, perform the following checks:
+
+1. Check the output of `git status` to verify that the right files are being ignored
+2. Make a commit and check that the pre-commit hook ran successfully. If files were formatted, try committing again until it succeeds.

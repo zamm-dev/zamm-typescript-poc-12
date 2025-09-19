@@ -1,7 +1,10 @@
 {
   "permissions": {
     "allow": [
-      "Bash(eza:*)"
+      "Bash(eza:*)",
+      "Bash(npm install:*)",
+      "Bash(npx eslint:*)",
+      "Bash(git add:*)"
     ],
     "deny": [],
     "ask": []
