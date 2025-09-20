@@ -18,7 +18,7 @@ src/
 │   ├── organize.test.ts  # Organize command tests
 │   ├── info.test.ts      # Info command tests
 │   └── test-utils.ts     # Shared test utilities
-├── cli.ts                # Main CLI entry point with Commander.js
+├── zamm.ts               # Main CLI entry point with Commander.js
 ├── core.ts               # Core organize and info command logic
 └── index.ts              # Library exports
 ```
@@ -27,9 +27,9 @@ src/
 
 - **Format**: `npm run format` - Format code with Prettier
 - **Lint**: `npm run lint` - Lint code with ESLint
-- **Build**: `npm run build` - Compile TypeScript to JavaScript
+- **Build**: `npm run build` - Compile TypeScript and create executable at `dist/zamm`
 - **Test**: `npm test` - Run Jest tests
-- **Run**: `npm start` - Execute the compiled CLI
+- **Run**: `npm start` - Execute the compiled CLI (`dist/zamm`)
 
 ## CLI Commands
 
@@ -44,7 +44,7 @@ src/
 
 ## Git Hooks
 
-- **Pre-commit**: Automatically runs linting and formatting on staged files
+- **Pre-commit**: Automatically runs linting, formatting on staged files, and builds the project
 - **Pre-push**: Runs full test suite before push
 
 ### Setup on Fresh Clone
