@@ -6,9 +6,9 @@ specs:
     path: docs/cli/README.md
   - id: MLM844
     path: docs/cli/tests/organize-single-file.md
-references:
-  - id: IEU463
-    path: implementations/nodejs.md
+impl:
+  id: IEU463
+  path: implementations/nodejs.md
 commits:
   - sha: 9b27159ce9b1f068526f413f669bf181c8bb9015
 note: >-

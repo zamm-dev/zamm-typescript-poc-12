@@ -4,9 +4,9 @@ type: implementation-note
 specs:
   - id: MTW997
     path: docs/test-file-resources.md
-references:
-  - id: IEU463
-    path: implementations/nodejs.md
+impl:
+  id: IEU463
+  path: implementations/nodejs.md
 commits:
   - sha: 88ab04da141b7706944e43ac885962ac4285abd7
 ---

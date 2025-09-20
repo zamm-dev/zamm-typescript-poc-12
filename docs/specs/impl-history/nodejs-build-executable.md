@@ -4,9 +4,10 @@ type: implementation-note
 specs:
   - id: HPF761
     path: ../project-setup.md
+impl:
+  id: IEU463
+  path: ../impls/nodejs.md
 references:
-  - id: IEU463
-    path: ../impls/nodejs.md
   - id: LVH754
     path: nodejs-project-init.md
 commits:

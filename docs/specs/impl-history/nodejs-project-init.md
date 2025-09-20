@@ -4,9 +4,9 @@ type: implementation-note
 specs:
   - id: HPF761
     path: project-setup.md
-references:
-  - id: IEU463
-    path: implementations/nodejs.md
+impl:
+  id: IEU463
+  path: implementations/nodejs.md
 commits:
   - sha: e01be6ede9f0b95c5d15333eac9cda2e5f6d85b4
 ---

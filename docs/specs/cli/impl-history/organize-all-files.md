@@ -6,9 +6,9 @@ specs:
     path: docs/cli/README.md
   - id: LLM115
     path: docs/cli/tests/organize-all-files.md
-references:
-  - id: IEU463
-    path: implementations/nodejs.md
+impl:
+  id: IEU463
+  path: implementations/nodejs.md
 commits:
   - sha: 522ec78049fc801377ba0916dbe42ed284001861
 note: Update `organize` command to optionally take in no arguments.
