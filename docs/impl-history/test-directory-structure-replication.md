@@ -1,6 +1,14 @@
 ---
-id: TED489
+id: XNP353
 type: implementation-note
+specs:
+  - id: MTW997
+    path: docs/test-file-resources.md
+references:
+  - id: IEU463
+    path: implementations/nodejs.md
+commits:
+  - sha: 88ab04da141b7706944e43ac885962ac4285abd7
 ---
 
 # Test Directory Structure Replication Implementation Plan

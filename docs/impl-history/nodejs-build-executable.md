@@ -9,6 +9,8 @@ references:
     path: ../impls/nodejs.md
   - id: LVH754
     path: nodejs-project-init.md
+commits:
+  - sha: 32fe8a94a8bc228b0acc630aee285582215ad94c
 ---
 
 # Node.js Build Executable Implementation
