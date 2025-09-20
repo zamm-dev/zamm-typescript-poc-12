@@ -19,9 +19,10 @@ The frontmatter should consist at a minimum of:
 - `type` is either:
   - `project` if it's the root `docs/README.md` file
   - `implementation` if it's in the `docs/impls/` folder
+  - `spec` if it's inside the `docs/specs/` folder
   - `implementation-note` if it's inside an `impl-history/` parent folder
   - `test` if it's inside a `tests/` parent folder
-  - `spec` for all other files
+  - `spec` by default for all other files
 
 If frontmatter already exists, ensure that no data from existing keys is lost.
 
