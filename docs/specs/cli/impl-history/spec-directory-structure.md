@@ -37,3 +37,33 @@ Update test files to match the new spec requirements:
 - Tests should pass with spec files located under `docs/specs/`
 - The organize command should correctly identify spec files in the new location
 - The info command should display correct paths for spec files
+
+## Implementation Results
+
+### Changes Made
+
+1. **Core Logic (`src/core.ts`)**:
+   - Updated `detectFileType()` function to explicitly check for `docs/specs/` path and return 'spec' type
+   - No other changes needed as the fallback still returns 'spec' for unmatched paths
+
+2. **Test Fixtures**:
+   - Moved `src/__tests__/fixtures/info/docs/features/authentication.md` to `src/__tests__/fixtures/info/docs/specs/features/authentication.md`
+   - Moved `src/__tests__/fixtures/organize/before/docs/foo.md` to `src/__tests__/fixtures/organize/before/docs/specs/foo.md`
+   - Moved `src/__tests__/fixtures/organize/after/docs/foo.md` to `src/__tests__/fixtures/organize/after/docs/specs/foo.md`
+
+3. **Test Files**:
+   - Updated `src/__tests__/info.test.ts` to use `docs/specs/features/` paths
+   - Updated `src/__tests__/organize.test.ts` to use `docs/specs/` paths for spec file tests
+
+### Surprises and Notes
+
+- The user initially requested to move files instead of copying when restructuring test fixtures
+- ESLint automatically formatted the test files during the pre-commit hook
+- All tests passed on the first run after implementation, indicating the changes were sufficient
+
+### Test Results
+
+All 28 tests passed successfully:
+
+- 10 organize command tests
+- 18 info command tests
