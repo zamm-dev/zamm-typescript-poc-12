@@ -31,7 +31,10 @@ describe('ZAMM CLI Info Command', () => {
 
   describe('findFileById', () => {
     it('should find file by ID', () => {
-      createTestFile('docs/features/authentication.md', 'spec-file.md');
+      createTestFile(
+        'docs/features/authentication.md',
+        'docs/features/authentication.md'
+      );
 
       const result = findFileById('XYZ789');
       expect(result).toContain('docs/features/authentication.md');
@@ -39,14 +42,17 @@ describe('ZAMM CLI Info Command', () => {
     });
 
     it('should return null if ID not found', () => {
-      createTestFile('docs/features/authentication.md', 'spec-file.md');
+      createTestFile(
+        'docs/features/authentication.md',
+        'docs/features/authentication.md'
+      );
 
       const result = findFileById('NOTFOUND');
       expect(result).toBeNull();
     });
 
     it('should handle files without frontmatter', () => {
-      createTestFile('docs/example.md', 'no-frontmatter.md');
+      createTestFile('docs/example.md', 'docs/example.md');
 
       const result = findFileById('XYZ789');
       expect(result).toBeNull();
@@ -57,7 +63,7 @@ describe('ZAMM CLI Info Command', () => {
     it('should extract file information', () => {
       const filePath = createTestFile(
         'docs/features/authentication.md',
-        'spec-file.md'
+        'docs/features/authentication.md'
       );
 
       const info = getFileInfo(filePath);
@@ -75,7 +81,7 @@ describe('ZAMM CLI Info Command', () => {
     });
 
     it('should error for file without ID', () => {
-      const filePath = createTestFile('docs/example.md', 'no-frontmatter.md');
+      const filePath = createTestFile('docs/example.md', 'docs/example.md');
 
       expect(() => getFileInfo(filePath)).toThrow(
         'File does not have proper YAML frontmatter with an id field'
@@ -85,8 +91,8 @@ describe('ZAMM CLI Info Command', () => {
 
   describe('getProjectImplementations', () => {
     it('should find all implementation files', () => {
-      createTestFile('docs/impls/nodejs.md', 'nodejs-impl.md');
-      createTestFile('docs/impls/python.md', 'python-impl.md');
+      createTestFile('docs/impls/nodejs.md', 'docs/impls/nodejs.md');
+      createTestFile('docs/impls/python.md', 'docs/impls/python.md');
 
       const implementations = getProjectImplementations(testEnv.tempDir);
       expect(implementations).toEqual([
@@ -101,7 +107,7 @@ describe('ZAMM CLI Info Command', () => {
     });
 
     it('should handle files without proper frontmatter', () => {
-      createTestFile('docs/impls/broken.md', 'broken-impl.md');
+      createTestFile('docs/impls/broken.md', 'docs/impls/broken.md');
 
       const implementations = getProjectImplementations(testEnv.tempDir);
       expect(implementations).toEqual([]);
@@ -175,7 +181,10 @@ Implementations:
 
   describe('getInfoByIdOrPath integration tests', () => {
     it('should get info for spec file by ID', () => {
-      createTestFile('docs/features/authentication.md', 'spec-file.md');
+      createTestFile(
+        'docs/features/authentication.md',
+        'docs/features/authentication.md'
+      );
 
       const result = getInfoByIdOrPath('XYZ789');
       expect(result).toBe(
@@ -186,7 +195,7 @@ Implementations:
     it('should get info for spec file by path', () => {
       const filePath = createTestFile(
         'docs/features/authentication.md',
-        'spec-file.md'
+        'docs/features/authentication.md'
       );
 
       const result = getInfoByIdOrPath(filePath);
@@ -196,9 +205,9 @@ Implementations:
     });
 
     it('should get info for project file with implementations', () => {
-      createTestFile('docs/README.md', 'project-file.md');
-      createTestFile('docs/impls/nodejs.md', 'nodejs-impl.md');
-      createTestFile('docs/impls/python.md', 'python-impl.md');
+      createTestFile('docs/README.md', 'docs/README.md');
+      createTestFile('docs/impls/nodejs.md', 'docs/impls/nodejs.md');
+      createTestFile('docs/impls/python.md', 'docs/impls/python.md');
 
       const result = getInfoByIdOrPath('PRJ001');
       expect(result).toBe(
@@ -212,7 +221,7 @@ Implementations:
     });
 
     it('should error for non-existent ID or path', () => {
-      createTestFile('docs/dummy.md', 'dummy-file.md');
+      createTestFile('docs/dummy.md', 'docs/dummy.md');
 
       expect(() => getInfoByIdOrPath('NOTFOUND')).toThrow(
         'No file found matching the given ID or path: NOTFOUND'
@@ -220,7 +229,7 @@ Implementations:
     });
 
     it('should error for file without proper frontmatter', () => {
-      const filePath = createTestFile('docs/example.md', 'no-frontmatter.md');
+      const filePath = createTestFile('docs/example.md', 'docs/example.md');
 
       expect(() => getInfoByIdOrPath(filePath)).toThrow(
         'File does not have proper YAML frontmatter with an id field'

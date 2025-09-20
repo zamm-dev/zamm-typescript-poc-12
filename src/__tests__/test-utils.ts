@@ -44,6 +44,23 @@ export function createTestFileFromFixture(
   return fullPath;
 }
 
+export function expectFileMatchesFixtureFile(
+  env: TestEnvironment,
+  filePath: string,
+  fixtureSubDir: string,
+  expectedRelativePath: string
+): void {
+  const result = fs.readFileSync(filePath, 'utf8');
+  const expectedPath = path.resolve(
+    env.originalCwd,
+    env.fixtureDir,
+    fixtureSubDir,
+    expectedRelativePath
+  );
+  const expected = fs.readFileSync(expectedPath, 'utf8');
+  expect(result).toBe(expected);
+}
+
 export function expectFileMatchesFixture(
   env: TestEnvironment,
   filePath: string,
@@ -52,4 +69,39 @@ export function expectFileMatchesFixture(
   const result = fs.readFileSync(filePath, 'utf8');
   const expected = loadFixture(env, expectedFixtureName);
   expect(result).toBe(expected);
+}
+
+export function copyDirectoryFromFixture(
+  env: TestEnvironment,
+  fixtureSubDir: string
+): void {
+  const sourceDir = path.resolve(
+    env.originalCwd,
+    env.fixtureDir,
+    fixtureSubDir
+  );
+  const targetDir = env.tempDir;
+  copyDirectoryRecursive(sourceDir, targetDir);
+}
+
+function copyDirectoryRecursive(source: string, target: string): void {
+  if (!fs.existsSync(source)) {
+    return;
+  }
+
+  const items = fs.readdirSync(source, { withFileTypes: true });
+
+  for (const item of items) {
+    const sourcePath = path.join(source, item.name);
+    const targetPath = path.join(target, item.name);
+
+    if (item.isDirectory()) {
+      fs.mkdirSync(targetPath, { recursive: true });
+      copyDirectoryRecursive(sourcePath, targetPath);
+    } else {
+      const dir = path.dirname(targetPath);
+      fs.mkdirSync(dir, { recursive: true });
+      fs.copyFileSync(sourcePath, targetPath);
+    }
+  }
 }

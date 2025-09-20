@@ -11,4 +11,8 @@ If files are being modified, then the assertion should be an exact match against
 
 ## Directories
 
-If the file comes with a specific path, then replicate that path in the test resource folder so that the entire folder can simply be copied over into the temp test directory. For example, if there's supposed to be `A.py` and `sub-folder/B.py` files for a "Python environment" test, put both of those in the right directory structure as `test-resources/python-env/A.py` and `test-resources/python-env/sub-folder/B.py` instead of a flat `test-resources/python-env/A.py` and `test-resources/python-env/B.py` structure.
+If the file comes with a specific path, then replicate that path in the test resource folder so that the entire folder can simply be copied over into the temp test directory.
+
+For example, if there's supposed to be `A.py` and `sub-folder/B.py` files for a "Python environment" test, put both of those in the right directory structure as `test-resources/python-env/A.py` and `test-resources/python-env/sub-folder/B.py` instead of a flat `test-resources/python-env/A.py` and `test-resources/python-env/B.py` structure.
+
+Or if there's supposed to be before- and after- versions of a file when processing is performed on it, produce before and after _folders_ rather than before and after files. For example, if we're supposed to test edits to `sub-folder/B.py` in the "Python environment" test, then there should be `test-resources/python-env/before/sub-folder/B.py` and `test-resources/python-env/after/subfolder/B.py`.
