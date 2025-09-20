@@ -246,5 +246,92 @@ Implementations:
         'Not in a git repository'
       );
     });
+
+    it('should get info for implementation note file by ID', () => {
+      // Create spec and implementation files first
+      createTestFile(
+        'docs/specs/features/authentication.md',
+        'docs/specs/features/authentication.md'
+      );
+      createTestFile('docs/impls/python.md', 'docs/impls/python.md');
+
+      // Create implementation note file from fixture
+      createTestFile(
+        'docs/specs/features/impl-history/initial-auth.md',
+        'docs/specs/features/impl-history/initial-auth.md'
+      );
+
+      const result = getInfoByIdOrPath('NOT123');
+      expect(result).toBe(
+        `ID: NOT123
+Type: Implementation Note
+File Path: /docs/specs/features/impl-history/initial-auth.md
+Specifications Implemented:
+  - XYZ789: /docs/specs/features/authentication.md
+Implementation:
+  - IMP002: /docs/impls/python.md`
+      );
+    });
+
+    it('should get info for implementation note file by path', () => {
+      // Create spec and implementation files first
+      createTestFile(
+        'docs/specs/features/authentication.md',
+        'docs/specs/features/authentication.md'
+      );
+      createTestFile('docs/impls/python.md', 'docs/impls/python.md');
+
+      // Create implementation note file from fixture
+      const implNotePath = createTestFile(
+        'docs/specs/features/impl-history/initial-auth.md',
+        'docs/specs/features/impl-history/initial-auth.md'
+      );
+
+      const result = getInfoByIdOrPath(implNotePath);
+      expect(result).toBe(
+        `ID: NOT123
+Type: Implementation Note
+File Path: /docs/specs/features/impl-history/initial-auth.md
+Specifications Implemented:
+  - XYZ789: /docs/specs/features/authentication.md
+Implementation:
+  - IMP002: /docs/impls/python.md`
+      );
+    });
+
+    it('should handle implementation note with multiple specs', () => {
+      // Create implementation note with multiple specs from fixture
+      createTestFile(
+        'docs/specs/features/impl-history/multi-spec.md',
+        'docs/specs/features/impl-history/multi-spec.md'
+      );
+
+      const result = getInfoByIdOrPath('NOT456');
+      expect(result).toBe(
+        `ID: NOT456
+Type: Implementation Note
+File Path: /docs/specs/features/impl-history/multi-spec.md
+Specifications Implemented:
+  - SPEC001: /docs/specs/features/auth.md
+  - SPEC002: /docs/specs/features/login.md
+Implementation:
+  - IMP001: /docs/impls/nodejs.md`
+      );
+    });
+
+    it('should handle implementation note with malformed frontmatter gracefully', () => {
+      // Create implementation note with incomplete frontmatter from fixture
+      createTestFile(
+        'docs/specs/features/impl-history/malformed.md',
+        'docs/specs/features/impl-history/malformed.md'
+      );
+
+      const result = getInfoByIdOrPath('NOT789');
+      expect(result).toBe(
+        `ID: NOT789
+Type: Implementation Note
+File Path: /docs/specs/features/impl-history/malformed.md`
+      );
+    });
   });
 });

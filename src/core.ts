@@ -317,6 +317,44 @@ export function formatFileInfo(
     }
   }
 
+  // Handle implementation note files
+  if (fileInfo.type === 'implementation-note') {
+    try {
+      const fileContent = fs.readFileSync(fileInfo.absolutePath, 'utf8');
+      const { frontmatter } = parseFrontmatter(fileContent);
+
+      // Display specifications implemented
+      if (frontmatter.specs && Array.isArray(frontmatter.specs)) {
+        const validSpecs = frontmatter.specs.filter(
+          spec =>
+            spec && typeof spec === 'object' && 'id' in spec && 'path' in spec
+        );
+
+        if (validSpecs.length > 0) {
+          output += '\nSpecifications Implemented:';
+          for (const spec of validSpecs) {
+            const specTyped = spec as { id: string; path: string };
+            output += `\n  - ${specTyped.id}: ${specTyped.path}`;
+          }
+        }
+      }
+
+      // Display implementation
+      if (
+        frontmatter.impl &&
+        typeof frontmatter.impl === 'object' &&
+        'id' in frontmatter.impl &&
+        'path' in frontmatter.impl
+      ) {
+        const implTyped = frontmatter.impl as { id: string; path: string };
+        output += '\nImplementation:';
+        output += `\n  - ${implTyped.id}: ${implTyped.path}`;
+      }
+    } catch {
+      // If we can't read the file content, just continue without the extra info
+    }
+  }
+
   return output;
 }
 
