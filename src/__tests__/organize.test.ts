@@ -42,10 +42,15 @@ describe('ZAMM CLI Organize Command', () => {
     it('should add spec frontmatter to regular docs file', () => {
       setIdProvider(new MockIdProvider(['ABC123']));
       copyDirectoryFromFixture(testEnv, 'before');
-      const filePath = path.join(testEnv.tempDir, 'docs/foo.md');
+      const filePath = path.join(testEnv.tempDir, 'docs/specs/foo.md');
       runOrganizeCommand(filePath);
 
-      expectFileMatchesFixtureFile(testEnv, filePath, 'after', 'docs/foo.md');
+      expectFileMatchesFixtureFile(
+        testEnv,
+        filePath,
+        'after',
+        'docs/specs/foo.md'
+      );
     });
   });
 
@@ -123,8 +128,8 @@ describe('ZAMM CLI Organize Command', () => {
 
       copyDirectoryFromFixture(testEnv, 'before');
       fs.renameSync(
-        path.join(testEnv.tempDir, 'docs/foo.md'),
-        path.join(testEnv.tempDir, 'docs/spec.md')
+        path.join(testEnv.tempDir, 'docs/specs/foo.md'),
+        path.join(testEnv.tempDir, 'docs/specs/spec.md')
       );
       fs.renameSync(
         path.join(testEnv.tempDir, 'docs/impl-history/setup-notes.md'),
@@ -145,9 +150,9 @@ describe('ZAMM CLI Organize Command', () => {
       );
       expectFileMatchesFixtureFile(
         testEnv,
-        path.join(testEnv.tempDir, 'docs/spec.md'),
+        path.join(testEnv.tempDir, 'docs/specs/spec.md'),
         'after',
-        'docs/foo.md'
+        'docs/specs/foo.md'
       );
       expectFileMatchesFixtureFile(
         testEnv,

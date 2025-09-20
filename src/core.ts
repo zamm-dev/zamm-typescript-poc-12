@@ -65,6 +65,10 @@ function detectFileType(filePath: string, gitRoot: string): string {
     return 'test';
   }
 
+  if (relativePath.startsWith('docs/specs/')) {
+    return 'spec';
+  }
+
   return 'spec';
 }
 

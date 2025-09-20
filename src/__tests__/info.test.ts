@@ -32,19 +32,19 @@ describe('ZAMM CLI Info Command', () => {
   describe('findFileById', () => {
     it('should find file by ID', () => {
       createTestFile(
-        'docs/features/authentication.md',
-        'docs/features/authentication.md'
+        'docs/specs/features/authentication.md',
+        'docs/specs/features/authentication.md'
       );
 
       const result = findFileById('XYZ789');
-      expect(result).toContain('docs/features/authentication.md');
-      expect(result).toMatch(/\/docs\/features\/authentication\.md$/);
+      expect(result).toContain('docs/specs/features/authentication.md');
+      expect(result).toMatch(/\/docs\/specs\/features\/authentication\.md$/);
     });
 
     it('should return null if ID not found', () => {
       createTestFile(
-        'docs/features/authentication.md',
-        'docs/features/authentication.md'
+        'docs/specs/features/authentication.md',
+        'docs/specs/features/authentication.md'
       );
 
       const result = findFileById('NOTFOUND');
@@ -62,15 +62,15 @@ describe('ZAMM CLI Info Command', () => {
   describe('getFileInfo', () => {
     it('should extract file information', () => {
       const filePath = createTestFile(
-        'docs/features/authentication.md',
-        'docs/features/authentication.md'
+        'docs/specs/features/authentication.md',
+        'docs/specs/features/authentication.md'
       );
 
       const info = getFileInfo(filePath);
       expect(info).toEqual({
         id: 'XYZ789',
         type: 'spec',
-        filePath: '/docs/features/authentication.md',
+        filePath: '/docs/specs/features/authentication.md',
         absolutePath: filePath,
         gitRoot: testEnv.tempDir,
       });
@@ -119,14 +119,14 @@ describe('ZAMM CLI Info Command', () => {
       const fileInfo = {
         id: 'XYZ789',
         type: 'spec',
-        filePath: '/docs/features/authentication.md',
+        filePath: '/docs/specs/features/authentication.md',
         absolutePath: '/some/path',
         gitRoot: '/root',
       };
 
       const result = formatFileInfo(fileInfo);
       expect(result).toBe(
-        'ID: XYZ789\nType: Specification\nFile Path: /docs/features/authentication.md'
+        'ID: XYZ789\nType: Specification\nFile Path: /docs/specs/features/authentication.md'
       );
     });
 
@@ -182,25 +182,25 @@ Implementations:
   describe('getInfoByIdOrPath integration tests', () => {
     it('should get info for spec file by ID', () => {
       createTestFile(
-        'docs/features/authentication.md',
-        'docs/features/authentication.md'
+        'docs/specs/features/authentication.md',
+        'docs/specs/features/authentication.md'
       );
 
       const result = getInfoByIdOrPath('XYZ789');
       expect(result).toBe(
-        'ID: XYZ789\nType: Specification\nFile Path: /docs/features/authentication.md'
+        'ID: XYZ789\nType: Specification\nFile Path: /docs/specs/features/authentication.md'
       );
     });
 
     it('should get info for spec file by path', () => {
       const filePath = createTestFile(
-        'docs/features/authentication.md',
-        'docs/features/authentication.md'
+        'docs/specs/features/authentication.md',
+        'docs/specs/features/authentication.md'
       );
 
       const result = getInfoByIdOrPath(filePath);
       expect(result).toBe(
-        'ID: XYZ789\nType: Specification\nFile Path: /docs/features/authentication.md'
+        'ID: XYZ789\nType: Specification\nFile Path: /docs/specs/features/authentication.md'
       );
     });
 
