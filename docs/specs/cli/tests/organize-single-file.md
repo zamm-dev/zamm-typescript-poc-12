@@ -15,7 +15,7 @@ These tests should be run inside a temp test directory with a Git repo already i
 
 ## Organize Spec
 
-Given a Markdown file `docs/foo.md`:
+Given a Markdown file `docs/specs/foo.md`:
 
 ```md
 # Some feature
@@ -26,10 +26,10 @@ Feature requirements
 then the command
 
 ```bash
-zamm organize docs/foo.md
+zamm organize docs/specs/foo.md
 ```
 
-should rewrite `docs/foo.md` as
+should rewrite `docs/specs/foo.md` as
 
 ```md
 ---
@@ -160,7 +160,7 @@ Test specifications and results.
 
 ## Organize with Existing Frontmatter
 
-Given a Markdown file `docs/example.md` with existing frontmatter:
+Given a Markdown file `docs/specs/example.md` with existing frontmatter:
 
 ```md
 ---
@@ -174,10 +174,10 @@ other: value
 then the command
 
 ```bash
-zamm organize docs/example.md
+zamm organize docs/specs/example.md
 ```
 
-should rewrite `docs/example.md` as
+should rewrite `docs/specs/example.md` as
 
 ```md
 ---

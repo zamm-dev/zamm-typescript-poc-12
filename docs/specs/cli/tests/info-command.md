@@ -12,7 +12,7 @@ These tests should be run inside a temp test directory with a Git repo already i
 
 ## Info for Spec File
 
-Given a Markdown file `docs/features/authentication.md`:
+Given a Markdown file `docs/specs/features/authentication.md`:
 
 ```md
 ---
@@ -34,7 +34,7 @@ zamm info XYZ789
 or
 
 ```bash
-zamm info docs/features/authentication.md
+zamm info docs/specs/features/authentication.md
 ```
 
 should output:
@@ -42,7 +42,7 @@ should output:
 ```
 ID: XYZ789
 Type: Specification
-File Path: /docs/features/authentication.md
+File Path: /docs/specs/features/authentication.md
 ```
 
 ## Info for Project File with Implementations
