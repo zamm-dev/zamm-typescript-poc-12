@@ -9,7 +9,10 @@ Each implementation of ZAMM will have the following common operations defined fo
 
 - A command to format all the code
 - A command to lint the code
-- A command to build the code (if implemented in a compiled language)
+- A command to build the code.
+
+  If it's not a compiled language, then this command should at least package the code so that `zamm` can be invoked from the commandline. This does not mean that a `zamm` executable must exist in the root directory, only that it is possible to execute `./zamm` in _some_ directory and get it to run.
+
 - A command to run all tests
 - A command to run the code
 
