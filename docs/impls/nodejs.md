@@ -16,6 +16,7 @@ src/
 │   │   ├── info/         # Info command test fixtures
 │   │   │   └── docs/     # Realistic file hierarchy for info tests
 │   │   │       ├── features/
+│   │   │       │   └── impl-history/  # Implementation note fixtures
 │   │   │       └── impls/
 │   │   └── organize/     # Organize command test fixtures
 │   │       ├── before/   # Before-state directory structures
@@ -24,9 +25,10 @@ src/
 │   │           └── docs/
 │   ├── organize.test.ts  # Organize command tests
 │   ├── info.test.ts      # Info command tests
+│   ├── implement.test.ts # Implement command tests
 │   └── test-utils.ts     # Shared test utilities with directory copying
 ├── zamm.ts               # Main CLI entry point with Commander.js
-├── core.ts               # Core organize and info command logic
+├── core.ts               # Core organize, info, and implement command logic
 └── index.ts              # Library exports
 ```
 
@@ -42,6 +44,7 @@ src/
 
 - **organize/o**: Add proper YAML frontmatter to markdown files
 - **info**: Display structured information about a file by ID or path
+- **implement/i**: Generate implementation note file for a spec and implementation
 
 ## Development
 

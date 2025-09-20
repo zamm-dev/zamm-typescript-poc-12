@@ -94,3 +94,52 @@ impl:
 - Test both ID and path resolution
 - Test error conditions
 - Integration tests for full command flow
+
+## Implementation Results
+
+### Phase 1: Implement Command (✅ COMPLETED)
+
+**Key Learnings:**
+
+- Successfully refactored to reuse existing `resolveFileInfo()` helper instead of duplicating file resolution logic
+- The existing error handling from `resolveFileInfo()` was sufficient - no need to rethrow custom error messages
+- Test fixtures work well with existing `createTestFileFromFixture()` infrastructure
+
+**Implementation Details:**
+
+- Added `generateImplementationNote()` function with clean interface
+- Reused `resolveFileInfo()` for consistent file resolution behavior
+- Added `implement` command with `--spec` and `--for` options and alias `i`
+- Created 9 comprehensive tests covering all scenarios
+- All tests pass, including edge cases and error conditions
+
+### Phase 2: Enhanced Info Command (✅ COMPLETED)
+
+**Key Learnings:**
+
+- Extended `formatFileInfo()` to handle implementation-note files without breaking existing functionality
+- Used proper type checking and filtering to handle malformed frontmatter gracefully
+- Following test-file-resources spec improved test maintainability significantly
+
+**Implementation Details:**
+
+- Enhanced `formatFileInfo()` to display "Specifications Implemented" and "Implementation" sections
+- Added robust frontmatter validation with graceful fallback for malformed data
+- Created proper test fixture files following test-file-resources spec:
+  - `initial-auth.md` - basic implementation note
+  - `multi-spec.md` - multiple specifications
+  - `malformed.md` - incomplete frontmatter
+- Added 4 comprehensive test cases, all passing
+
+**Architectural Insights:**
+
+- The modular design allowed clean extension without breaking changes
+- Reusing existing `parseFrontmatter()` function maintained consistency
+- TypeScript type assertions provided good balance of safety and flexibility
+
+**Final Status:**
+
+- Both commands fully implemented with comprehensive test coverage
+- All 41 tests passing
+- Code follows existing patterns and conventions
+- Ready for production use
