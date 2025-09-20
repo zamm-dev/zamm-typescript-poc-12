@@ -110,3 +110,48 @@ Implementations:
   - IMP001: Node.js Implementation
   - IMP002: Python Implementation
 ```
+
+## Info for Implementation Note File
+
+Given an implementation note file `docs/specs/features/impl-history/initial-auth.md`:
+
+```md
+---
+id: NOT123
+type: implementation-note
+specs:
+  - id: XYZ789
+    path: /docs/specs/features/authentication.md
+impl:
+  id: IMP002
+  path: /docs/impls/python.md
+---
+
+# Initial Authentication Implementation
+
+Implementation plan for the authentication feature using Python.
+```
+
+then the command
+
+```bash
+zamm info NOT123
+```
+
+or
+
+```bash
+zamm info docs/specs/features/impl-history/initial-auth.md
+```
+
+should output:
+
+```
+ID: NOT123
+Type: Implementation Note
+File Path: /docs/specs/features/impl-history/initial-auth.md
+Specifications Implemented:
+  - XYZ789: /docs/specs/features/authentication.md
+Implementation:
+  - IMP002: /docs/impls/python.md
+```
