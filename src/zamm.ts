@@ -9,6 +9,8 @@ import {
   setIdProvider,
   resetIdProvider,
   getInfoByIdOrPath,
+  generateImplementationNote,
+  ImplementOptions,
 } from './core';
 
 const program = new Command();
@@ -72,6 +74,34 @@ program
   .description('Display structured information about a file by ID or path')
   .argument('<id-or-path>', 'file ID or file path to get information about')
   .action(infoWithErrorHandling);
+
+function implementWithErrorHandling(options: {
+  spec: string;
+  for: string;
+}): void {
+  try {
+    const implementOptions: ImplementOptions = {
+      specIdOrPath: options.spec,
+      implIdOrPath: options.for,
+    };
+    const newFilePath = generateImplementationNote(implementOptions);
+    console.log(chalk.green(`✓ Created implementation note: ${newFilePath}`));
+  } catch (error) {
+    const errorMessage = error instanceof Error ? error.message : String(error);
+    console.error(chalk.red(`Error: ${errorMessage}`));
+    process.exit(1);
+  }
+}
+
+program
+  .command('implement')
+  .alias('i')
+  .description(
+    'Generate implementation note file for a spec and implementation'
+  )
+  .requiredOption('--spec <spec>', 'spec file ID or path')
+  .requiredOption('--for <impl>', 'implementation file ID or path')
+  .action(implementWithErrorHandling);
 
 export { setIdProvider, resetIdProvider };
 

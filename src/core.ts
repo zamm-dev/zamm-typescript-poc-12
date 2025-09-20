@@ -320,7 +320,7 @@ export function formatFileInfo(
   return output;
 }
 
-export function getInfoByIdOrPath(idOrPath: string): string {
+function resolveFileInfo(idOrPath: string): FileInfo {
   let filePath: string;
 
   if (fs.existsSync(path.resolve(idOrPath))) {
@@ -335,7 +335,11 @@ export function getInfoByIdOrPath(idOrPath: string): string {
     filePath = foundPath;
   }
 
-  const fileInfo = getFileInfo(filePath);
+  return getFileInfo(filePath);
+}
+
+export function getInfoByIdOrPath(idOrPath: string): string {
+  const fileInfo = resolveFileInfo(idOrPath);
 
   let implementations: Implementation[] | undefined;
   if (fileInfo.type === 'project') {
@@ -343,4 +347,81 @@ export function getInfoByIdOrPath(idOrPath: string): string {
   }
 
   return formatFileInfo(fileInfo, implementations);
+}
+
+export interface ImplementOptions {
+  specIdOrPath: string;
+  implIdOrPath: string;
+}
+
+export function generateImplementationNote(options: ImplementOptions): string {
+  const gitRoot = findGitRoot(process.cwd());
+  if (!gitRoot) {
+    throw new Error('Not in a git repository');
+  }
+
+  // Reuse existing getInfoByIdOrPath logic to resolve files
+  const specInfo = resolveFileInfo(options.specIdOrPath);
+  const implInfo = resolveFileInfo(options.implIdOrPath);
+
+  // Validate file types
+  if (specInfo.type !== 'spec' && specInfo.type !== 'test') {
+    throw new Error(
+      `Spec file must be of type 'spec' or 'test', got '${specInfo.type}'`
+    );
+  }
+
+  if (implInfo.type !== 'implementation') {
+    throw new Error(
+      `Implementation file must be of type 'implementation', got '${implInfo.type}'`
+    );
+  }
+
+  // Find the impl-history directory relative to the spec file
+  const specDir = path.dirname(specInfo.absolutePath);
+  const implHistoryDir = path.join(specDir, 'impl-history');
+
+  // Create impl-history directory if it doesn't exist
+  if (!fs.existsSync(implHistoryDir)) {
+    fs.mkdirSync(implHistoryDir, { recursive: true });
+  }
+
+  // Generate new implementation note
+  const newId = globalIdProvider.generateId();
+  const newFileName = `new-${specInfo.id}-impl.md`;
+  const newFilePath = path.join(implHistoryDir, newFileName);
+
+  // Create frontmatter
+  const frontmatter = {
+    id: newId,
+    type: 'implementation-note',
+    specs: [
+      {
+        id: specInfo.id,
+        path: specInfo.filePath,
+      },
+    ],
+    impl: {
+      id: implInfo.id,
+      path: implInfo.filePath,
+    },
+  };
+
+  const yamlFrontmatter = yaml
+    .dump(frontmatter, {
+      flowLevel: -1,
+      noRefs: true,
+    })
+    .trim();
+
+  const content = `---
+${yamlFrontmatter}
+---
+
+TODO: LLM agent, please put implementation plan details here and rename this file as appropriate.
+`;
+
+  fs.writeFileSync(newFilePath, content);
+
+  return newFilePath;
 }
