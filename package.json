@@ -4,15 +4,16 @@
   "description": "",
   "main": "dist/index.js",
   "bin": {
-    "zamm": "dist/cli.js"
+    "zamm": "dist/zamm"
   },
   "directories": {
     "doc": "docs"
   },
   "scripts": {
-    "build": "tsc",
+    "build": "tsc && mv dist/zamm.js dist/zamm",
+    "postbuild": "chmod +x dist/zamm",
     "build:watch": "tsc --watch",
-    "start": "node dist/cli.js",
+    "start": "node dist/zamm",
     "dev": "npm run build && npm start",
     "test": "jest",
     "test:watch": "jest --watch",
