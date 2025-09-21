@@ -125,6 +125,13 @@ specs:
 impl:
   id: IMP002
   path: /docs/impls/python.md
+commits:
+  - sha: a1b2c3d4e5f6789012345678901234567890abcd
+    message: Add initial authentication scaffolding
+  - sha: b2c3d4e5f6789012345678901234567890abcdef1
+    message: Implement user login endpoint
+  - sha: c3d4e5f6789012345678901234567890abcdef12
+    message: Add password validation and hashing
 ---
 
 # Initial Authentication Implementation
@@ -151,7 +158,11 @@ ID: NOT123
 Type: Reference Implementation
 File Path: /docs/impl-history/python/features/initial-auth.md
 Specifications Implemented:
-  - XYZ789: /docs/specs/features/authentication.md
+  - XYZ789: Authentication Feature
 Implementation:
-  - IMP002: /docs/impls/python.md
+  - IMP002: Python Implementation
+Commits:
+  - a1b2c3d: Add initial authentication scaffolding
+  - b2c3d4e: Implement user login endpoint
+  - c3d4e5f: Add password validation and hashing
 ```

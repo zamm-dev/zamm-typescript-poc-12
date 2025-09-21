@@ -54,17 +54,20 @@ When given a file identifier (ID or path), `info` should output the following in
 #### Additional information for project files:
 
 - **Implementations**: A list of all implementation files associated with this project, showing:
-  - Implementation ID
-  - Implementation name (as defined by the level 1 Markdown heading)
+  - Implementation ID and title (from the level 1 Markdown heading)
 
 #### Additional information for reference implementation files:
 
 - **Specifications Implemented**: A list of all specification files referenced in the `specs` frontmatter field, showing:
-  - Specification ID
-  - Specification file path
+  - Specification ID and title (from the level 1 Markdown heading)
 - **Implementation**: The single implementation file referenced in the `impl` frontmatter field, showing:
-  - Implementation ID
-  - Implementation file path
+  - Implementation ID and title (from the level 1 Markdown heading)
+- **Commits**: Display the commits of the reference implementation, showing:
+  - First 7 characters of the commit SHA
+  - First line of the commit message
+
+> [!NOTE]
+> **Title Fallback Behavior**: Whenever displaying file references (implementations, specifications, etc.), always prefer showing the title from the level 1 Markdown heading. Only if no title is available should the system fall back to displaying the file path.
 
 ### Error handling
 
@@ -108,7 +111,7 @@ TODO: LLM agent, please put implementation plan details here and rename this fil
 
 ### `impl record`
 
-When given the `--last-n-commits <N>` parameter and a positional argument for the implementation ID or file path, `impl record` should add the commit hashes from the last N commits to the specified file's frontmatter under a `commits` field. The commits should be recorded as an array of objects with `sha` properties.
+When given the `--last-n-commits <N>` parameter and a positional argument for the implementation ID or file path, `impl record` should add the commit hashes from the last N commits to the specified file's frontmatter under a `commits` field. The commits should be recorded as an array of objects with `sha` and `message` properties.
 
 For example, running:
 
@@ -151,8 +154,11 @@ impl:
   path: /docs/impls/python.md
 commits:
   - sha: a1b2c3d4e5f6789012345678901234567890abcd
+    message: Add initial authentication scaffolding
   - sha: b2c3d4e5f6789012345678901234567890abcdef1
+    message: Implement user login endpoint
   - sha: c3d4e5f6789012345678901234567890abcdef12
+    message: Add password validation and hashing
 ---
 ```
 
