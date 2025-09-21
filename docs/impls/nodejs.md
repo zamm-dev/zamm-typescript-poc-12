@@ -82,10 +82,28 @@ The `prepare` script will automatically set up git hooks via Husky.
 
 ### Test Resource Files
 
-Following the test-file-resources specification, test assertions that verify file content use exact matching against expected output files stored in `src/__tests__/fixtures/`. This ensures reliable testing of generated content by comparing against known-good reference files rather than partial string matching.
+Following the test-file-resources specification (see [Spec MTW997](docs/specs/test-file-resources.md)), test assertions that verify file content use exact matching against expected output files stored in `src/__tests__/fixtures/`. This ensures reliable testing of generated content by comparing against known-good reference files rather than partial string matching.
+
+Test setup avoids runtime string replacement (e.g., `content.replace()`) and instead uses dedicated fixture files for different test scenarios. This ensures tests verify exactly what they're supposed to test without modification.
 
 ### Test Utilities
 
 Use `copyTestFile` to copy test fixtures into the same corresponding path in a temporary test directory.
 
 Use `expectFileMatches(testEnv, relativePath, fixtureSubDir?)` to verify that a file in the temporary test directory matches a fixture file at the same relative path. The optional `fixtureSubDir` parameter specifies a subdirectory within the fixture directory (similar to `copyDirectoryFromFixture`).
+
+## Known Issues
+
+### Jest CLI Options
+
+When running specific test files, use `--testPathPatterns` instead of the deprecated `--testPathPattern`. For example:
+
+```bash
+# Correct
+npm test -- --testPathPatterns=implement.test.ts
+
+# Deprecated (will show error)
+npm test -- --testPathPattern=implement.test.ts
+```
+
+This change affects Jest CLI usage and may impact development workflows that rely on running individual test files. See https://jestjs.io/docs/cli for more information.

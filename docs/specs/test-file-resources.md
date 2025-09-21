@@ -9,6 +9,9 @@ Test file contents should be stored as separate test resource files, instead of 
 
 If files are being modified, then the assertion should be an exact match against the string read in from the after-file. A direct filesystem comparison to the after-file is possible too, although this may result in worse diffs for the test.
 
+> [!NOTE]
+> Avoid replacing strings at runtime for test setup files or for expected output. We want to be sure that we're getting exactly what we asked for. If you find yourself wishing to modify an existing file, either create another copy of that file or put before- and after-versions of that file in `before/` and `after/` folders.
+
 ## Directories
 
 If the file comes with a specific path, then replicate that path in the test resource folder so that the entire folder can simply be copied over into the temp test directory.

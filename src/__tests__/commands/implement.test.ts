@@ -117,22 +117,16 @@ describe('ZAMM CLI Implement Command', () => {
     });
 
     it('should work with test file type as spec', () => {
-      // Create a test file in the fixtures and use it
-      const content = fs.readFileSync(
-        path.join(
-          __dirname,
-          '../fixtures/info/docs/specs/features/authentication.md'
-        ),
-        'utf8'
-      );
-      // Change the content to make it a test type and place in cli/tests directory
-      const updatedContent = content.replace('type: spec', 'type: test');
       const testSpecPath = path.join(
         testEnv.tempDir,
         'docs/specs/cli/tests/info-command.md'
       );
       fs.mkdirSync(path.dirname(testSpecPath), { recursive: true });
-      fs.writeFileSync(testSpecPath, updatedContent);
+      const testContent = fs.readFileSync(
+        path.join(__dirname, '../fixtures/implement/test-spec-info-command.md'),
+        'utf8'
+      );
+      fs.writeFileSync(testSpecPath, testContent);
 
       createTestFile('docs/impls/python.md');
 
@@ -255,18 +249,19 @@ describe('ZAMM CLI Implement Command', () => {
     });
 
     it('should prepend new commits to existing commits', () => {
-      const testFile = createTestFile(
+      const testFile = path.join(
+        testEnv.tempDir,
         'docs/specs/features/impl-history/initial-auth.md'
       );
-
-      // First, add existing commits manually
-      let content = fs.readFileSync(testFile, 'utf8');
-      const existingCommit = 'existing123abc';
-      content = content.replace(
-        'impl:\n  id: IMP002\n  path: /docs/impls/python.md',
-        `impl:\n  id: IMP002\n  path: /docs/impls/python.md\ncommits:\n  - sha: ${existingCommit}`
+      fs.mkdirSync(path.dirname(testFile), { recursive: true });
+      const contentWithCommits = fs.readFileSync(
+        path.join(
+          __dirname,
+          '../fixtures/implement/initial-auth-with-existing-commits.md'
+        ),
+        'utf8'
       );
-      fs.writeFileSync(testFile, content);
+      fs.writeFileSync(testFile, contentWithCommits);
 
       createTestCommits();
       recordCommits('NOT123', 2);
