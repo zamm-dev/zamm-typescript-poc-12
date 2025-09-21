@@ -74,12 +74,16 @@ The command should error out if:
 - The specified file does not have proper YAML frontmatter with an `id` field
 - The `.git` directory cannot be found (to determine the project root)
 
-## `implement`
+## `impl`
 
-When given a spec ID/file path and implementation ID/file path as arguments, `implement` or `i` should generate a new reference implementation file in the `docs/impl-history/<implementation>/` directory corresponding to the implementation. For example, if we are to reuse the [Test Spec SOB239](./tests/info-command.md) test data, then running the command
+The `impl` or `i` command provides subcommands for managing implementation records and creating new reference implementations.
+
+### `impl create`
+
+When given a spec ID/file path and implementation ID/file path as arguments, `impl create` should generate a new reference implementation file in the `docs/impl-history/<implementation>/` directory corresponding to the implementation. For example, if we are to reuse the [Test Spec SOB239](./tests/info-command.md) test data, then running the command
 
 ```bash
-zamm implement --spec XYZ789 --for IMP002
+zamm impl create --spec XYZ789 --for IMP002
 ```
 
 should generate a new reference implementation at `docs/impl-history/python/features/new-XYZ789-impl.md` with the contents
@@ -101,3 +105,58 @@ TODO: LLM agent, please put implementation plan details here and rename this fil
 
 > [!NOTE]
 > When testing this, you should reuse the test resources defined by [Test Spec SOB239](./tests/info-command.md) instead of creating duplicate test resource files.
+
+### `impl record`
+
+When given the `--last-n-commits <N>` parameter and a positional argument for the implementation ID or file path, `impl record` should add the commit hashes from the last N commits to the specified file's frontmatter under a `commits` field. The commits should be recorded as an array of objects with `sha` properties.
+
+For example, running:
+
+```bash
+zamm impl record --last-n-commits 3 NOT123
+```
+
+or
+
+```bash
+zamm impl record --last-n-commits 3 docs/specs/features/impl-history/initial-auth.md
+```
+
+on the existing test file `initial-auth.md` with ID NOT123 (from [Test Spec SOB239](./tests/info-command.md)) that currently has frontmatter like:
+
+```md
+---
+id: NOT123
+type: ref-impl
+specs:
+  - id: XYZ789
+    path: /docs/specs/features/authentication.md
+impl:
+  id: IMP002
+  path: /docs/impls/python.md
+---
+```
+
+should update the frontmatter to include the commit hashes:
+
+```md
+---
+id: NOT123
+type: ref-impl
+specs:
+  - id: XYZ789
+    path: /docs/specs/features/authentication.md
+impl:
+  id: IMP002
+  path: /docs/impls/python.md
+commits:
+  - sha: a1b2c3d4e5f6789012345678901234567890abcd
+  - sha: b2c3d4e5f6789012345678901234567890abcdef1
+  - sha: c3d4e5f6789012345678901234567890abcdef12
+---
+```
+
+If the `commits` field already exists, the new commits should be prepended to the existing list, maintaining chronological order with the most recent commits first.
+
+> [!NOTE]
+> **Testing Implementation Note**: To ensure reproducible testing with deterministic commit hashes, test commits should be created with consistent metadata (author, email, date, etc.). This allows the use of simple file comparison for verifying the exact output format, as the same input will always produce the same commit hashes.
