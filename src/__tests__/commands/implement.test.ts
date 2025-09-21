@@ -1,6 +1,5 @@
 import * as fs from 'fs';
 import * as path from 'path';
-import { execSync } from 'child_process';
 import {
   generateImplementationNote,
   recordCommits,
@@ -8,13 +7,16 @@ import {
   setIdProvider,
   resetIdProvider,
   IdProvider,
+  getLastNCommits,
 } from '../../core/index';
 import {
   TestEnvironment,
   setupTestEnvironment,
   cleanupTestEnvironment,
   copyTestFile,
+  expectFileMatches,
 } from '../shared/test-utils';
+import { createDeterministicCommits } from '../shared/git-test-utils';
 
 class TestIdProvider implements IdProvider {
   private counter = 0;
@@ -29,7 +31,7 @@ describe('ZAMM CLI Implement Command', () => {
   let testEnv: TestEnvironment;
 
   beforeEach(() => {
-    testEnv = setupTestEnvironment('src/__tests__/fixtures/info');
+    testEnv = setupTestEnvironment('src/__tests__/fixtures/implement');
     setIdProvider(new TestIdProvider());
   });
 
@@ -39,7 +41,10 @@ describe('ZAMM CLI Implement Command', () => {
   });
 
   function createTestFile(filePath: string): string {
-    return copyTestFile(testEnv, filePath);
+    // All source files for tests come from the info fixtures
+    // Only the expected output files come from implement fixtures
+    const infoEnv = { ...testEnv, fixtureDir: 'src/__tests__/fixtures/info' };
+    return copyTestFile(infoEnv, filePath);
   }
 
   describe('generateImplementationNote', () => {
@@ -217,66 +222,36 @@ describe('ZAMM CLI Implement Command', () => {
 
   describe('recordCommits', () => {
     function createTestCommits(): string[] {
-      // Create test commits with deterministic metadata
-      const commitShas: string[] = [];
-
-      // Set git config for deterministic commits
-      execSync('git config user.name "Test User"', {
-        cwd: testEnv.tempDir,
-      });
-      execSync('git config user.email "test@example.com"', {
-        cwd: testEnv.tempDir,
-      });
-
-      for (let i = 1; i <= 3; i++) {
-        const testFile = path.join(testEnv.tempDir, `test${i}.txt`);
-        fs.writeFileSync(testFile, `Test commit ${i}`);
-        execSync(`git add test${i}.txt`, { cwd: testEnv.tempDir });
-
-        // Set commit date for deterministic hashes
-        const commitDate = `2024-01-0${i} 12:00:00`;
-        execSync(
-          `GIT_COMMITTER_DATE="${commitDate}" GIT_AUTHOR_DATE="${commitDate}" git commit -m "Test commit ${i}"`,
-          { cwd: testEnv.tempDir }
-        );
-
-        const sha = execSync('git rev-parse HEAD', {
-          cwd: testEnv.tempDir,
-          encoding: 'utf8',
-        }).trim();
-        commitShas.push(sha);
-      }
-
-      return commitShas.reverse(); // Return most recent first
+      createDeterministicCommits(testEnv.tempDir, 3);
+      return getLastNCommits(3).map(c => c.sha);
     }
 
     it('should record commits by ID', () => {
-      const testFile = createTestFile(
-        'docs/specs/features/impl-history/initial-auth.md'
-      );
-      const commitShas = createTestCommits();
+      createTestFile('docs/specs/features/impl-history/initial-auth.md');
+      createTestCommits();
 
       recordCommits('NOT123', 2);
 
-      const content = fs.readFileSync(testFile, 'utf8');
-      expect(content).toContain('commits:');
-      expect(content).toContain(`- sha: ${commitShas[0]}`);
-      expect(content).toContain(`- sha: ${commitShas[1]}`);
-      expect(content).not.toContain(`- sha: ${commitShas[2]}`);
+      expectFileMatches(
+        testEnv,
+        'docs/specs/features/impl-history/initial-auth.md',
+        'record-commits'
+      );
     });
 
     it('should record commits by file path', () => {
       const testFile = createTestFile(
         'docs/specs/features/impl-history/initial-auth.md'
       );
-      const commitShas = createTestCommits();
+      createTestCommits();
 
-      recordCommits(testFile, 1);
+      recordCommits(testFile, 2);
 
-      const content = fs.readFileSync(testFile, 'utf8');
-      expect(content).toContain('commits:');
-      expect(content).toContain(`- sha: ${commitShas[0]}`);
-      expect(content).not.toContain(`- sha: ${commitShas[1]}`);
+      expectFileMatches(
+        testEnv,
+        'docs/specs/features/impl-history/initial-auth.md',
+        'record-commits'
+      );
     });
 
     it('should prepend new commits to existing commits', () => {
@@ -293,19 +268,14 @@ describe('ZAMM CLI Implement Command', () => {
       );
       fs.writeFileSync(testFile, content);
 
-      const commitShas = createTestCommits();
+      createTestCommits();
       recordCommits('NOT123', 2);
 
-      const updatedContent = fs.readFileSync(testFile, 'utf8');
-      expect(updatedContent).toContain('commits:');
-
-      // New commits should come first
-      const commitLines = updatedContent
-        .split('\n')
-        .filter(line => line.includes('- sha:'));
-      expect(commitLines[0]).toContain(commitShas[0]);
-      expect(commitLines[1]).toContain(commitShas[1]);
-      expect(commitLines[2]).toContain(existingCommit);
+      expectFileMatches(
+        testEnv,
+        'docs/specs/features/impl-history/initial-auth.md',
+        'record-commits-prepend'
+      );
     });
 
     it('should error for non-existent file ID', () => {
