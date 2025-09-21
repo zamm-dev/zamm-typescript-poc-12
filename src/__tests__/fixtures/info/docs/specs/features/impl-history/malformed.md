@@ -1,6 +1,6 @@
 ---
 id: NOT789
-type: implementation-note
+type: ref-impl
 specs:
   - incomplete spec entry
 impl:

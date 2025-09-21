@@ -1,6 +1,6 @@
 ---
 id: NOT456
-type: implementation-note
+type: ref-impl
 specs:
   - id: SPEC001
     path: /docs/specs/features/auth.md

@@ -86,8 +86,8 @@ describe('ZAMM CLI Organize Command', () => {
     });
   });
 
-  describe('Organize Implementation Note', () => {
-    it('should add implementation-note frontmatter to impl-history file', () => {
+  describe('Organize Reference Implementation', () => {
+    it('should add ref-impl frontmatter to impl-history file', () => {
       setIdProvider(new MockIdProvider(['JKL012']));
       copyDirectoryFromFixture(testEnv, 'before');
       const filePath = path.join(

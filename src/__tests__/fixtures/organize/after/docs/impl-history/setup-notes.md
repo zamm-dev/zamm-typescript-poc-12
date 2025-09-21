@@ -1,6 +1,6 @@
 ---
 id: JKL012
-type: implementation-note
+type: ref-impl
 ---
 
 # Setup Notes

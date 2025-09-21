@@ -100,7 +100,7 @@ type: implementation
 Implementation details for Node.js version.
 ```
 
-## Organize Implementation Note
+## Organize Reference Implementation
 
 Given a Markdown file `docs/impl-history/setup-notes.md`:
 
@@ -121,7 +121,7 @@ should rewrite `docs/impl-history/setup-notes.md` as
 ```md
 ---
 id: XXX000
-type: implementation-note
+type: ref-impl
 ---
 
 # Setup Notes

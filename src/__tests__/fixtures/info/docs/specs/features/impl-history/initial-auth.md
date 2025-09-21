@@ -1,6 +1,6 @@
 ---
 id: NOT123
-type: implementation-note
+type: ref-impl
 specs:
   - id: XYZ789
     path: /docs/specs/features/authentication.md

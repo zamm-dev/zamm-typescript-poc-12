@@ -159,7 +159,7 @@ Implementations:
       const testCases = [
         { type: 'project', expected: 'Project' },
         { type: 'implementation', expected: 'Implementation' },
-        { type: 'implementation-note', expected: 'Implementation Note' },
+        { type: 'ref-impl', expected: 'Reference Implementation' },
         { type: 'test', expected: 'Test' },
         { type: 'spec', expected: 'Specification' },
       ];
@@ -247,7 +247,7 @@ Implementations:
       );
     });
 
-    it('should get info for implementation note file by ID', () => {
+    it('should get info for reference implementation file by ID', () => {
       // Create spec and implementation files first
       createTestFile(
         'docs/specs/features/authentication.md',
@@ -255,7 +255,7 @@ Implementations:
       );
       createTestFile('docs/impls/python.md', 'docs/impls/python.md');
 
-      // Create implementation note file from fixture
+      // Create reference implementation file from fixture
       createTestFile(
         'docs/specs/features/impl-history/initial-auth.md',
         'docs/specs/features/impl-history/initial-auth.md'
@@ -264,7 +264,7 @@ Implementations:
       const result = getInfoByIdOrPath('NOT123');
       expect(result).toBe(
         `ID: NOT123
-Type: Implementation Note
+Type: Reference Implementation
 File Path: /docs/specs/features/impl-history/initial-auth.md
 Specifications Implemented:
   - XYZ789: /docs/specs/features/authentication.md
@@ -273,7 +273,7 @@ Implementation:
       );
     });
 
-    it('should get info for implementation note file by path', () => {
+    it('should get info for reference implementation file by path', () => {
       // Create spec and implementation files first
       createTestFile(
         'docs/specs/features/authentication.md',
@@ -281,7 +281,7 @@ Implementation:
       );
       createTestFile('docs/impls/python.md', 'docs/impls/python.md');
 
-      // Create implementation note file from fixture
+      // Create reference implementation file from fixture
       const implNotePath = createTestFile(
         'docs/specs/features/impl-history/initial-auth.md',
         'docs/specs/features/impl-history/initial-auth.md'
@@ -290,7 +290,7 @@ Implementation:
       const result = getInfoByIdOrPath(implNotePath);
       expect(result).toBe(
         `ID: NOT123
-Type: Implementation Note
+Type: Reference Implementation
 File Path: /docs/specs/features/impl-history/initial-auth.md
 Specifications Implemented:
   - XYZ789: /docs/specs/features/authentication.md
@@ -299,8 +299,8 @@ Implementation:
       );
     });
 
-    it('should handle implementation note with multiple specs', () => {
-      // Create implementation note with multiple specs from fixture
+    it('should handle reference implementation with multiple specs', () => {
+      // Create reference implementation with multiple specs from fixture
       createTestFile(
         'docs/specs/features/impl-history/multi-spec.md',
         'docs/specs/features/impl-history/multi-spec.md'
@@ -309,7 +309,7 @@ Implementation:
       const result = getInfoByIdOrPath('NOT456');
       expect(result).toBe(
         `ID: NOT456
-Type: Implementation Note
+Type: Reference Implementation
 File Path: /docs/specs/features/impl-history/multi-spec.md
 Specifications Implemented:
   - SPEC001: /docs/specs/features/auth.md
@@ -319,8 +319,8 @@ Implementation:
       );
     });
 
-    it('should handle implementation note with malformed frontmatter gracefully', () => {
-      // Create implementation note with incomplete frontmatter from fixture
+    it('should handle reference implementation with malformed frontmatter gracefully', () => {
+      // Create reference implementation with incomplete frontmatter from fixture
       createTestFile(
         'docs/specs/features/impl-history/malformed.md',
         'docs/specs/features/impl-history/malformed.md'
@@ -329,7 +329,7 @@ Implementation:
       const result = getInfoByIdOrPath('NOT789');
       expect(result).toBe(
         `ID: NOT789
-Type: Implementation Note
+Type: Reference Implementation
 File Path: /docs/specs/features/impl-history/malformed.md`
       );
     });

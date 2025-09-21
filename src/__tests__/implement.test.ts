@@ -41,7 +41,7 @@ describe('ZAMM CLI Implement Command', () => {
   }
 
   describe('generateImplementationNote', () => {
-    it('should create implementation note for spec and implementation by ID', () => {
+    it('should create reference implementation for spec and implementation by ID', () => {
       createTestFile(
         'docs/specs/features/authentication.md',
         'docs/specs/features/authentication.md'
@@ -62,7 +62,7 @@ describe('ZAMM CLI Implement Command', () => {
 
       const content = fs.readFileSync(resultPath, 'utf8');
       expect(content).toContain('id: TEST001');
-      expect(content).toContain('type: implementation-note');
+      expect(content).toContain('type: ref-impl');
       expect(content).toContain('specs:');
       expect(content).toContain('- id: XYZ789');
       expect(content).toContain('path: /docs/specs/features/authentication.md');
@@ -74,7 +74,7 @@ describe('ZAMM CLI Implement Command', () => {
       );
     });
 
-    it('should create implementation note for spec and implementation by path', () => {
+    it('should create reference implementation for spec and implementation by path', () => {
       const specPath = createTestFile(
         'docs/specs/features/authentication.md',
         'docs/specs/features/authentication.md'
@@ -98,7 +98,7 @@ describe('ZAMM CLI Implement Command', () => {
 
       const content = fs.readFileSync(resultPath, 'utf8');
       expect(content).toContain('id: TEST001');
-      expect(content).toContain('type: implementation-note');
+      expect(content).toContain('type: ref-impl');
     });
 
     it('should create impl-history directory if it does not exist', () => {

@@ -85,7 +85,9 @@ function implementWithErrorHandling(options: {
       implIdOrPath: options.for,
     };
     const newFilePath = generateImplementationNote(implementOptions);
-    console.log(chalk.green(`✓ Created implementation note: ${newFilePath}`));
+    console.log(
+      chalk.green(`✓ Created reference implementation: ${newFilePath}`)
+    );
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : String(error);
     console.error(chalk.red(`Error: ${errorMessage}`));
@@ -97,7 +99,7 @@ program
   .command('implement')
   .alias('i')
   .description(
-    'Generate implementation note file for a spec and implementation'
+    'Generate reference implementation file for a spec and implementation'
   )
   .requiredOption('--spec <spec>', 'spec file ID or path')
   .requiredOption('--for <impl>', 'implementation file ID or path')

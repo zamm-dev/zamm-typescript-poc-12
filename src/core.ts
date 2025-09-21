@@ -58,7 +58,7 @@ function detectFileType(filePath: string, gitRoot: string): string {
   }
 
   if (relativePath.includes('/impl-history/')) {
-    return 'implementation-note';
+    return 'ref-impl';
   }
 
   if (relativePath.includes('/tests/')) {
@@ -292,8 +292,8 @@ function formatFileType(type: string): string {
       return 'Project';
     case 'implementation':
       return 'Implementation';
-    case 'implementation-note':
-      return 'Implementation Note';
+    case 'ref-impl':
+      return 'Reference Implementation';
     case 'test':
       return 'Test';
     case 'spec':
@@ -317,8 +317,8 @@ export function formatFileInfo(
     }
   }
 
-  // Handle implementation note files
-  if (fileInfo.type === 'implementation-note') {
+  // Handle reference implementation files
+  if (fileInfo.type === 'ref-impl') {
     try {
       const fileContent = fs.readFileSync(fileInfo.absolutePath, 'utf8');
       const { frontmatter } = parseFrontmatter(fileContent);
@@ -424,7 +424,7 @@ export function generateImplementationNote(options: ImplementOptions): string {
     fs.mkdirSync(implHistoryDir, { recursive: true });
   }
 
-  // Generate new implementation note
+  // Generate new reference implementation
   const newId = globalIdProvider.generateId();
   const newFileName = `new-${specInfo.id}-impl.md`;
   const newFilePath = path.join(implHistoryDir, newFileName);
@@ -432,7 +432,7 @@ export function generateImplementationNote(options: ImplementOptions): string {
   // Create frontmatter
   const frontmatter = {
     id: newId,
-    type: 'implementation-note',
+    type: 'ref-impl',
     specs: [
       {
         id: specInfo.id,

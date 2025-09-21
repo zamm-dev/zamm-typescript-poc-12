@@ -111,14 +111,14 @@ Implementations:
   - IMP002: Python Implementation
 ```
 
-## Info for Implementation Note File
+## Info for Reference Implementation File
 
-Given an implementation note file `docs/specs/features/impl-history/initial-auth.md`:
+Given an reference implementation file `docs/specs/features/impl-history/initial-auth.md`:
 
 ```md
 ---
 id: NOT123
-type: implementation-note
+type: ref-impl
 specs:
   - id: XYZ789
     path: /docs/specs/features/authentication.md
@@ -148,7 +148,7 @@ should output:
 
 ```
 ID: NOT123
-Type: Implementation Note
+Type: Reference Implementation
 File Path: /docs/specs/features/impl-history/initial-auth.md
 Specifications Implemented:
   - XYZ789: /docs/specs/features/authentication.md

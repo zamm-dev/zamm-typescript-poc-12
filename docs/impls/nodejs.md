@@ -14,15 +14,7 @@ src/
 ├── __tests__/            # Jest test files
 │   ├── fixtures/         # Test fixture files with preserved directory structure
 │   │   ├── info/         # Info command test fixtures
-│   │   │   └── docs/     # Realistic file hierarchy for info tests
-│   │   │       ├── features/
-│   │   │       │   └── impl-history/  # Implementation note fixtures
-│   │   │       └── impls/
 │   │   └── organize/     # Organize command test fixtures
-│   │       ├── before/   # Before-state directory structures
-│   │       │   └── docs/
-│   │       └── after/    # After-state directory structures
-│   │           └── docs/
 │   ├── organize.test.ts  # Organize command tests
 │   ├── info.test.ts      # Info command tests
 │   ├── implement.test.ts # Implement command tests
@@ -44,7 +36,7 @@ src/
 
 - **organize/o**: Add proper YAML frontmatter to markdown files
 - **info**: Display structured information about a file by ID or path
-- **implement/i**: Generate implementation note file for a spec and implementation
+- **implement/i**: Generate reference implementation file for a spec and implementation
 
 ## Development
 
