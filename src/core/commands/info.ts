@@ -1,7 +1,7 @@
 import * as fs from 'fs';
 import * as path from 'path';
 import { FileInfo, Implementation } from '../shared/types';
-import { findMarkdownFiles } from '../shared/file-utils';
+import { findMarkdownFiles, resolveTitleFromFile } from '../shared/file-utils';
 import { parseFrontmatter } from '../shared/frontmatter';
 import { resolveFileInfo } from '../shared/file-resolver';
 
@@ -86,7 +86,10 @@ export function formatFileInfo(
           output += '\nSpecifications Implemented:';
           for (const spec of validSpecs) {
             const specTyped = spec as { id: string; path: string };
-            output += `\n  - ${specTyped.id}: ${specTyped.path}`;
+            const specPath = path.join(fileInfo.gitRoot, specTyped.path);
+            const title = resolveTitleFromFile(specPath);
+            const displayText = title === specPath ? specTyped.path : title;
+            output += `\n  - ${specTyped.id}: ${displayText}`;
           }
         }
       }
@@ -98,8 +101,30 @@ export function formatFileInfo(
         'path' in frontmatter.impl
       ) {
         const implTyped = frontmatter.impl as { id: string; path: string };
+        const implPath = path.join(fileInfo.gitRoot, implTyped.path);
+        const title = resolveTitleFromFile(implPath);
+        const displayText = title === implPath ? implTyped.path : title;
         output += '\nImplementation:';
-        output += `\n  - ${implTyped.id}: ${implTyped.path}`;
+        output += `\n  - ${implTyped.id}: ${displayText}`;
+      }
+
+      if (frontmatter.commits && Array.isArray(frontmatter.commits)) {
+        const validCommits = frontmatter.commits.filter(
+          commit =>
+            commit &&
+            typeof commit === 'object' &&
+            'sha' in commit &&
+            'message' in commit
+        );
+
+        if (validCommits.length > 0) {
+          output += '\nCommits:';
+          for (const commit of validCommits) {
+            const commitTyped = commit as { sha: string; message: string };
+            const shortSha = commitTyped.sha.substring(0, 7);
+            output += `\n  - ${shortSha}: ${commitTyped.message}`;
+          }
+        }
       }
     } catch {
       // If we can't read the file content, just continue without the extra info

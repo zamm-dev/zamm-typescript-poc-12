@@ -246,9 +246,9 @@ Implementations:
 Type: Reference Implementation
 File Path: /docs/specs/features/impl-history/initial-auth.md
 Specifications Implemented:
-  - XYZ789: /docs/specs/features/authentication.md
+  - XYZ789: Authentication Feature
 Implementation:
-  - IMP002: /docs/impls/python.md`
+  - IMP002: Python Implementation`
       );
     });
 
@@ -268,9 +268,9 @@ Implementation:
 Type: Reference Implementation
 File Path: /docs/specs/features/impl-history/initial-auth.md
 Specifications Implemented:
-  - XYZ789: /docs/specs/features/authentication.md
+  - XYZ789: Authentication Feature
 Implementation:
-  - IMP002: /docs/impls/python.md`
+  - IMP002: Python Implementation`
       );
     });
 
@@ -300,6 +300,32 @@ Implementation:
         `ID: NOT789
 Type: Reference Implementation
 File Path: /docs/specs/features/impl-history/malformed.md`
+      );
+    });
+
+    it('should show commits for reference implementation with commit history', () => {
+      // Create spec and implementation files first
+      createTestFile('docs/specs/features/authentication.md');
+      createTestFile('docs/impls/python.md');
+
+      // Create reference implementation file with commits from fixture
+      createTestFile(
+        'docs/specs/features/impl-history/initial-auth-with-commits.md'
+      );
+
+      const result = getInfoByIdOrPath('NOT124');
+      expect(result).toBe(
+        `ID: NOT124
+Type: Reference Implementation
+File Path: /docs/specs/features/impl-history/initial-auth-with-commits.md
+Specifications Implemented:
+  - XYZ789: Authentication Feature
+Implementation:
+  - IMP002: Python Implementation
+Commits:
+  - a1b2c3d: Add initial authentication scaffolding
+  - b2c3d4e: Implement user login endpoint
+  - c3d4e5f: Add password validation and hashing`
       );
     });
   });
