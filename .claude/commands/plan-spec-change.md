@@ -2,7 +2,7 @@
 
 Implement the changes to the spec made in the last Git commit.
 
-1. Run the command `git diff HEAD~2..HEAD` to see proposed changes to the spec
+1. Run the command `git diff main` to see proposed changes to the spec
 2. Read the file @docs/impls/nodejs.md to understand the state of the current implementation
 3. Run the command `zamm implement --spec <spec ID> --for docs/impls/nodejs.md` to create a new implementation plan file
 4. Rename and edit the generated file with a plan for implementation. You may read the code in the rest of the repo, but do not make any changes. This is only a planning step.

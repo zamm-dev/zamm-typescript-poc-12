@@ -1,7 +1,7 @@
 # Implement the latest spec changes
 
 1. Run the command `eza . --tree --git-ignore` to understand the entire project structure
-2. Run the command `git diff HEAD~3..HEAD` to understand the latest requested spec changes and the plan for implementing them
+2. Run the command `git diff main` to understand the latest requested spec changes and the plan for implementing them
 3. Implement. As you go, make note of any unexpected errors and surprises you encounter.
 4. Run tests
 5. Commit (as many times as specified in the plan)
