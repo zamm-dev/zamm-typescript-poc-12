@@ -5,6 +5,12 @@ import { ImplementOptions } from '../shared/types';
 import { findGitRoot } from '../shared/file-utils';
 import { resolveFileInfo } from '../shared/file-resolver';
 import { getIdProvider } from '../shared/id-provider';
+import { getLastNCommits, isGitRepository } from '../shared/git-utils';
+import {
+  parseFrontmatter,
+  serializeFrontmatter,
+  addCommitsToFrontmatter,
+} from '../shared/frontmatter';
 
 export function generateImplementationNote(options: ImplementOptions): string {
   const gitRoot = findGitRoot(process.cwd());
@@ -94,4 +100,31 @@ TODO: LLM agent, please put implementation plan details here and rename this fil
   fs.writeFileSync(newFilePath, content);
 
   return newFilePath;
+}
+
+export function recordCommits(idOrPath: string, lastNCommits: number): void {
+  if (!isGitRepository()) {
+    throw new Error('Not in a git repository');
+  }
+
+  const fileInfo = resolveFileInfo(idOrPath);
+
+  if (!fs.existsSync(fileInfo.absolutePath)) {
+    throw new Error(`File not found: ${fileInfo.absolutePath}`);
+  }
+
+  const content = fs.readFileSync(fileInfo.absolutePath, 'utf8');
+  const { frontmatter, body } = parseFrontmatter(content);
+
+  if (!frontmatter.id) {
+    throw new Error(
+      `File does not have proper YAML frontmatter with an id field: ${fileInfo.absolutePath}`
+    );
+  }
+
+  const commits = getLastNCommits(lastNCommits);
+  const updatedFrontmatter = addCommitsToFrontmatter(frontmatter, commits);
+  const updatedContent = serializeFrontmatter(updatedFrontmatter, body);
+
+  fs.writeFileSync(fileInfo.absolutePath, updatedContent);
 }

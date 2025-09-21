@@ -1,5 +1,5 @@
 import * as yaml from 'js-yaml';
-import { Frontmatter } from './types';
+import { Frontmatter, Commit } from './types';
 
 export function parseFrontmatter(content: string): {
   frontmatter: Frontmatter;
@@ -18,4 +18,34 @@ export function parseFrontmatter(content: string): {
   }
 
   return { frontmatter: {}, body: content.trim() };
+}
+
+export function serializeFrontmatter(
+  frontmatter: Frontmatter,
+  body: string
+): string {
+  const yamlContent = yaml
+    .dump(frontmatter, {
+      flowLevel: -1,
+      noRefs: true,
+    })
+    .trim();
+
+  return `---\n${yamlContent}\n---\n\n${body}`;
+}
+
+export function addCommitsToFrontmatter(
+  frontmatter: Frontmatter,
+  newCommits: Commit[]
+): Frontmatter {
+  const updatedFrontmatter = { ...frontmatter };
+
+  if (updatedFrontmatter.commits) {
+    // Prepend new commits to existing ones (most recent first)
+    updatedFrontmatter.commits = [...newCommits, ...updatedFrontmatter.commits];
+  } else {
+    updatedFrontmatter.commits = newCommits;
+  }
+
+  return updatedFrontmatter;
 }

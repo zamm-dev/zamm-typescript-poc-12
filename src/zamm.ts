@@ -10,6 +10,7 @@ import {
   resetIdProvider,
   getInfoByIdOrPath,
   generateImplementationNote,
+  recordCommits,
   ImplementOptions,
 } from './core/index';
 
@@ -95,15 +96,49 @@ function implementWithErrorHandling(options: {
   }
 }
 
-program
-  .command('implement')
+function recordCommitsWithErrorHandling(
+  idOrPath: string,
+  options: { lastNCommits: number }
+): void {
+  try {
+    recordCommits(idOrPath, options.lastNCommits);
+    console.log(
+      chalk.green(`✓ Recorded ${options.lastNCommits} commit(s) to ${idOrPath}`)
+    );
+  } catch (error) {
+    const errorMessage = error instanceof Error ? error.message : String(error);
+    console.error(chalk.red(`Error: ${errorMessage}`));
+    process.exit(1);
+  }
+}
+
+const implCommand = program
+  .command('impl')
   .alias('i')
+  .description('Implementation management commands');
+
+implCommand
+  .command('create')
   .description(
     'Generate reference implementation file for a spec and implementation'
   )
   .requiredOption('--spec <spec>', 'spec file ID or path')
   .requiredOption('--for <impl>', 'implementation file ID or path')
   .action(implementWithErrorHandling);
+
+implCommand
+  .command('record')
+  .description('Record commit hashes in implementation file')
+  .requiredOption(
+    '--last-n-commits <n>',
+    'number of recent commits to record',
+    parseInt
+  )
+  .argument(
+    '<id-or-path>',
+    'reference implementation ID or file path to update'
+  )
+  .action(recordCommitsWithErrorHandling);
 
 export { setIdProvider, resetIdProvider };
 

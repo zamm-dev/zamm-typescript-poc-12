@@ -1,7 +1,9 @@
 import * as fs from 'fs';
 import * as path from 'path';
+import { execSync } from 'child_process';
 import {
   generateImplementationNote,
+  recordCommits,
   ImplementOptions,
   setIdProvider,
   resetIdProvider,
@@ -208,6 +210,133 @@ describe('ZAMM CLI Implement Command', () => {
       };
 
       expect(() => generateImplementationNote(options)).toThrow(
+        'Not in a git repository'
+      );
+    });
+  });
+
+  describe('recordCommits', () => {
+    function createTestCommits(): string[] {
+      // Create test commits with deterministic metadata
+      const commitShas: string[] = [];
+
+      // Set git config for deterministic commits
+      execSync('git config user.name "Test User"', {
+        cwd: testEnv.tempDir,
+      });
+      execSync('git config user.email "test@example.com"', {
+        cwd: testEnv.tempDir,
+      });
+
+      for (let i = 1; i <= 3; i++) {
+        const testFile = path.join(testEnv.tempDir, `test${i}.txt`);
+        fs.writeFileSync(testFile, `Test commit ${i}`);
+        execSync(`git add test${i}.txt`, { cwd: testEnv.tempDir });
+
+        // Set commit date for deterministic hashes
+        const commitDate = `2024-01-0${i} 12:00:00`;
+        execSync(
+          `GIT_COMMITTER_DATE="${commitDate}" GIT_AUTHOR_DATE="${commitDate}" git commit -m "Test commit ${i}"`,
+          { cwd: testEnv.tempDir }
+        );
+
+        const sha = execSync('git rev-parse HEAD', {
+          cwd: testEnv.tempDir,
+          encoding: 'utf8',
+        }).trim();
+        commitShas.push(sha);
+      }
+
+      return commitShas.reverse(); // Return most recent first
+    }
+
+    it('should record commits by ID', () => {
+      const testFile = createTestFile(
+        'docs/specs/features/impl-history/initial-auth.md'
+      );
+      const commitShas = createTestCommits();
+
+      recordCommits('NOT123', 2);
+
+      const content = fs.readFileSync(testFile, 'utf8');
+      expect(content).toContain('commits:');
+      expect(content).toContain(`- sha: ${commitShas[0]}`);
+      expect(content).toContain(`- sha: ${commitShas[1]}`);
+      expect(content).not.toContain(`- sha: ${commitShas[2]}`);
+    });
+
+    it('should record commits by file path', () => {
+      const testFile = createTestFile(
+        'docs/specs/features/impl-history/initial-auth.md'
+      );
+      const commitShas = createTestCommits();
+
+      recordCommits(testFile, 1);
+
+      const content = fs.readFileSync(testFile, 'utf8');
+      expect(content).toContain('commits:');
+      expect(content).toContain(`- sha: ${commitShas[0]}`);
+      expect(content).not.toContain(`- sha: ${commitShas[1]}`);
+    });
+
+    it('should prepend new commits to existing commits', () => {
+      const testFile = createTestFile(
+        'docs/specs/features/impl-history/initial-auth.md'
+      );
+
+      // First, add existing commits manually
+      let content = fs.readFileSync(testFile, 'utf8');
+      const existingCommit = 'existing123abc';
+      content = content.replace(
+        'impl:\n  id: IMP002\n  path: /docs/impls/python.md',
+        `impl:\n  id: IMP002\n  path: /docs/impls/python.md\ncommits:\n  - sha: ${existingCommit}`
+      );
+      fs.writeFileSync(testFile, content);
+
+      const commitShas = createTestCommits();
+      recordCommits('NOT123', 2);
+
+      const updatedContent = fs.readFileSync(testFile, 'utf8');
+      expect(updatedContent).toContain('commits:');
+
+      // New commits should come first
+      const commitLines = updatedContent
+        .split('\n')
+        .filter(line => line.includes('- sha:'));
+      expect(commitLines[0]).toContain(commitShas[0]);
+      expect(commitLines[1]).toContain(commitShas[1]);
+      expect(commitLines[2]).toContain(existingCommit);
+    });
+
+    it('should error for non-existent file ID', () => {
+      // Create the docs directory structure first
+      createTestFile('docs/specs/features/impl-history/initial-auth.md');
+      createTestCommits();
+
+      expect(() => recordCommits('NOTFOUND', 1)).toThrow(
+        'No file found matching the given ID or path: NOTFOUND'
+      );
+    });
+
+    it('should error for file without proper frontmatter', () => {
+      const testFile = path.join(testEnv.tempDir, 'no-frontmatter.md');
+      fs.writeFileSync(testFile, 'Just some content without frontmatter');
+      createTestCommits();
+
+      expect(() => recordCommits(testFile, 1)).toThrow(
+        'File does not have proper YAML frontmatter with an id field'
+      );
+    });
+
+    it('should error when not in git repository', () => {
+      createTestFile('docs/specs/features/impl-history/initial-auth.md');
+
+      fs.rmSync(path.join(testEnv.tempDir, '.git'), {
+        recursive: true,
+        force: true,
+      });
+
+      expect(() => recordCommits('NOT123', 1)).toThrow(
         'Not in a git repository'
       );
     });

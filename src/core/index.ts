@@ -3,6 +3,7 @@ export * from './shared/id-provider';
 export * from './shared/file-utils';
 export * from './shared/frontmatter';
 export * from './shared/file-resolver';
+export * from './shared/git-utils';
 export * from './commands/organize';
 export * from './commands/info';
 export * from './commands/implement';

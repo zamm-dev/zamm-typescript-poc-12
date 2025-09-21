@@ -23,5 +23,10 @@ export interface ImplementOptions {
 export interface Frontmatter {
   id?: string;
   type?: string;
+  commits?: Commit[];
   [key: string]: unknown;
+}
+
+export interface Commit {
+  sha: string;
 }
