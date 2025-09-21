@@ -7,6 +7,8 @@ specs:
 impl:
   id: IEU463
   path: /docs/impls/nodejs.md
+commits:
+  - sha: 611b78ce687c957b1b0a0e85e9f56aaebbce76eb
 ---
 
 # Implementation Plan: Update Code for Impl-History Directory Structure
@@ -56,3 +58,42 @@ The `implement` command currently generates files in `docs/specs/<spec-path>/imp
 ## Testing Strategy
 
 - Run existing tests (with modified paths) to ensure no regression
+
+## Implementation Results
+
+**Successfully Implemented**: ✅ **Single Commit**: Update implement command for new directory structure (commit 611b78c)
+
+### Changes Made
+
+1. **Updated `generateImplementationNote` function in `src/core.ts`**:
+   - Modified path generation logic to use `docs/impl-history/<implementation>/` instead of `docs/specs/<spec-path>/impl-history/`
+   - Added extraction of implementation name from implementation file path using `path.basename(implInfo.absolutePath, '.md')`
+   - Updated spec directory structure calculation to preserve relative path from specs or spec-history
+   - Fixed macOS symlink path resolution issue using `fs.realpathSync()` to normalize paths
+
+2. **Updated all test expectations in `src/__tests__/implement.test.ts`**:
+   - Changed expected output paths from `/docs/specs/features/impl-history/` to `/docs/impl-history/python/features/`
+   - Updated test directory structure expectations for proper validation
+   - Fixed test for CLI tests path structure from `/docs/specs/cli/tests/impl-history/` to `/docs/impl-history/python/cli/tests/`
+
+3. **Path Generation Logic**:
+   - For specs in `docs/specs/features/authentication.md` → generates to `docs/impl-history/<impl-name>/features/`
+   - For specs in `docs/specs/cli/tests/info-command.md` → generates to `docs/impl-history/<impl-name>/cli/tests/`
+   - Maintains directory structure preservation as specified
+
+### Unexpected Issues Encountered
+
+1. **macOS Symlink Issue**: Encountered path resolution problems on macOS where `/var` is a symlink to `/private/var`. This caused `path.relative()` to return incorrect relative paths with `../` segments.
+   - **Solution**: Used `fs.realpathSync()` to normalize both the git root and spec file paths before calculating relative paths.
+
+2. **Test Path Expectations**: Had to carefully update all test regex patterns to match the new directory structure while ensuring they remained specific enough to catch regressions.
+
+### Verification
+
+- ✅ All 41 tests pass
+- ✅ Linting passes with no errors
+- ✅ TypeScript compilation successful
+- ✅ Build generates executable successfully
+- ✅ Pre-commit hooks run successfully with formatting and linting
+
+The implementation correctly follows the new directory structure as specified in JDK025, generating implementation files in `docs/impl-history/<implementation>/` while preserving the original spec directory structure.
