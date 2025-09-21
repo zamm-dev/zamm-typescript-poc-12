@@ -113,7 +113,7 @@ Implementations:
 
 ## Info for Reference Implementation File
 
-Given an reference implementation file `docs/specs/features/impl-history/initial-auth.md`:
+Given an reference implementation file `docs/impl-history/python/features/initial-auth.md`:
 
 ```md
 ---
@@ -141,7 +141,7 @@ zamm info NOT123
 or
 
 ```bash
-zamm info docs/specs/features/impl-history/initial-auth.md
+zamm info docs/impl-history/python/features/initial-auth.md
 ```
 
 should output:
@@ -149,7 +149,7 @@ should output:
 ```
 ID: NOT123
 Type: Reference Implementation
-File Path: /docs/specs/features/impl-history/initial-auth.md
+File Path: /docs/impl-history/python/features/initial-auth.md
 Specifications Implemented:
   - XYZ789: /docs/specs/features/authentication.md
 Implementation:

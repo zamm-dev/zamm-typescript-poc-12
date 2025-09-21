@@ -76,13 +76,13 @@ The command should error out if:
 
 ## `implement`
 
-When given a spec ID/file path and implementation ID/file path as arguments, `implement` or `i` should generate a new reference implementation file in the sibling `impl-history/` directory of that spec. For example, if we are to reuse the [Test Spec SOB239](./tests/info-command.md) test data, then running the command
+When given a spec ID/file path and implementation ID/file path as arguments, `implement` or `i` should generate a new reference implementation file in the `docs/impl-history/<implementation>/` directory corresponding to the implementation. For example, if we are to reuse the [Test Spec SOB239](./tests/info-command.md) test data, then running the command
 
 ```bash
 zamm implement --spec XYZ789 --for IMP002
 ```
 
-should generate a new reference implementation at `docs/specs/features/impl-history/new-XYZ789-impl.md` with the contents
+should generate a new reference implementation at `docs/impl-history/python/features/new-XYZ789-impl.md` with the contents
 
 ```md
 ---

@@ -102,7 +102,7 @@ Implementation details for Node.js version.
 
 ## Organize Reference Implementation
 
-Given a Markdown file `docs/impl-history/setup-notes.md`:
+Given a Markdown file `docs/impl-history/nodejs/setup-notes.md`:
 
 ```md
 # Setup Notes
@@ -113,10 +113,10 @@ Notes from the implementation process.
 then the command
 
 ```bash
-zamm organize docs/impl-history/setup-notes.md
+zamm organize docs/impl-history/nodejs/setup-notes.md
 ```
 
-should rewrite `docs/impl-history/setup-notes.md` as
+should rewrite `docs/impl-history/nodejs/setup-notes.md` as
 
 ```md
 ---
