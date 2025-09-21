@@ -11,7 +11,7 @@ import {
   TestEnvironment,
   setupTestEnvironment,
   cleanupTestEnvironment,
-  createTestFileFromFixture,
+  copyTestFile,
 } from './test-utils';
 
 class TestIdProvider implements IdProvider {
@@ -36,17 +36,14 @@ describe('ZAMM CLI Implement Command', () => {
     resetIdProvider();
   });
 
-  function createTestFile(relativePath: string, fixtureName: string): string {
-    return createTestFileFromFixture(testEnv, relativePath, fixtureName);
+  function createTestFile(filePath: string): string {
+    return copyTestFile(testEnv, filePath);
   }
 
   describe('generateImplementationNote', () => {
     it('should create reference implementation for spec and implementation by ID', () => {
-      createTestFile(
-        'docs/specs/features/authentication.md',
-        'docs/specs/features/authentication.md'
-      );
-      createTestFile('docs/impls/python.md', 'docs/impls/python.md');
+      createTestFile('docs/specs/features/authentication.md');
+      createTestFile('docs/impls/python.md');
 
       const options: ImplementOptions = {
         specIdOrPath: 'XYZ789',
@@ -69,14 +66,8 @@ describe('ZAMM CLI Implement Command', () => {
     });
 
     it('should create reference implementation for spec and implementation by path', () => {
-      const specPath = createTestFile(
-        'docs/specs/features/authentication.md',
-        'docs/specs/features/authentication.md'
-      );
-      const implPath = createTestFile(
-        'docs/impls/python.md',
-        'docs/impls/python.md'
-      );
+      const specPath = createTestFile('docs/specs/features/authentication.md');
+      const implPath = createTestFile('docs/impls/python.md');
 
       const options: ImplementOptions = {
         specIdOrPath: specPath,
@@ -99,11 +90,8 @@ describe('ZAMM CLI Implement Command', () => {
     });
 
     it('should create impl-history directory if it does not exist', () => {
-      createTestFile(
-        'docs/specs/features/authentication.md',
-        'docs/specs/features/authentication.md'
-      );
-      createTestFile('docs/impls/python.md', 'docs/impls/python.md');
+      createTestFile('docs/specs/features/authentication.md');
+      createTestFile('docs/impls/python.md');
 
       const implHistoryDir = path.join(
         testEnv.tempDir,
@@ -123,16 +111,23 @@ describe('ZAMM CLI Implement Command', () => {
 
     it('should work with test file type as spec', () => {
       // Create a test file in the fixtures and use it
-      const testSpecPath = createTestFile(
-        'docs/specs/cli/tests/info-command.md',
-        'docs/specs/features/authentication.md'
+      const content = fs.readFileSync(
+        path.join(
+          __dirname,
+          'fixtures/info/docs/specs/features/authentication.md'
+        ),
+        'utf8'
       );
-      // Change the content to make it a test type
-      const content = fs.readFileSync(testSpecPath, 'utf8');
+      // Change the content to make it a test type and place in cli/tests directory
       const updatedContent = content.replace('type: spec', 'type: test');
+      const testSpecPath = path.join(
+        testEnv.tempDir,
+        'docs/specs/cli/tests/info-command.md'
+      );
+      fs.mkdirSync(path.dirname(testSpecPath), { recursive: true });
       fs.writeFileSync(testSpecPath, updatedContent);
 
-      createTestFile('docs/impls/python.md', 'docs/impls/python.md');
+      createTestFile('docs/impls/python.md');
 
       const options: ImplementOptions = {
         specIdOrPath: testSpecPath,
@@ -148,7 +143,7 @@ describe('ZAMM CLI Implement Command', () => {
     });
 
     it('should error for non-existent spec ID', () => {
-      createTestFile('docs/impls/python.md', 'docs/impls/python.md');
+      createTestFile('docs/impls/python.md');
 
       const options: ImplementOptions = {
         specIdOrPath: 'NOTFOUND',
@@ -161,10 +156,7 @@ describe('ZAMM CLI Implement Command', () => {
     });
 
     it('should error for non-existent implementation ID', () => {
-      createTestFile(
-        'docs/specs/features/authentication.md',
-        'docs/specs/features/authentication.md'
-      );
+      createTestFile('docs/specs/features/authentication.md');
 
       const options: ImplementOptions = {
         specIdOrPath: 'XYZ789',
@@ -177,8 +169,8 @@ describe('ZAMM CLI Implement Command', () => {
     });
 
     it('should error for wrong spec file type', () => {
-      createTestFile('docs/impls/python.md', 'docs/impls/python.md');
-      const wrongSpecPath = createTestFile('docs/README.md', 'docs/README.md');
+      createTestFile('docs/impls/python.md');
+      const wrongSpecPath = createTestFile('docs/README.md');
 
       const options: ImplementOptions = {
         specIdOrPath: wrongSpecPath,
@@ -191,11 +183,8 @@ describe('ZAMM CLI Implement Command', () => {
     });
 
     it('should error for wrong implementation file type', () => {
-      createTestFile(
-        'docs/specs/features/authentication.md',
-        'docs/specs/features/authentication.md'
-      );
-      const wrongImplPath = createTestFile('docs/README.md', 'docs/README.md');
+      createTestFile('docs/specs/features/authentication.md');
+      const wrongImplPath = createTestFile('docs/README.md');
 
       const options: ImplementOptions = {
         specIdOrPath: 'XYZ789',

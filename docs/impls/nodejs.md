@@ -65,3 +65,7 @@ The `prepare` script will automatically set up git hooks via Husky.
 ### Test Resource Files
 
 Following the test-file-resources specification, test assertions that verify file content use exact matching against expected output files stored in `src/__tests__/fixtures/`. This ensures reliable testing of generated content by comparing against known-good reference files rather than partial string matching.
+
+### Test Utilities
+
+Use `copyTestFile` to copy test fixtures into the same corresponding path in a temporary test directory.

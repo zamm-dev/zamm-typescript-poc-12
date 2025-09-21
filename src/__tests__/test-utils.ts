@@ -31,13 +31,9 @@ export function loadFixture(env: TestEnvironment, name: string): string {
   return fs.readFileSync(fixturePath, 'utf8');
 }
 
-export function createTestFileFromFixture(
-  env: TestEnvironment,
-  relativePath: string,
-  fixtureName: string
-): string {
-  const content = loadFixture(env, fixtureName);
-  const fullPath = path.join(env.tempDir, relativePath);
+export function copyTestFile(env: TestEnvironment, filePath: string): string {
+  const content = loadFixture(env, filePath);
+  const fullPath = path.join(env.tempDir, filePath);
   const dir = path.dirname(fullPath);
   fs.mkdirSync(dir, { recursive: true });
   fs.writeFileSync(fullPath, content);
