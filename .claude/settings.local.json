@@ -14,7 +14,8 @@
       "Bash(npm test:*)",
       "Bash(find:*)",
       "Bash(./dist/zamm implement:*)",
-      "Bash(xxd:*)"
+      "Bash(xxd:*)",
+      "Bash(git cherry-pick:*)"
     ],
     "deny": [],
     "ask": []
