@@ -159,4 +159,6 @@ commits:
 If the `commits` field already exists, the new commits should be prepended to the existing list, maintaining chronological order with the most recent commits first.
 
 > [!NOTE]
-> **Testing Implementation Note**: To ensure reproducible testing with deterministic commit hashes, test commits should be created with consistent metadata (author, email, date, etc.). This allows the use of simple file comparison for verifying the exact output format, as the same input will always produce the same commit hashes.
+> To ensure reproducible testing with deterministic commit hashes, test commits should be created with consistent metadata (author, email, date, etc.). This allows the use of simple file comparison for verifying the exact output format, as the same input will always produce the same commit hashes.
+>
+> **Do not** mock Git output in your tests. We want to ensure that this works with real Git operations.
