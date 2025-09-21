@@ -9,7 +9,7 @@ This section documents all the CLI commands that the ZAMM implementation should 
 
 ## `organize`
 
-## Single argument
+### Single argument
 
 When given a single file as argument, `organize` or `o` should ensure it has proper YAML frontmatter.
 
@@ -28,9 +28,19 @@ If frontmatter already exists, ensure that no data from existing keys is lost.
 
 The root is determined relative to the `.git` directory. If none exists, the command should error out.
 
-## No arguments
+### No arguments
 
 When given no files as argument, `organize` or `o` should organize all files under the `docs/` directory.
+
+### Metadata updates
+
+The `organize` command should overwrite all derived metadata in reference implementation files by finding the correct resources based on their IDs. This includes:
+
+- **File paths**: Update `specs[].path` and `impl.path` fields by locating the current file paths for the referenced spec and implementation IDs
+- **Commit information**: Update the `commits` array with the first line of Git commit messages based on the commit hashes
+
+> [!NOTE]
+> The logic for retrieving/setting this data should be shared and reused between this and the other commands.
 
 ## `info`
 
