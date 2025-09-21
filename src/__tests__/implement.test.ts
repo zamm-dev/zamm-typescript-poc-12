@@ -56,7 +56,7 @@ describe('ZAMM CLI Implement Command', () => {
       const resultPath = generateImplementationNote(options);
 
       expect(resultPath).toMatch(
-        /docs\/specs\/features\/impl-history\/new-XYZ789-impl\.md$/
+        /docs\/impl-history\/python\/features\/new-XYZ789-impl\.md$/
       );
       expect(fs.existsSync(resultPath)).toBe(true);
 
@@ -92,7 +92,7 @@ describe('ZAMM CLI Implement Command', () => {
       const resultPath = generateImplementationNote(options);
 
       expect(resultPath).toMatch(
-        /docs\/specs\/features\/impl-history\/new-XYZ789-impl\.md$/
+        /docs\/impl-history\/python\/features\/new-XYZ789-impl\.md$/
       );
       expect(fs.existsSync(resultPath)).toBe(true);
 
@@ -110,7 +110,7 @@ describe('ZAMM CLI Implement Command', () => {
 
       const implHistoryDir = path.join(
         testEnv.tempDir,
-        'docs/specs/features/impl-history'
+        'docs/impl-history/python/features'
       );
       expect(fs.existsSync(implHistoryDir)).toBe(false);
 
@@ -146,7 +146,7 @@ describe('ZAMM CLI Implement Command', () => {
 
       expect(fs.existsSync(resultPath)).toBe(true);
       expect(resultPath).toMatch(
-        /docs\/specs\/cli\/tests\/impl-history\/new-XYZ789-impl\.md$/
+        /docs\/impl-history\/python\/cli\/tests\/new-XYZ789-impl\.md$/
       );
     });
 

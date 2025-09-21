@@ -415,9 +415,37 @@ export function generateImplementationNote(options: ImplementOptions): string {
     );
   }
 
-  // Find the impl-history directory relative to the spec file
-  const specDir = path.dirname(specInfo.absolutePath);
-  const implHistoryDir = path.join(specDir, 'impl-history');
+  // Extract implementation name from the implementation file path
+  const implFileName = path.basename(implInfo.absolutePath, '.md');
+
+  // Calculate the spec's directory structure relative to docs/specs/ or docs/spec-history/
+  // Normalize both paths to avoid symlink issues on macOS
+  const normalizedGitRoot = fs.realpathSync(gitRoot);
+  const normalizedSpecPath = fs.realpathSync(specInfo.absolutePath);
+  const specRelativePath = path.relative(normalizedGitRoot, normalizedSpecPath);
+  let specSubPath: string;
+
+  if (specRelativePath.startsWith('docs/specs/')) {
+    specSubPath = path.dirname(
+      specRelativePath.substring('docs/specs/'.length)
+    );
+  } else if (specRelativePath.startsWith('docs/spec-history/')) {
+    specSubPath = path.dirname(
+      specRelativePath.substring('docs/spec-history/'.length)
+    );
+  } else {
+    // Fallback: use the directory structure as-is
+    specSubPath = path.dirname(specRelativePath);
+  }
+
+  // Generate the new directory structure: docs/impl-history/<impl-name>/<spec-subpath>/
+  const implHistoryDir = path.join(
+    gitRoot,
+    'docs',
+    'impl-history',
+    implFileName,
+    specSubPath
+  );
 
   // Create impl-history directory if it doesn't exist
   if (!fs.existsSync(implHistoryDir)) {
