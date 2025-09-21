@@ -39,3 +39,26 @@ export function findMarkdownFiles(dirPath: string): string[] {
 
   return files.sort();
 }
+
+export function extractTitleFromMarkdown(content: string): string | null {
+  const lines = content.split('\n');
+
+  for (const line of lines) {
+    const trimmedLine = line.trim();
+    if (trimmedLine.startsWith('# ')) {
+      return trimmedLine.substring(2).trim();
+    }
+  }
+
+  return null;
+}
+
+export function resolveTitleFromFile(filePath: string): string {
+  try {
+    const content = fs.readFileSync(filePath, 'utf8');
+    const title = extractTitleFromMarkdown(content);
+    return title || filePath;
+  } catch {
+    return filePath;
+  }
+}
