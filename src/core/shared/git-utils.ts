@@ -3,7 +3,7 @@ import { Commit } from './types';
 
 export function getLastNCommits(n: number): Commit[] {
   try {
-    const output = execSync(`git log -n ${n} --pretty=format:"%H"`, {
+    const output = execSync(`git log -n ${n} --pretty=format:"%H%x09%s"`, {
       encoding: 'utf8',
       cwd: process.cwd(),
     });
@@ -11,8 +11,11 @@ export function getLastNCommits(n: number): Commit[] {
     return output
       .trim()
       .split('\n')
-      .filter(sha => sha.length > 0)
-      .map(sha => ({ sha }));
+      .filter(line => line.length > 0)
+      .map(line => {
+        const [sha, message] = line.split('\t');
+        return { sha: sha || '', message: message || '' };
+      });
   } catch (error) {
     throw new Error(
       `Failed to get git commit history: ${error instanceof Error ? error.message : String(error)}`

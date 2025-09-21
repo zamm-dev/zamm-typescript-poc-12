@@ -29,4 +29,5 @@ export interface Frontmatter {
 
 export interface Commit {
   sha: string;
+  message: string;
 }
