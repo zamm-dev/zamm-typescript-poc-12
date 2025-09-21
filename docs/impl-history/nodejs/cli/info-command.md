@@ -1,6 +1,6 @@
 ---
 id: TIC979
-type: implementation-note
+type: ref-impl
 specs:
   - id: FYR697
     path: docs/cli/README.md

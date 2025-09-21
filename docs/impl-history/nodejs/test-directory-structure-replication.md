@@ -1,6 +1,6 @@
 ---
 id: XNP353
-type: implementation-note
+type: ref-impl
 specs:
   - id: MTW997
     path: docs/test-file-resources.md

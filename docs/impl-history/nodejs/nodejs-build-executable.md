@@ -1,6 +1,6 @@
 ---
 id: BEX429
-type: implementation-note
+type: ref-impl
 specs:
   - id: HPF761
     path: ../project-setup.md

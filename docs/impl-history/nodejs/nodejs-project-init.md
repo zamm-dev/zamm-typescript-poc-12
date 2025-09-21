@@ -1,6 +1,6 @@
 ---
 id: LVH754
-type: implementation-note
+type: ref-impl
 specs:
   - id: HPF761
     path: project-setup.md
