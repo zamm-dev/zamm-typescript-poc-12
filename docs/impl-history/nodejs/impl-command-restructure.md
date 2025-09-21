@@ -90,3 +90,73 @@ The current implementation has:
 - All existing tests pass with updated command names
 - CLI help and documentation reflect the new structure
 - Backward compatibility maintained where possible
+
+## Implementation Results
+
+### Successfully Implemented
+
+✅ **Phase 1: Command Restructure**
+
+- Renamed `implement` command to `impl` with subcommand structure
+- Moved existing functionality to `impl create` subcommand
+- Maintained backward compatibility with `i` alias
+- All existing `generateImplementationNote` functionality preserved
+
+✅ **Phase 2: Git Utilities**
+
+- Created `src/core/shared/git-utils.ts` with `getLastNCommits()` and `isGitRepository()` functions
+- Added `Commit` interface to `src/core/shared/types.ts`
+- Integrated with existing frontmatter utilities
+
+✅ **Phase 3: impl record Subcommand**
+
+- Implemented `impl record --last-n-commits <N> <id-or-path>` command
+- Added `recordCommits()` function in `implement.ts`
+- Created frontmatter manipulation utilities (`serializeFrontmatter`, `addCommitsToFrontmatter`)
+- Supports both ID and file path resolution
+- Prepends new commits to existing commits array (most recent first)
+
+✅ **Testing**
+
+- All existing tests updated for new command structure
+- Added comprehensive tests for `recordCommits` functionality
+- Created git test utilities for deterministic commit generation
+- Refactored to use exact file content matching per test-file-resources specification
+- All 47 tests passing
+
+### Surprises and Issues Encountered
+
+🔧 **Test Infrastructure Improvements**
+
+- Initially used `toContain` assertions but user feedback required refactoring to exact file matching per test-file-resources specification for better precision
+- User pointed out code duplication in git setup and requested creation of shared `git-test-utils.ts` for deterministic commit generation across tests
+- User corrected approach: git-test-utils should only set up commits, not return SHAs - use existing `getLastNCommits` for SHA retrieval
+- User moved test fixtures under `implement/` directory structure and constrained against editing test resources further
+- Required adapting test environment setup and copy/assert functions to work with new fixture organization
+- Multiple rounds of back-and-forth to get test structure and fixture organization correct
+- Deterministic commit SHAs: `e779995e60790757d2ed7e3ff8e87a2617e8c3c6`, `4bd28bec045891fff0ccb1e549d88f17f34d6827`, `37029ec0f2bc27ce51a21c18293d49923706bf9f`
+
+🎯 **Error Handling**
+
+- Proper validation for git repository existence
+- Clear error messages for missing files and invalid frontmatter
+- Graceful handling of files without proper YAML frontmatter
+
+🚀 **CLI Structure**
+
+- Commander.js subcommand structure works seamlessly
+- Help system automatically generates proper nested help
+- Both `zamm impl create` and `zamm i create` work as expected
+- Both `zamm impl record` and `zamm i record` work as expected
+
+### Final Status
+
+The implementation fully meets the spec requirements:
+
+- ✅ `impl create` replaces `implement` with identical functionality
+- ✅ `impl record --last-n-commits <N> <id-or-path>` successfully records commit hashes
+- ✅ Works with both file IDs and file paths
+- ✅ Prepends new commits to existing commits array
+- ✅ All existing tests pass
+- ✅ New comprehensive test coverage for record functionality
+- ✅ Backward compatibility maintained with `i` alias

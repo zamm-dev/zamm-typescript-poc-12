@@ -17,7 +17,8 @@ src/
 │   │   ├── info.test.ts      # Info command tests
 │   │   └── implement.test.ts # Implement command tests
 │   ├── shared/             # Shared test utilities
-│   │   └── test-utils.ts     # Test utilities with directory copying
+│   │   ├── test-utils.ts     # Test utilities with directory copying
+│   │   └── git-test-utils.ts # Git repository setup for deterministic testing
 │   └── fixtures/           # Test fixture files with preserved directory structure
 │       ├── info/           # Info command test fixtures
 │       ├── organize/       # Organize command test fixtures
@@ -31,8 +32,9 @@ src/
 │   │   ├── types.ts          # Type definitions
 │   │   ├── id-provider.ts    # ID generation logic
 │   │   ├── file-utils.ts     # File system utilities
-│   │   ├── frontmatter.ts    # YAML frontmatter parsing
-│   │   └── file-resolver.ts  # File detection and resolution
+│   │   ├── frontmatter.ts    # YAML frontmatter parsing and manipulation
+│   │   ├── file-resolver.ts  # File detection and resolution
+│   │   └── git-utils.ts      # Git repository operations
 │   └── index.ts            # Core module exports
 ├── zamm.ts                 # Main CLI entry point with Commander.js
 └── index.ts                # Library exports
@@ -50,7 +52,9 @@ src/
 
 - **organize/o**: Add proper YAML frontmatter to markdown files
 - **info**: Display structured information about a file by ID or path
-- **implement/i**: Generate reference implementation file for a spec and implementation
+- **impl/i**: Implementation management commands
+  - **impl create**: Generate reference implementation file for a spec and implementation
+  - **impl record**: Record commit hashes in implementation file frontmatter
 
 ## Development
 
