@@ -31,7 +31,7 @@ export function serializeFrontmatter(
     })
     .trim();
 
-  return `---\n${yamlContent}\n---\n\n${body}`;
+  return `---\n${yamlContent}\n---\n\n${body}\n`;
 }
 
 export function addCommitsToFrontmatter(
