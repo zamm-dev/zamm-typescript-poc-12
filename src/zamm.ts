@@ -11,7 +11,7 @@ import {
   getInfoByIdOrPath,
   generateImplementationNote,
   ImplementOptions,
-} from './core';
+} from './core/index';
 
 const program = new Command();
 

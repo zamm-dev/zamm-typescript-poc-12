@@ -6,13 +6,13 @@ import {
   getFileInfo,
   getProjectImplementations,
   formatFileInfo,
-} from '../core';
+} from '../../core/index';
 import {
   TestEnvironment,
   setupTestEnvironment,
   cleanupTestEnvironment,
   copyTestFile,
-} from './test-utils';
+} from '../shared/test-utils';
 
 describe('ZAMM CLI Info Command', () => {
   let testEnv: TestEnvironment;

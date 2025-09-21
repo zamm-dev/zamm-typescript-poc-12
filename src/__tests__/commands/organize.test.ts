@@ -5,14 +5,14 @@ import {
   resetIdProvider,
   organizeFile,
   organizeAllFiles,
-} from '../core';
+} from '../../core/index';
 import {
   TestEnvironment,
   setupTestEnvironment,
   cleanupTestEnvironment,
   copyDirectoryFromFixture,
   expectFileMatchesFixtureFile,
-} from './test-utils';
+} from '../shared/test-utils';
 
 class MockIdProvider {
   constructor(private ids: string[]) {}

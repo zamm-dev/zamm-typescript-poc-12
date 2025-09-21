@@ -11,18 +11,31 @@ This is an implementation of the ZAMM CLI using NodeJS with TypeScript.
 
 ```
 src/
-├── __tests__/            # Jest test files
-│   ├── fixtures/         # Test fixture files with preserved directory structure
-│   │   ├── info/         # Info command test fixtures
-│   │   ├── organize/     # Organize command test fixtures
-│   │   └── implement/    # Implement command test fixtures
-│   ├── organize.test.ts  # Organize command tests
-│   ├── info.test.ts      # Info command tests
-│   ├── implement.test.ts # Implement command tests
-│   └── test-utils.ts     # Shared test utilities with directory copying
-├── zamm.ts               # Main CLI entry point with Commander.js
-├── core.ts               # Core organize, info, and implement command logic
-└── index.ts              # Library exports
+├── __tests__/              # Jest test files
+│   ├── commands/           # Command-specific test files
+│   │   ├── organize.test.ts  # Organize command tests
+│   │   ├── info.test.ts      # Info command tests
+│   │   └── implement.test.ts # Implement command tests
+│   ├── shared/             # Shared test utilities
+│   │   └── test-utils.ts     # Test utilities with directory copying
+│   └── fixtures/           # Test fixture files with preserved directory structure
+│       ├── info/           # Info command test fixtures
+│       ├── organize/       # Organize command test fixtures
+│       └── implement/      # Implement command test fixtures
+├── core/                   # Core business logic
+│   ├── commands/           # Command-specific implementations
+│   │   ├── organize.ts       # Organize command logic
+│   │   ├── info.ts           # Info command logic
+│   │   └── implement.ts      # Implement command logic
+│   ├── shared/             # Shared utilities and types
+│   │   ├── types.ts          # Type definitions
+│   │   ├── id-provider.ts    # ID generation logic
+│   │   ├── file-utils.ts     # File system utilities
+│   │   ├── frontmatter.ts    # YAML frontmatter parsing
+│   │   └── file-resolver.ts  # File detection and resolution
+│   └── index.ts            # Core module exports
+├── zamm.ts                 # Main CLI entry point with Commander.js
+└── index.ts                # Library exports
 ```
 
 ## Commands

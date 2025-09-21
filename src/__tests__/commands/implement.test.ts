@@ -6,13 +6,13 @@ import {
   setIdProvider,
   resetIdProvider,
   IdProvider,
-} from '../core';
+} from '../../core/index';
 import {
   TestEnvironment,
   setupTestEnvironment,
   cleanupTestEnvironment,
   copyTestFile,
-} from './test-utils';
+} from '../shared/test-utils';
 
 class TestIdProvider implements IdProvider {
   private counter = 0;
@@ -59,7 +59,7 @@ describe('ZAMM CLI Implement Command', () => {
 
       const content = fs.readFileSync(resultPath, 'utf8');
       const expectedContent = fs.readFileSync(
-        path.join(__dirname, 'fixtures/implement/new-XYZ789-impl.md'),
+        path.join(__dirname, '../fixtures/implement/new-XYZ789-impl.md'),
         'utf8'
       );
       expect(content).toBe(expectedContent);
@@ -83,7 +83,7 @@ describe('ZAMM CLI Implement Command', () => {
 
       const content = fs.readFileSync(resultPath, 'utf8');
       const expectedContent = fs.readFileSync(
-        path.join(__dirname, 'fixtures/implement/new-XYZ789-impl.md'),
+        path.join(__dirname, '../fixtures/implement/new-XYZ789-impl.md'),
         'utf8'
       );
       expect(content).toBe(expectedContent);
@@ -114,7 +114,7 @@ describe('ZAMM CLI Implement Command', () => {
       const content = fs.readFileSync(
         path.join(
           __dirname,
-          'fixtures/info/docs/specs/features/authentication.md'
+          '../fixtures/info/docs/specs/features/authentication.md'
         ),
         'utf8'
       );
