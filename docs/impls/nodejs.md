@@ -14,7 +14,8 @@ src/
 ├── __tests__/            # Jest test files
 │   ├── fixtures/         # Test fixture files with preserved directory structure
 │   │   ├── info/         # Info command test fixtures
-│   │   └── organize/     # Organize command test fixtures
+│   │   ├── organize/     # Organize command test fixtures
+│   │   └── implement/    # Implement command test fixtures
 │   ├── organize.test.ts  # Organize command tests
 │   ├── info.test.ts      # Info command tests
 │   ├── implement.test.ts # Implement command tests
@@ -58,3 +59,9 @@ npm install
 ```
 
 The `prepare` script will automatically set up git hooks via Husky.
+
+## Testing Guidelines
+
+### Test Resource Files
+
+Following the test-file-resources specification, test assertions that verify file content use exact matching against expected output files stored in `src/__tests__/fixtures/`. This ensures reliable testing of generated content by comparing against known-good reference files rather than partial string matching.

@@ -19,7 +19,7 @@ class TestIdProvider implements IdProvider {
 
   generateId(): string {
     this.counter++;
-    return `TEST${this.counter.toString().padStart(3, '0')}`;
+    return `TST${this.counter.toString().padStart(3, '0')}`;
   }
 }
 
@@ -61,17 +61,11 @@ describe('ZAMM CLI Implement Command', () => {
       expect(fs.existsSync(resultPath)).toBe(true);
 
       const content = fs.readFileSync(resultPath, 'utf8');
-      expect(content).toContain('id: TEST001');
-      expect(content).toContain('type: ref-impl');
-      expect(content).toContain('specs:');
-      expect(content).toContain('- id: XYZ789');
-      expect(content).toContain('path: /docs/specs/features/authentication.md');
-      expect(content).toContain('impl:');
-      expect(content).toContain('id: IMP002');
-      expect(content).toContain('path: /docs/impls/python.md');
-      expect(content).toContain(
-        'TODO: LLM agent, please put implementation plan details here'
+      const expectedContent = fs.readFileSync(
+        path.join(__dirname, 'fixtures/implement/new-XYZ789-impl.md'),
+        'utf8'
       );
+      expect(content).toBe(expectedContent);
     });
 
     it('should create reference implementation for spec and implementation by path', () => {
@@ -97,8 +91,11 @@ describe('ZAMM CLI Implement Command', () => {
       expect(fs.existsSync(resultPath)).toBe(true);
 
       const content = fs.readFileSync(resultPath, 'utf8');
-      expect(content).toContain('id: TEST001');
-      expect(content).toContain('type: ref-impl');
+      const expectedContent = fs.readFileSync(
+        path.join(__dirname, 'fixtures/implement/new-XYZ789-impl.md'),
+        'utf8'
+      );
+      expect(content).toBe(expectedContent);
     });
 
     it('should create impl-history directory if it does not exist', () => {
