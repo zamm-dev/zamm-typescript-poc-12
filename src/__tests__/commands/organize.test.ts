@@ -11,7 +11,7 @@ import {
   setupTestEnvironment,
   cleanupTestEnvironment,
   copyDirectoryFromFixture,
-  expectFileMatchesFixtureFile,
+  expectFileMatches,
 } from '../shared/test-utils';
 
 class MockIdProvider {
@@ -42,15 +42,10 @@ describe('ZAMM CLI Organize Command', () => {
     it('should add spec frontmatter to regular docs file', () => {
       setIdProvider(new MockIdProvider(['ABC123']));
       copyDirectoryFromFixture(testEnv, 'before');
-      const filePath = path.join(testEnv.tempDir, 'docs/specs/foo.md');
+      const filePath = path.join(testEnv.tempDir, 'docs/specs/spec.md');
       runOrganizeCommand(filePath);
 
-      expectFileMatchesFixtureFile(
-        testEnv,
-        filePath,
-        'after',
-        'docs/specs/foo.md'
-      );
+      expectFileMatches(testEnv, 'docs/specs/spec.md', 'after');
     });
   });
 
@@ -61,12 +56,7 @@ describe('ZAMM CLI Organize Command', () => {
       const filePath = path.join(testEnv.tempDir, 'docs/README.md');
       runOrganizeCommand(filePath);
 
-      expectFileMatchesFixtureFile(
-        testEnv,
-        filePath,
-        'after',
-        'docs/README.md'
-      );
+      expectFileMatches(testEnv, 'docs/README.md', 'after');
     });
   });
 
@@ -77,12 +67,7 @@ describe('ZAMM CLI Organize Command', () => {
       const filePath = path.join(testEnv.tempDir, 'docs/impls/nodejs.md');
       runOrganizeCommand(filePath);
 
-      expectFileMatchesFixtureFile(
-        testEnv,
-        filePath,
-        'after',
-        'docs/impls/nodejs.md'
-      );
+      expectFileMatches(testEnv, 'docs/impls/nodejs.md', 'after');
     });
   });
 
@@ -90,18 +75,10 @@ describe('ZAMM CLI Organize Command', () => {
     it('should add ref-impl frontmatter to impl-history file', () => {
       setIdProvider(new MockIdProvider(['JKL012']));
       copyDirectoryFromFixture(testEnv, 'before');
-      const filePath = path.join(
-        testEnv.tempDir,
-        'docs/impl-history/setup-notes.md'
-      );
+      const filePath = path.join(testEnv.tempDir, 'docs/impl-history/notes.md');
       runOrganizeCommand(filePath);
 
-      expectFileMatchesFixtureFile(
-        testEnv,
-        filePath,
-        'after',
-        'docs/impl-history/setup-notes.md'
-      );
+      expectFileMatches(testEnv, 'docs/impl-history/notes.md', 'after');
     });
   });
 
@@ -109,15 +86,10 @@ describe('ZAMM CLI Organize Command', () => {
     it('should add test frontmatter to tests file', () => {
       setIdProvider(new MockIdProvider(['MNO345']));
       copyDirectoryFromFixture(testEnv, 'before');
-      const filePath = path.join(testEnv.tempDir, 'docs/tests/unit-tests.md');
+      const filePath = path.join(testEnv.tempDir, 'docs/tests/unit.md');
       runOrganizeCommand(filePath);
 
-      expectFileMatchesFixtureFile(
-        testEnv,
-        filePath,
-        'after',
-        'docs/tests/unit-tests.md'
-      );
+      expectFileMatches(testEnv, 'docs/tests/unit.md', 'after');
     });
   });
 
@@ -127,51 +99,14 @@ describe('ZAMM CLI Organize Command', () => {
       setIdProvider(new MockIdProvider(fileIds));
 
       copyDirectoryFromFixture(testEnv, 'before');
-      fs.renameSync(
-        path.join(testEnv.tempDir, 'docs/specs/foo.md'),
-        path.join(testEnv.tempDir, 'docs/specs/spec.md')
-      );
-      fs.renameSync(
-        path.join(testEnv.tempDir, 'docs/impl-history/setup-notes.md'),
-        path.join(testEnv.tempDir, 'docs/impl-history/notes.md')
-      );
-      fs.renameSync(
-        path.join(testEnv.tempDir, 'docs/tests/unit-tests.md'),
-        path.join(testEnv.tempDir, 'docs/tests/unit.md')
-      );
 
       organizeAllFiles();
 
-      expectFileMatchesFixtureFile(
-        testEnv,
-        path.join(testEnv.tempDir, 'docs/README.md'),
-        'after',
-        'docs/README.md'
-      );
-      expectFileMatchesFixtureFile(
-        testEnv,
-        path.join(testEnv.tempDir, 'docs/specs/spec.md'),
-        'after',
-        'docs/specs/foo.md'
-      );
-      expectFileMatchesFixtureFile(
-        testEnv,
-        path.join(testEnv.tempDir, 'docs/impls/nodejs.md'),
-        'after',
-        'docs/impls/nodejs.md'
-      );
-      expectFileMatchesFixtureFile(
-        testEnv,
-        path.join(testEnv.tempDir, 'docs/impl-history/notes.md'),
-        'after',
-        'docs/impl-history/setup-notes.md'
-      );
-      expectFileMatchesFixtureFile(
-        testEnv,
-        path.join(testEnv.tempDir, 'docs/tests/unit.md'),
-        'after',
-        'docs/tests/unit-tests.md'
-      );
+      expectFileMatches(testEnv, 'docs/README.md', 'after');
+      expectFileMatches(testEnv, 'docs/specs/spec.md', 'after');
+      expectFileMatches(testEnv, 'docs/impls/nodejs.md', 'after');
+      expectFileMatches(testEnv, 'docs/impl-history/notes.md', 'after');
+      expectFileMatches(testEnv, 'docs/tests/unit.md', 'after');
     });
 
     it('should handle empty docs directory gracefully', () => {
@@ -200,12 +135,7 @@ describe('ZAMM CLI Organize Command', () => {
       const filePath = path.join(testEnv.tempDir, 'docs/example.md');
       runOrganizeCommand(filePath);
 
-      expectFileMatchesFixtureFile(
-        testEnv,
-        filePath,
-        'after',
-        'docs/example.md'
-      );
+      expectFileMatches(testEnv, 'docs/example.md', 'after');
     });
   });
 });

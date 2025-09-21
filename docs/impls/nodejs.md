@@ -82,3 +82,5 @@ Following the test-file-resources specification, test assertions that verify fil
 ### Test Utilities
 
 Use `copyTestFile` to copy test fixtures into the same corresponding path in a temporary test directory.
+
+Use `expectFileMatches(testEnv, relativePath, fixtureSubDir?)` to verify that a file in the temporary test directory matches a fixture file at the same relative path. The optional `fixtureSubDir` parameter specifies a subdirectory within the fixture directory (similar to `copyDirectoryFromFixture`).

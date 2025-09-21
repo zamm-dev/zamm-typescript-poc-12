@@ -40,30 +40,17 @@ export function copyTestFile(env: TestEnvironment, filePath: string): string {
   return fullPath;
 }
 
-export function expectFileMatchesFixtureFile(
+export function expectFileMatches(
   env: TestEnvironment,
-  filePath: string,
-  fixtureSubDir: string,
-  expectedRelativePath: string
+  relativePath: string,
+  fixtureSubDir?: string
 ): void {
-  const result = fs.readFileSync(filePath, 'utf8');
-  const expectedPath = path.resolve(
-    env.originalCwd,
-    env.fixtureDir,
-    fixtureSubDir,
-    expectedRelativePath
-  );
+  const tempFilePath = path.join(env.tempDir, relativePath);
+  const result = fs.readFileSync(tempFilePath, 'utf8');
+  const expectedPath = fixtureSubDir
+    ? path.resolve(env.originalCwd, env.fixtureDir, fixtureSubDir, relativePath)
+    : path.resolve(env.originalCwd, env.fixtureDir, relativePath);
   const expected = fs.readFileSync(expectedPath, 'utf8');
-  expect(result).toBe(expected);
-}
-
-export function expectFileMatchesFixture(
-  env: TestEnvironment,
-  filePath: string,
-  expectedFixtureName: string
-): void {
-  const result = fs.readFileSync(filePath, 'utf8');
-  const expected = loadFixture(env, expectedFixtureName);
   expect(result).toBe(expected);
 }
 
