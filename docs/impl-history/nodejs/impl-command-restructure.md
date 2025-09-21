@@ -7,6 +7,10 @@ specs:
 impl:
   id: IEU463
   path: /docs/impls/nodejs.md
+commits:
+  - sha: 7e0788b6f5fde090d89c8cddcba9d922b5785c2d
+  - sha: 9a497eef18c6f6a8b952a9bd5d862b6e6f7d921c
+  - sha: 90c114cd2d03019ed20d6445baf0b2e3afcf621b
 ---
 
 # Implementation Plan: Restructure Implement Command
