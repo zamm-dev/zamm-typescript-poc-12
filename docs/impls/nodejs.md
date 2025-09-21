@@ -18,7 +18,8 @@ src/
 │   │   └── implement.test.ts # Implement command tests
 │   ├── shared/             # Shared test utilities
 │   │   ├── test-utils.ts     # Test utilities with directory copying
-│   │   └── git-test-utils.ts # Git repository setup for deterministic testing
+│   │   ├── git-test-utils.ts # Git repository setup for deterministic testing
+│   │   └── file-utils.test.ts # Tests for file utilities and title extraction
 │   └── fixtures/           # Test fixture files with preserved directory structure
 │       ├── info/           # Info command test fixtures
 │       ├── organize/       # Organize command test fixtures
@@ -31,7 +32,7 @@ src/
 │   ├── shared/             # Shared utilities and types
 │   │   ├── types.ts          # Type definitions
 │   │   ├── id-provider.ts    # ID generation logic
-│   │   ├── file-utils.ts     # File system utilities
+│   │   ├── file-utils.ts     # File system utilities and markdown title extraction
 │   │   ├── frontmatter.ts    # YAML frontmatter parsing and manipulation
 │   │   ├── file-resolver.ts  # File detection and resolution
 │   │   └── git-utils.ts      # Git repository operations
@@ -54,7 +55,7 @@ src/
 - **info**: Display structured information about a file by ID or path
 - **impl/i**: Implementation management commands
   - **impl create**: Generate reference implementation file for a spec and implementation
-  - **impl record**: Record commit hashes in implementation file frontmatter
+  - **impl record**: Record commit hashes and messages in implementation file frontmatter
 
 ## Development
 
