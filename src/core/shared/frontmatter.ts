@@ -1,5 +1,7 @@
 import * as yaml from 'js-yaml';
-import { Frontmatter, Commit } from './types';
+import { Frontmatter, Commit, FileReference } from './types';
+import { resolveFileInfo } from './file-resolver';
+import { getCommitMessage } from './git-utils';
 
 export function parseFrontmatter(content: string): {
   frontmatter: Frontmatter;
@@ -45,6 +47,97 @@ export function addCommitsToFrontmatter(
     updatedFrontmatter.commits = [...newCommits, ...updatedFrontmatter.commits];
   } else {
     updatedFrontmatter.commits = newCommits;
+  }
+
+  return updatedFrontmatter;
+}
+
+function updateFileReference(
+  fileRef: FileReference,
+  validateTypes = false,
+  expectedTypes: string[] = [],
+  refType = 'file'
+): FileReference {
+  try {
+    const fileInfo = resolveFileInfo(fileRef.id);
+
+    if (
+      validateTypes &&
+      expectedTypes.length > 0 &&
+      !expectedTypes.includes(fileInfo.type)
+    ) {
+      throw new Error(
+        `${refType} file must be of type ${expectedTypes.map(t => `'${t}'`).join(' or ')}, got '${fileInfo.type}'`
+      );
+    }
+
+    return {
+      ...fileRef,
+      path: fileInfo.filePath,
+    };
+  } catch (error) {
+    if (validateTypes) {
+      throw error; // Re-throw validation errors
+    }
+    console.warn(
+      `Warning: Could not resolve ${refType} file for ID ${fileRef.id}: ${
+        error instanceof Error ? error.message : String(error)
+      }`
+    );
+    // Remove path if resolution fails
+    const { path: _, ...fileRefWithoutPath } = fileRef;
+    return fileRefWithoutPath;
+  }
+}
+
+export function updateReferenceImplPaths(
+  frontmatter: Frontmatter,
+  validateTypes = false
+): Frontmatter {
+  const updatedFrontmatter = { ...frontmatter };
+
+  // Update spec paths
+  if (updatedFrontmatter.specs && Array.isArray(updatedFrontmatter.specs)) {
+    updatedFrontmatter.specs = updatedFrontmatter.specs.map(spec =>
+      updateFileReference(spec, validateTypes, ['spec', 'test'], 'Spec')
+    );
+  }
+
+  // Update impl path
+  if (
+    updatedFrontmatter.impl &&
+    typeof updatedFrontmatter.impl === 'object' &&
+    updatedFrontmatter.impl.id
+  ) {
+    updatedFrontmatter.impl = updateFileReference(
+      updatedFrontmatter.impl,
+      validateTypes,
+      ['implementation'],
+      'Implementation'
+    );
+  }
+
+  return updatedFrontmatter;
+}
+
+export function updateCommitMessages(frontmatter: Frontmatter): Frontmatter {
+  const updatedFrontmatter = { ...frontmatter };
+
+  if (updatedFrontmatter.commits && Array.isArray(updatedFrontmatter.commits)) {
+    updatedFrontmatter.commits = updatedFrontmatter.commits.map(commit => {
+      // Try to fetch the actual commit message from git
+      const fetchedMessage = getCommitMessage(commit.sha);
+      if (fetchedMessage) {
+        return {
+          ...commit,
+          message: fetchedMessage,
+        };
+      } else {
+        // Remove message field if no commit found
+        const { message: _, ...commitWithoutMessage } = commit;
+        return commitWithoutMessage;
+      }
+    });
   }
 
   return updatedFrontmatter;

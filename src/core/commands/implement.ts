@@ -1,7 +1,7 @@
 import * as fs from 'fs';
 import * as path from 'path';
 import * as yaml from 'js-yaml';
-import { ImplementOptions } from '../shared/types';
+import { FileInfo, ImplementOptions } from '../shared/types';
 import { findGitRoot } from '../shared/file-utils';
 import { resolveFileInfo } from '../shared/file-resolver';
 import { getIdProvider } from '../shared/id-provider';
@@ -12,34 +12,20 @@ import {
   addCommitsToFrontmatter,
 } from '../shared/frontmatter';
 
-export function generateImplementationNote(options: ImplementOptions): string {
-  const gitRoot = findGitRoot(process.cwd());
-  if (!gitRoot) {
-    throw new Error('Not in a git repository');
-  }
-
-  const specInfo = resolveFileInfo(options.specIdOrPath);
-  const implInfo = resolveFileInfo(options.implIdOrPath);
-
-  if (specInfo.type !== 'spec' && specInfo.type !== 'test') {
-    throw new Error(
-      `Spec file must be of type 'spec' or 'test', got '${specInfo.type}'`
-    );
-  }
-
-  if (implInfo.type !== 'implementation') {
-    throw new Error(
-      `Implementation file must be of type 'implementation', got '${implInfo.type}'`
-    );
-  }
-
+function getNewImplementationNotePath(
+  gitRoot: string,
+  implInfo: FileInfo,
+  specInfo: FileInfo
+): string {
+  // Get implementation file name for directory structure
   const implFileName = path.basename(implInfo.absolutePath, '.md');
 
   const normalizedGitRoot = fs.realpathSync(gitRoot);
   const normalizedSpecPath = fs.realpathSync(specInfo.absolutePath);
   const specRelativePath = path.relative(normalizedGitRoot, normalizedSpecPath);
-  let specSubPath: string;
 
+  // Extract subdirectory from spec path
+  let specSubPath: string;
   if (specRelativePath.startsWith('docs/specs/')) {
     specSubPath = path.dirname(
       specRelativePath.substring('docs/specs/'.length)
@@ -64,9 +50,35 @@ export function generateImplementationNote(options: ImplementOptions): string {
     fs.mkdirSync(implHistoryDir, { recursive: true });
   }
 
-  const newId = getIdProvider().generateId();
   const newFileName = `new-${specInfo.id}-impl.md`;
   const newFilePath = path.join(implHistoryDir, newFileName);
+
+  return newFilePath;
+}
+
+export function generateImplementationNote(options: ImplementOptions): string {
+  const gitRoot = findGitRoot(process.cwd());
+  if (!gitRoot) {
+    throw new Error('Not in a git repository');
+  }
+
+  // Get the actual IDs by resolving the file info first
+  const specInfo = resolveFileInfo(options.specIdOrPath);
+  const implInfo = resolveFileInfo(options.implIdOrPath);
+
+  if (specInfo.type !== 'spec' && specInfo.type !== 'test') {
+    throw new Error(
+      `Spec file must be of type 'spec' or 'test', got '${specInfo.type}'`
+    );
+  }
+
+  if (implInfo.type !== 'implementation') {
+    throw new Error(
+      `Implementation file must be of type 'implementation', got '${implInfo.type}'`
+    );
+  }
+
+  const newId = getIdProvider().generateId();
 
   const frontmatter = {
     id: newId,
@@ -82,6 +94,8 @@ export function generateImplementationNote(options: ImplementOptions): string {
       path: implInfo.filePath,
     },
   };
+
+  const newFilePath = getNewImplementationNotePath(gitRoot, implInfo, specInfo);
 
   const yamlFrontmatter = yaml
     .dump(frontmatter, {

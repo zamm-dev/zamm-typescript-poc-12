@@ -23,6 +23,19 @@ export function getLastNCommits(n: number): Commit[] {
   }
 }
 
+export function getCommitMessage(sha: string): string | null {
+  try {
+    const output = execSync(`git log -1 --pretty=format:"%s" ${sha}`, {
+      encoding: 'utf8',
+      cwd: process.cwd(),
+      stdio: ['pipe', 'pipe', 'ignore'], // Suppress stderr
+    });
+    return output.trim();
+  } catch {
+    return null;
+  }
+}
+
 export function isGitRepository(): boolean {
   try {
     execSync('git rev-parse --git-dir', {

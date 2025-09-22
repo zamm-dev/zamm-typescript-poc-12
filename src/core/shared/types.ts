@@ -20,14 +20,21 @@ export interface ImplementOptions {
   implIdOrPath: string;
 }
 
+export interface FileReference {
+  id: string;
+  path?: string;
+}
+
 export interface Frontmatter {
   id?: string;
   type?: string;
   commits?: Commit[];
+  specs?: FileReference[];
+  impl?: FileReference;
   [key: string]: unknown;
 }
 
 export interface Commit {
   sha: string;
-  message: string;
+  message?: string;
 }

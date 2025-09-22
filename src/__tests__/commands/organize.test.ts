@@ -13,6 +13,7 @@ import {
   copyDirectoryFromFixture,
   expectFileMatches,
 } from '../shared/test-utils';
+import { createDeterministicCommits } from '../shared/git-test-utils';
 
 class MockIdProvider {
   constructor(private ids: string[]) {}
@@ -24,14 +25,20 @@ class MockIdProvider {
 
 describe('ZAMM CLI Organize Command', () => {
   let testEnv: TestEnvironment;
+  let originalConsoleWarn: typeof console.warn;
 
   beforeEach(() => {
     testEnv = setupTestEnvironment('src/__tests__/fixtures/organize');
+    // Suppress console warnings during tests
+    originalConsoleWarn = console.warn;
+    console.warn = jest.fn();
   });
 
   afterEach(() => {
     cleanupTestEnvironment(testEnv);
     resetIdProvider();
+    // Restore console.warn
+    console.warn = originalConsoleWarn;
   });
 
   function runOrganizeCommand(filePath: string): void {
@@ -79,6 +86,72 @@ describe('ZAMM CLI Organize Command', () => {
       runOrganizeCommand(filePath);
 
       expectFileMatches(testEnv, 'docs/impl-history/notes.md', 'after');
+    });
+
+    it('should update spec and impl paths for ref-impl files', () => {
+      copyDirectoryFromFixture(testEnv, 'before');
+      const refImplPath = path.join(
+        testEnv.tempDir,
+        'docs/impl-history/nodejs/features/test-ref-impl-outdated-paths.md'
+      );
+      runOrganizeCommand(refImplPath);
+
+      expectFileMatches(
+        testEnv,
+        'docs/impl-history/nodejs/features/test-ref-impl-outdated-paths.md',
+        'after'
+      );
+    });
+
+    it('should update commit messages for ref-impl files', () => {
+      copyDirectoryFromFixture(testEnv, 'before');
+      // Create the deterministic commits that match our test fixture commit hashes
+      createDeterministicCommits(testEnv.tempDir, 3);
+
+      const refImplPath = path.join(
+        testEnv.tempDir,
+        'docs/impl-history/nodejs/features/test-ref-impl-missing-commit-messages.md'
+      );
+      runOrganizeCommand(refImplPath);
+
+      expectFileMatches(
+        testEnv,
+        'docs/impl-history/nodejs/features/test-ref-impl-missing-commit-messages.md',
+        'after'
+      );
+    });
+
+    it('should remove commit message fields when commits do not exist', () => {
+      copyDirectoryFromFixture(testEnv, 'before');
+      const refImplPath = path.join(
+        testEnv.tempDir,
+        'docs/impl-history/nodejs/features/test-ref-impl-nonexistent-commits.md'
+      );
+      runOrganizeCommand(refImplPath);
+
+      expectFileMatches(
+        testEnv,
+        'docs/impl-history/nodejs/features/test-ref-impl-nonexistent-commits.md',
+        'after'
+      );
+    });
+
+    it('should handle ref-impl files with missing referenced files gracefully', () => {
+      copyDirectoryFromFixture(testEnv, 'before');
+      const refImplPath = path.join(
+        testEnv.tempDir,
+        'docs/impl-history/nodejs/features/test-ref-impl-missing-refs.md'
+      );
+
+      // Should not throw, but should warn and preserve existing paths
+      expect(() => runOrganizeCommand(refImplPath)).not.toThrow();
+
+      // Check that file still has proper structure but unchanged paths
+      expectFileMatches(
+        testEnv,
+        'docs/impl-history/nodejs/features/test-ref-impl-missing-refs.md',
+        'after'
+      );
     });
   });
 

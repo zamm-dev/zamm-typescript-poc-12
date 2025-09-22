@@ -2,7 +2,12 @@ import * as fs from 'fs';
 import * as path from 'path';
 import * as yaml from 'js-yaml';
 import { findGitRoot, findMarkdownFiles } from '../shared/file-utils';
-import { parseFrontmatter } from '../shared/frontmatter';
+import {
+  parseFrontmatter,
+  updateReferenceImplPaths,
+  updateCommitMessages,
+} from '../shared/frontmatter';
+import { Frontmatter } from '../shared/types';
 import { detectFileType } from '../shared/file-resolver';
 import { getIdProvider } from '../shared/id-provider';
 
@@ -23,11 +28,19 @@ export function organizeFile(filePath: string): void {
 
   const fileType = detectFileType(absolutePath, gitRoot);
 
-  const updatedFrontmatter = {
+  const baseUpdatedFrontmatter: Frontmatter = {
     id: frontmatter.id || getIdProvider().generateId(),
     type: fileType,
     ...frontmatter,
   };
+
+  let updatedFrontmatter: Frontmatter = baseUpdatedFrontmatter;
+
+  // Update derived metadata for ref-impl files
+  if (fileType === 'ref-impl') {
+    updatedFrontmatter = updateReferenceImplPaths(baseUpdatedFrontmatter);
+    updatedFrontmatter = updateCommitMessages(updatedFrontmatter);
+  }
 
   const yamlFrontmatter = yaml
     .dump(updatedFrontmatter, {
