@@ -15,7 +15,9 @@
       "Bash(find:*)",
       "Bash(./dist/zamm implement:*)",
       "Bash(xxd:*)",
-      "Bash(git cherry-pick:*)"
+      "Bash(git cherry-pick:*)",
+      "Bash(git checkout:*)",
+      "Bash(git log:*)"
     ],
     "deny": [],
     "ask": []
