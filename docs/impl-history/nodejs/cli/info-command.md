@@ -3,14 +3,15 @@ id: TIC979
 type: ref-impl
 specs:
   - id: FYR697
-    path: docs/cli/README.md
+    path: /docs/specs/cli/README.md
   - id: SOB239
-    path: docs/cli/tests/info-command.md
+    path: /docs/specs/cli/tests/info-command.md
 impl:
   id: IEU463
-  path: implementations/nodejs.md
+  path: /docs/impls/nodejs.md
 commits:
   - sha: bcf3cddc149c19aa4bb8644b0101f316cea6261c
+    message: Implement info command with test fixture refactoring
 ---
 
 # Implementation of Info Command

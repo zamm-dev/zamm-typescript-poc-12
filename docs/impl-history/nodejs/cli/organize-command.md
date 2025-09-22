@@ -3,14 +3,15 @@ id: USA133
 type: ref-impl
 specs:
   - id: FYR697
-    path: docs/cli/README.md
+    path: /docs/specs/cli/README.md
   - id: MLM844
-    path: docs/cli/tests/organize-single-file.md
+    path: /docs/specs/cli/tests/organize-single-file.md
 impl:
   id: IEU463
-  path: implementations/nodejs.md
+  path: /docs/impls/nodejs.md
 commits:
   - sha: 9b27159ce9b1f068526f413f669bf181c8bb9015
+    message: Implement CLI organize command with YAML frontmatter generation
 note: >-
   Initial implementation of `organize` command that takes in single filename as
   argument.

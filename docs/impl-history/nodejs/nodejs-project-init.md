@@ -3,12 +3,13 @@ id: LVH754
 type: ref-impl
 specs:
   - id: HPF761
-    path: project-setup.md
+    path: /docs/specs/project-setup.md
 impl:
   id: IEU463
-  path: implementations/nodejs.md
+  path: /docs/impls/nodejs.md
 commits:
   - sha: e01be6ede9f0b95c5d15333eac9cda2e5f6d85b4
+    message: Set up Node.js project with TypeScript, ESLint, Prettier, Jest, and Husky
 ---
 
 # Node.js Project Setup Plan for ZAMM

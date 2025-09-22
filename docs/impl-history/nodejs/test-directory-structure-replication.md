@@ -3,12 +3,13 @@ id: XNP353
 type: ref-impl
 specs:
   - id: MTW997
-    path: docs/test-file-resources.md
+    path: /docs/specs/test-file-resources.md
 impl:
   id: IEU463
-  path: implementations/nodejs.md
+  path: /docs/impls/nodejs.md
 commits:
   - sha: 88ab04da141b7706944e43ac885962ac4285abd7
+    message: Restructure test fixtures to preserve directory hierarchy
 ---
 
 # Test Directory Structure Replication Implementation Plan

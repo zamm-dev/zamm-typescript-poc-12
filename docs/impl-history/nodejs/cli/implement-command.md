@@ -9,7 +9,9 @@ impl:
   path: /docs/impls/nodejs.md
 commits:
   - sha: 0de40a8ebeedca17adc4b3688b23e4c8b771adb4
+    message: Implement new implement command
   - sha: f0711651afb1ca065afeb72fc3e43b35eb80f74b
+    message: Enhance info command for implementation note files
 ---
 
 # Implementation Plan: Implement Command

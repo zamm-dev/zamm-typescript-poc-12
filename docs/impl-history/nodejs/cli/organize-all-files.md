@@ -3,14 +3,15 @@ id: GQH403
 type: ref-impl
 specs:
   - id: FYR697
-    path: docs/cli/README.md
+    path: /docs/specs/cli/README.md
   - id: LLM115
-    path: docs/cli/tests/organize-all-files.md
+    path: /docs/specs/cli/tests/organize-all-files.md
 impl:
   id: IEU463
-  path: implementations/nodejs.md
+  path: /docs/impls/nodejs.md
 commits:
   - sha: 522ec78049fc801377ba0916dbe42ed284001861
+    message: Implement organize command with no arguments to process all docs files
 note: Update `organize` command to optionally take in no arguments.
 ---
 

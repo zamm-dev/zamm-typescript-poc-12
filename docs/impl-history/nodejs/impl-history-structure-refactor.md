@@ -9,6 +9,7 @@ impl:
   path: /docs/impls/nodejs.md
 commits:
   - sha: 611b78ce687c957b1b0a0e85e9f56aaebbce76eb
+    message: Update implement command for new directory structure
 ---
 
 # Implementation Plan: Update Code for Impl-History Directory Structure

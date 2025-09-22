@@ -9,8 +9,11 @@ impl:
   path: /docs/impls/nodejs.md
 commits:
   - sha: 7e0788b6f5fde090d89c8cddcba9d922b5785c2d
+    message: Fix test failures by adding trailing newline to serializeFrontmatter
   - sha: 9a497eef18c6f6a8b952a9bd5d862b6e6f7d921c
+    message: Refactor implement.test.ts to use exact file content matching
   - sha: 90c114cd2d03019ed20d6445baf0b2e3afcf621b
+    message: Restructure implement command to impl with create and record subcommands
 ---
 
 # Implementation Plan: Restructure Implement Command

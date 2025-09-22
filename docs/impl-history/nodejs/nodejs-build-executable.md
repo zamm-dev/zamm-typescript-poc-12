@@ -3,15 +3,16 @@ id: BEX429
 type: ref-impl
 specs:
   - id: HPF761
-    path: ../project-setup.md
+    path: /docs/specs/project-setup.md
 impl:
   id: IEU463
-  path: ../impls/nodejs.md
+  path: /docs/impls/nodejs.md
 references:
   - id: LVH754
     path: nodejs-project-init.md
 commits:
   - sha: 32fe8a94a8bc228b0acc630aee285582215ad94c
+    message: Update build process to create proper executable file
 ---
 
 # Node.js Build Executable Implementation
