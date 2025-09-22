@@ -39,6 +39,8 @@ The `organize` command should overwrite all derived metadata in reference implem
 - **File paths**: Update `specs[].path` and `impl.path` fields by locating the current file paths for the referenced spec and implementation IDs
 - **Commit information**: Update the `commits` array with the first line of Git commit messages based on the commit hashes
 
+If the derived metadata cannot be retrieved (for example, if the commit with the given hash or the file with the given ID no longer exists), output a warning message and remove that field. **Do not set the field to an empty string.**
+
 > [!NOTE]
 > The logic for retrieving/setting this data should be shared and reused between this and the other commands.
 
