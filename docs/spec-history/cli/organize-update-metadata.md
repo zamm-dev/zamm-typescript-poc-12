@@ -3,6 +3,8 @@ id: LQO792
 type: spec
 commits:
   - sha: f71cfcfc036addcf5573c8e222a16c8de4253b06
+  - sha: 6d57cc1144217b7d2cf49dcd04ab6c4cea45f411
+  - sha: 01267bcf70d7e139fac9217cce9d2205c230b990
 ---
 
 # `organize` command should update derived metadata
