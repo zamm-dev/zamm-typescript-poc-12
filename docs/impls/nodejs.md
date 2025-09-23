@@ -53,6 +53,7 @@ src/
 
 - **organize/o**: Add proper YAML frontmatter to markdown files
 - **info**: Display structured information about a file by ID or path
+- **split**: Split content from a main file into new separate files with proper frontmatter
 - **impl/i**: Implementation management commands
   - **impl create**: Generate reference implementation file for a spec and implementation
   - **impl record**: Record commit hashes and messages in implementation file frontmatter

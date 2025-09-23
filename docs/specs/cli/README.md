@@ -91,14 +91,14 @@ The command should error out if:
 
 ## `split`
 
-When given a main file and a filename to be split off, `split` should split content from the main file into new separate files. The behavior depends on whether the main file is already named `README.md`:
+When given a main file and one or more filenames to be split off, `split` should split content from the main file into new separate files. The behavior depends on whether the main file is already named `README.md`:
 
 - **If the main file is already `README.md`**: Create the new files in the same directory as the main file
 - **If the main file is not `README.md`**: Create a new folder with the same name as the main file, move the main file to `README.md` under that new folder, and create the new files in that same subdirectory
 
 ### Examples
 
-**Example 1: Main file is not README.md**
+**Example 1: Single file split (main file is not README.md)**
 
 ```bash
 zamm split docs/specs/features.md --into authentication.md
@@ -109,7 +109,18 @@ This should:
 - Move `docs/specs/features.md` to `docs/specs/features/README.md`
 - Create the new file at `docs/specs/features/authentication.md`
 
-**Example 2: Main file is already README.md**
+**Example 2: Multiple files split**
+
+```bash
+zamm split docs/specs/features.md --into authentication.md user-management.md
+```
+
+This should:
+
+- Move `docs/specs/features.md` to `docs/specs/features/README.md`
+- Create new files at `docs/specs/features/authentication.md` and `docs/specs/features/user-management.md`
+
+**Example 3: Main file is already README.md**
 
 ```bash
 zamm split docs/specs/features/README.md --into authentication.md
@@ -123,6 +134,13 @@ This should:
 ### File extension handling
 
 If the new filename argument doesn't include a `.md` extension, the command should automatically append it.
+
+### Frontmatter generation
+
+New files created by the split command should automatically receive proper YAML frontmatter with:
+
+- A unique generated ID (three capital letters followed by three numbers)
+- The same type as the parent file (inherited from the main file's frontmatter)
 
 > [!NOTE]
 > This command does not apply to reference implementation files (files under `impl-history/`) or spec changelog files (files under `spec-history/`).
