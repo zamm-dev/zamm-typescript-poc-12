@@ -127,58 +127,7 @@ When given the `--last-n-commits <N>` parameter and a positional argument for th
 
 The command should validate that the target file has `type: ref-impl` in its frontmatter before recording commits. If the file type is not `ref-impl`, the command should exit with an error.
 
-For example, running:
-
-```bash
-zamm impl record --last-n-commits 3 NOT123
-```
-
-or
-
-```bash
-zamm impl record --last-n-commits 3 docs/specs/features/impl-history/initial-auth.md
-```
-
-on the existing test file `initial-auth.md` with ID NOT123 (from [Test Spec SOB239](./tests/info-command.md)) that currently has frontmatter like:
-
-```md
----
-id: NOT123
-type: ref-impl
-specs:
-  - id: XYZ789
-    path: /docs/specs/features/authentication.md
-impl:
-  id: IMP002
-  path: /docs/impls/python.md
----
-```
-
-should update the frontmatter to include the commit hashes:
-
-```md
----
-id: NOT123
-type: ref-impl
-specs:
-  - id: XYZ789
-    path: /docs/specs/features/authentication.md
-impl:
-  id: IMP002
-  path: /docs/impls/python.md
-commits:
-  - sha: a1b2c3d4e5f6789012345678901234567890abcd
-    message: Add initial authentication scaffolding
-  - sha: b2c3d4e5f6789012345678901234567890abcdef1
-    message: Implement user login endpoint
-  - sha: c3d4e5f6789012345678901234567890abcdef12
-    message: Add password validation and hashing
----
-```
-
 If the `commits` field already exists, the new commits should be prepended to the existing list, maintaining chronological order with the most recent commits first.
 
 > [!NOTE]
-> To ensure reproducible testing with deterministic commit hashes, test commits should be created with consistent metadata (author, email, date, etc.). This allows the use of simple file comparison for verifying the exact output format, as the same input will always produce the same commit hashes.
->
-> **Do not** mock Git output in your tests. We want to ensure that this works with real Git operations.
+> For detailed examples and test cases, see [Test Spec KYT921](./tests/implement-command.md).
