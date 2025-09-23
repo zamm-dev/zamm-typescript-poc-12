@@ -305,5 +305,32 @@ describe('ZAMM CLI Implement Command', () => {
         'Not in a git repository'
       );
     });
+
+    it('should error when attempting to record commits to a spec file', () => {
+      createTestFile('docs/specs/features/authentication.md');
+      createTestCommits();
+
+      expect(() => recordCommits('XYZ789', 1)).toThrow(
+        'Error: Implementation commits have to be added to implementation files. The file you entered, Spec XYZ789 at docs/specs/features/authentication.md, is a specification file.'
+      );
+    });
+
+    it('should error when attempting to record commits to an implementation file', () => {
+      createTestFile('docs/impls/python.md');
+      createTestCommits();
+
+      expect(() => recordCommits('IMP002', 1)).toThrow(
+        'Error: Implementation commits have to be added to implementation files. The file you entered, Impl IMP002 at docs/impls/python.md, is a implementation file.'
+      );
+    });
+
+    it('should error when attempting to record commits to a project file', () => {
+      createTestFile('docs/README.md');
+      createTestCommits();
+
+      expect(() => recordCommits('PRJ001', 1)).toThrow(
+        'Error: Implementation commits have to be added to implementation files. The file you entered, Proj PRJ001 at docs/README.md, is a project file.'
+      );
+    });
   });
 });

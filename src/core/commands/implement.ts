@@ -116,6 +116,40 @@ TODO: LLM agent, please put implementation plan details here and rename this fil
   return newFilePath;
 }
 
+function getFileTypeLabel(type: string): string {
+  switch (type) {
+    case 'spec':
+      return 'Spec';
+    case 'test':
+      return 'Test';
+    case 'implementation':
+      return 'Impl';
+    case 'ref-impl':
+      return 'Ref Impl';
+    case 'project':
+      return 'Proj';
+    default:
+      return 'File';
+  }
+}
+
+function getFileTypeDescription(type: string): string {
+  switch (type) {
+    case 'spec':
+      return 'specification';
+    case 'test':
+      return 'test';
+    case 'implementation':
+      return 'implementation';
+    case 'ref-impl':
+      return 'reference implementation';
+    case 'project':
+      return 'project';
+    default:
+      return 'unknown';
+  }
+}
+
 export function recordCommits(idOrPath: string, lastNCommits: number): void {
   if (!isGitRepository()) {
     throw new Error('Not in a git repository');
@@ -125,6 +159,14 @@ export function recordCommits(idOrPath: string, lastNCommits: number): void {
 
   if (!fs.existsSync(fileInfo.absolutePath)) {
     throw new Error(`File not found: ${fileInfo.absolutePath}`);
+  }
+
+  // Validate that the file is a reference implementation
+  if (fileInfo.type !== 'ref-impl') {
+    const typeDescription = getFileTypeDescription(fileInfo.type);
+    throw new Error(
+      `Error: Implementation commits have to be added to implementation files. The file you entered, ${getFileTypeLabel(fileInfo.type)} ${fileInfo.id} at ${fileInfo.filePath.substring(1)}, is a ${typeDescription} file.`
+    );
   }
 
   const content = fs.readFileSync(fileInfo.absolutePath, 'utf8');
