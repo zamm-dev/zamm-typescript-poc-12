@@ -125,6 +125,8 @@ TODO: LLM agent, please put implementation plan details here and rename this fil
 
 When given the `--last-n-commits <N>` parameter and a positional argument for the implementation ID or file path, `impl record` should add the commit hashes from the last N commits to the specified file's frontmatter under a `commits` field. The commits should be recorded as an array of objects with `sha` and `message` properties.
 
+The command should validate that the target file has `type: ref-impl` in its frontmatter before recording commits. If the file type is not `ref-impl`, the command should exit with an error.
+
 For example, running:
 
 ```bash
