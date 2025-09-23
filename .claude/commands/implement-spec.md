@@ -6,4 +6,5 @@
 4. Run `zamm impl record <ref-impl> --last-n-commits <N>` where `<N>` is the total number of commits you've made and `<ref-impl>` is the reference implementation plan ID or file path
 5. Update the Markdown plan file (the one in `impl-history/`) with any surprises, errors, and results from implementation, including any guidance the user provided along the way for you to end up with the final product.
 6. Update `docs/impls/` as appropriate with **concise** updates to implementation-specific development documentation (e.g. changes to project structure, dev commands, or anything else of note to future LLM agents working on this project). If there is nothing to update about the project from a development standpoint, then you may skip this step. You should **never** duplicate feature documentation in this step -- that information belongs in the specs in `docs/`.
-7. Commit again (if needed)
+7. Update the original spec as appropriate with new requirements learned during implementation. This should be things that were originally left underspecified in the original spec, and that will be useful to all future implementors of the spec (as opposed to those working on just the current implementation of the spec).
+8. Commit again (if needed)

@@ -13,11 +13,20 @@
       "Bash(mv:*)",
       "Bash(npm test:*)",
       "Bash(find:*)",
-      "Bash(./dist/zamm implement:*)",
       "Bash(xxd:*)",
       "Bash(git cherry-pick:*)",
       "Bash(git checkout:*)",
-      "Bash(git log:*)"
+      "Bash(git log:*)",
+      "Bash(pnpm add:*)",
+      "Bash(pnpm test:*)",
+      "Bash(pnpm format:*)",
+      "Bash(pnpm lint:*)",
+      "Bash(pnpm check:*)",
+      "WebFetch(domain:stackoverflow.com)",
+      "Bash(pnpm build:*)",
+      "Bash(pnpm exec playwright test:*)",
+      "WebSearch",
+      "Bash(pnpm exec tsc:*)"
     ],
     "deny": [],
     "ask": []
