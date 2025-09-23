@@ -80,15 +80,23 @@ program
 
 function splitWithErrorHandling(
   mainFile: string,
-  options: { into: string }
+  options: { into: string[] }
 ): void {
   try {
+    const fileNames = Array.isArray(options.into)
+      ? options.into
+      : [options.into];
+
     const splitOptions: SplitOptions = {
       mainFilePath: mainFile,
-      newFileName: options.into,
+      newFileNames: fileNames,
     };
+
     splitFile(splitOptions);
-    console.log(chalk.green(`✓ Split ${mainFile} into ${options.into}`));
+
+    console.log(
+      chalk.green(`✓ Split ${mainFile} into ${fileNames.length} file(s)`)
+    );
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : String(error);
     console.error(chalk.red(`Error: ${errorMessage}`));
@@ -100,7 +108,7 @@ program
   .command('split')
   .description('Split content from a main file into new separate files')
   .argument('<main-file>', 'main file to split')
-  .requiredOption('--into <filename>', 'new filename to split off')
+  .requiredOption('--into <filenames...>', 'new filenames to split off')
   .action(splitWithErrorHandling);
 
 function implementWithErrorHandling(options: {

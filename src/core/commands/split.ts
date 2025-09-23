@@ -9,11 +9,11 @@ import { Frontmatter } from '../shared/types';
 
 export interface SplitOptions {
   mainFilePath: string;
-  newFileName: string;
+  newFileNames: string[];
 }
 
 export function splitFile(options: SplitOptions): void {
-  const { mainFilePath, newFileName } = options;
+  const { mainFilePath, newFileNames } = options;
 
   const absoluteMainPath = path.resolve(mainFilePath);
 
@@ -41,30 +41,16 @@ export function splitFile(options: SplitOptions): void {
   const mainFileContent = fs.readFileSync(absoluteMainPath, 'utf8');
   const { frontmatter: mainFrontmatter } = parseFrontmatter(mainFileContent);
 
-  // Ensure the new filename has .md extension
-  const newFileNameWithExt = newFileName.endsWith('.md')
-    ? newFileName
-    : `${newFileName}.md`;
-
   const mainDir = path.dirname(absoluteMainPath);
   const mainBaseName = path.basename(absoluteMainPath, '.md');
   const mainFileName = path.basename(absoluteMainPath);
 
-  // Determine the target directory and new file path
-  let newFilePath: string;
+  let targetDir = mainDir;
 
-  if (mainFileName === 'README.md') {
-    // Case 1: Main file is already README.md - create new file in same directory
-    newFilePath = path.join(mainDir, newFileNameWithExt);
-
-    if (fs.existsSync(newFilePath)) {
-      throw new Error(`File already exists: ${newFilePath}`);
-    }
-  } else {
-    // Case 2: Main file is not README.md - create folder and move files
+  // Handle main file placement
+  if (mainFileName !== 'README.md') {
+    // Case 2: Main file is not README.md - create folder and move main file
     const newDirPath = path.join(mainDir, mainBaseName);
-    const newMainPath = path.join(newDirPath, 'README.md');
-    newFilePath = path.join(newDirPath, newFileNameWithExt);
 
     if (fs.existsSync(newDirPath)) {
       throw new Error(`Directory already exists: ${newDirPath}`);
@@ -74,27 +60,44 @@ export function splitFile(options: SplitOptions): void {
     fs.mkdirSync(newDirPath, { recursive: true });
 
     // Move the main file to README.md in the new directory
+    const newMainPath = path.join(newDirPath, 'README.md');
     fs.renameSync(absoluteMainPath, newMainPath);
+
+    targetDir = newDirPath;
   }
 
-  // Generate frontmatter for the new file, inheriting type from parent
-  const fileType = detectFileType(newFilePath, gitRoot);
-  const parentType = mainFrontmatter.type || fileType;
+  // Create all new files
+  for (const newFileName of newFileNames) {
+    // Ensure the new filename has .md extension
+    const newFileNameWithExt = newFileName.endsWith('.md')
+      ? newFileName
+      : `${newFileName}.md`;
 
-  const newFileFrontmatter: Frontmatter = {
-    id: getIdProvider().generateId(),
-    type: parentType,
-  };
+    const newFilePath = path.join(targetDir, newFileNameWithExt);
 
-  const yamlFrontmatter = yaml
-    .dump(newFileFrontmatter, {
-      flowLevel: -1,
-      noRefs: true,
-    })
-    .trim();
+    if (fs.existsSync(newFilePath)) {
+      throw new Error(`File already exists: ${newFilePath}`);
+    }
 
-  const newFileContent = `---\n${yamlFrontmatter}\n---\n`;
+    // Generate frontmatter for the new file, inheriting type from parent
+    const fileType = detectFileType(newFilePath, gitRoot);
+    const parentType = mainFrontmatter.type || fileType;
 
-  // Create new file with frontmatter
-  fs.writeFileSync(newFilePath, newFileContent);
+    const newFileFrontmatter: Frontmatter = {
+      id: getIdProvider().generateId(),
+      type: parentType,
+    };
+
+    const yamlFrontmatter = yaml
+      .dump(newFileFrontmatter, {
+        flowLevel: -1,
+        noRefs: true,
+      })
+      .trim();
+
+    const newFileContent = `---\n${yamlFrontmatter}\n---\n`;
+
+    // Create new file with frontmatter
+    fs.writeFileSync(newFilePath, newFileContent);
+  }
 }

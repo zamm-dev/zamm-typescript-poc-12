@@ -50,7 +50,7 @@ describe('ZAMM CLI Split Command', () => {
 
       runSplitCommand({
         mainFilePath,
-        newFileName: 'authentication.md',
+        newFileNames: ['authentication.md'],
       });
 
       // Check that the original file was moved to a subfolder as README.md
@@ -83,7 +83,7 @@ describe('ZAMM CLI Split Command', () => {
 
       runSplitCommand({
         mainFilePath,
-        newFileName: 'authentication.md',
+        newFileNames: ['authentication.md'],
       });
 
       // Check that the original README.md file remains unchanged
@@ -105,7 +105,7 @@ describe('ZAMM CLI Split Command', () => {
 
       runSplitCommand({
         mainFilePath,
-        newFileName: 'authentication', // No .md extension
+        newFileNames: ['authentication'], // No .md extension
       });
 
       // Check that the new file was created with .md extension
@@ -114,6 +114,46 @@ describe('ZAMM CLI Split Command', () => {
         'docs/specs/features/authentication.md'
       );
       expect(fs.existsSync(newFilePath)).toBe(true);
+    });
+
+    it('should split a regular file into multiple files with frontmatter', () => {
+      setIdProvider(new MockIdProvider(['DEF456', 'GHI789']));
+      copyDirectoryFromFixture(testEnv, 'before-regular-file');
+      createDeterministicCommits(testEnv.tempDir);
+
+      const mainFilePath = path.join(testEnv.tempDir, 'docs/specs/features.md');
+
+      // Split into multiple files at once
+      runSplitCommand({
+        mainFilePath,
+        newFileNames: ['authentication.md', 'user-management.md'],
+      });
+
+      // Check that the original file was moved to a subfolder as README.md
+      expectFileMatches(
+        testEnv,
+        'docs/specs/features/README.md',
+        'after-multiple'
+      );
+
+      // Check that both new files were created with proper frontmatter
+      expectFileMatches(
+        testEnv,
+        'docs/specs/features/authentication.md',
+        'after-multiple'
+      );
+      expectFileMatches(
+        testEnv,
+        'docs/specs/features/user-management.md',
+        'after-multiple'
+      );
+
+      // Check that the original file no longer exists
+      const originalFilePath = path.join(
+        testEnv.tempDir,
+        'docs/specs/features.md'
+      );
+      expect(fs.existsSync(originalFilePath)).toBe(false);
     });
 
     it('should error if main file does not exist', () => {
@@ -128,7 +168,7 @@ describe('ZAMM CLI Split Command', () => {
       expect(() => {
         runSplitCommand({
           mainFilePath,
-          newFileName: 'new-file.md',
+          newFileNames: ['new-file.md'],
         });
       }).toThrow('File not found');
     });
@@ -142,7 +182,7 @@ describe('ZAMM CLI Split Command', () => {
       // First split
       runSplitCommand({
         mainFilePath,
-        newFileName: 'authentication.md',
+        newFileNames: ['authentication.md'],
       });
 
       // Try to split again with same new filename
@@ -152,7 +192,7 @@ describe('ZAMM CLI Split Command', () => {
             testEnv.tempDir,
             'docs/specs/features/README.md'
           ),
-          newFileName: 'authentication.md',
+          newFileNames: ['authentication.md'],
         });
       }).toThrow('File already exists');
     });
@@ -173,7 +213,7 @@ describe('ZAMM CLI Split Command', () => {
       expect(() => {
         runSplitCommand({
           mainFilePath,
-          newFileName: 'authentication.md',
+          newFileNames: ['authentication.md'],
         });
       }).toThrow('Directory already exists');
     });
@@ -194,7 +234,7 @@ describe('ZAMM CLI Split Command', () => {
       expect(() => {
         runSplitCommand({
           mainFilePath: refImplFile,
-          newFileName: 'new-file.md',
+          newFileNames: ['new-file.md'],
         });
       }).toThrow(
         'Split command does not apply to reference implementation files'
@@ -217,7 +257,7 @@ describe('ZAMM CLI Split Command', () => {
       expect(() => {
         runSplitCommand({
           mainFilePath: specHistoryFile,
-          newFileName: 'new-file.md',
+          newFileNames: ['new-file.md'],
         });
       }).toThrow(
         'Split command does not apply to reference implementation files or spec changelog files'
@@ -241,7 +281,7 @@ describe('ZAMM CLI Split Command', () => {
         expect(() => {
           runSplitCommand({
             mainFilePath,
-            newFileName: 'new-file.md',
+            newFileNames: ['new-file.md'],
           });
         }).toThrow('Not in a git repository');
       } finally {
