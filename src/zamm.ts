@@ -12,6 +12,8 @@ import {
   generateImplementationNote,
   recordCommits,
   ImplementOptions,
+  splitFile,
+  SplitOptions,
 } from './core/index';
 
 const program = new Command();
@@ -75,6 +77,31 @@ program
   .description('Display structured information about a file by ID or path')
   .argument('<id-or-path>', 'file ID or file path to get information about')
   .action(infoWithErrorHandling);
+
+function splitWithErrorHandling(
+  mainFile: string,
+  options: { into: string }
+): void {
+  try {
+    const splitOptions: SplitOptions = {
+      mainFilePath: mainFile,
+      newFileName: options.into,
+    };
+    splitFile(splitOptions);
+    console.log(chalk.green(`✓ Split ${mainFile} into ${options.into}`));
+  } catch (error) {
+    const errorMessage = error instanceof Error ? error.message : String(error);
+    console.error(chalk.red(`Error: ${errorMessage}`));
+    process.exit(1);
+  }
+}
+
+program
+  .command('split')
+  .description('Split content from a main file into new separate files')
+  .argument('<main-file>', 'main file to split')
+  .requiredOption('--into <filename>', 'new filename to split off')
+  .action(splitWithErrorHandling);
 
 function implementWithErrorHandling(options: {
   spec: string;
