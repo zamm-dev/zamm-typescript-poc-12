@@ -10,6 +10,8 @@ impl:
   id: IEU463
   path: /docs/impls/nodejs.md
 commits:
+  - sha: 4b5654dd34248c8c16c1febb1b055f6b3f0a5f1b
+    message: Improve feat command tests with consolidation and exact matching
   - sha: 8e47ee72cf99923a6e4907250343434415a3a003
     message: Add nock integration with proper TypeScript types and header matching
   - sha: 67d5486fef122fe70452e7e931d1f2051559f99c
