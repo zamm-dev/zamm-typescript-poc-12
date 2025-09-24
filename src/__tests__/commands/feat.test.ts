@@ -9,7 +9,11 @@ import {
   resetIdProvider,
   IdProvider,
 } from '../../core/index';
-import { TestEnvironment, cleanupTestEnvironment } from '../shared/test-utils';
+import {
+  TestEnvironment,
+  cleanupTestEnvironment,
+  expectFileMatches,
+} from '../shared/test-utils';
 import { NockRecorder } from '../shared/nock-utils';
 
 class TestIdProvider implements IdProvider {
@@ -110,74 +114,31 @@ describe('ZAMM CLI Feat Command', () => {
       );
     });
 
-    it('should create worktree and spec file successfully', async () => {
+    it('should create worktree, branch, and spec file successfully', async () => {
       const options: FeatStartOptions = {
         description: 'Add user authentication',
       };
 
       await featStart(options);
 
-      // Verify spec file was created
-      const expectedSpecPath = path.join(
-        testEnv.tempDir,
-        'docs',
-        'spec-history',
-        'user-authentication.md'
-      );
-      expect(fs.existsSync(expectedSpecPath)).toBe(true);
-
-      const specContent = fs.readFileSync(expectedSpecPath, 'utf-8');
-      expect(specContent).toContain('id: TST123');
-      expect(specContent).toContain('type: spec');
-      expect(specContent).toContain('# Add User Authentication');
-      expect(specContent).toContain('Add user authentication');
-    });
-
-    it('should prepend zamm/ to branch name if not present', async () => {
-      const options: FeatStartOptions = {
-        description: 'Add user authentication',
-      };
-
-      await featStart(options);
-
-      // Verify that zamm/ prefix was added (our recordings show "user-authentication")
+      // Verify worktree directory was created
       const siblingDirs = fs.readdirSync(path.dirname(testEnv.tempDir));
       expect(siblingDirs).toContain('user-authentication');
-    });
 
-    it('should convert slashes to hyphens in directory name', async () => {
-      const options: FeatStartOptions = {
-        description: 'Add user authentication',
-      };
-
-      await featStart(options);
-
-      // Verify spec file uses hyphens (our recordings create "user-authentication.md")
-      const expectedSpecPath = path.join(
-        testEnv.tempDir,
-        'docs',
-        'spec-history',
-        'user-authentication.md'
+      // Verify branch was created with zamm/ prefix
+      const worktreePath = path.join(
+        path.dirname(testEnv.tempDir),
+        'user-authentication'
       );
-      expect(fs.existsSync(expectedSpecPath)).toBe(true);
-    });
+      const branches = execSync('git branch --show-current', {
+        stdio: 'pipe',
+        cwd: worktreePath,
+        encoding: 'utf-8',
+      }).trim();
+      expect(branches).toBe('zamm/user-authentication');
 
-    it('should handle API integration correctly', async () => {
-      const options: FeatStartOptions = {
-        description: 'Add user authentication',
-      };
-
-      await featStart(options);
-
-      // Verify that the spec file contains the expected AI-generated title
-      const expectedSpecPath = path.join(
-        testEnv.tempDir,
-        'docs',
-        'spec-history',
-        'user-authentication.md'
-      );
-      const specContent = fs.readFileSync(expectedSpecPath, 'utf-8');
-      expect(specContent).toContain('# Add User Authentication');
+      // Verify spec file was created with exact expected content
+      expectFileMatches(testEnv, 'docs/spec-history/user-authentication.md');
     });
   });
 });
