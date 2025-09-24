@@ -45,3 +45,6 @@ If the `commits` field already exists, the new commits should be prepended to th
 
 > [!NOTE]
 > For detailed examples and test cases, see [Test Spec KYT921](./tests/implement-command.md).
+
+> [!NOTE]
+> The `impl record` command is meant to do almost the exact same thing as the `spec record` command. As such, when editing this spec, consider editing [Spec PWQ070](/docs/specs/cli/spec/README.md) as well.
