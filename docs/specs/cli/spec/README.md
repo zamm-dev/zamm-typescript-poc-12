@@ -15,6 +15,8 @@ The command should validate that the target file exists in the `docs/spec-histor
 
 If the `commits` field already exists, the new commits should be prepended to the existing list, maintaining chronological order with the most recent commits first.
 
+The command must also validate that the current directory is within a git repository before attempting to retrieve commit information. If not in a git repository, the command should exit with an appropriate error message.
+
 This command should only apply to specs in the `docs/spec-history/` directory. Regular specs in the `docs/specs/` directory are not eligible for this sort of changelog tracking.
 
 > [!NOTE]
