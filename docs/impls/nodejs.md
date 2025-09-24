@@ -104,7 +104,10 @@ Test setup avoids runtime string replacement (e.g., `content.replace()`) and ins
 
 Use `copyTestFile` to copy test fixtures into the same corresponding path in a temporary test directory.
 
-Use `expectFileMatches(testEnv, relativePath, fixtureSubDir?)` to verify that a file in the temporary test directory matches a fixture file at the same relative path. The optional `fixtureSubDir` parameter specifies a subdirectory within the fixture directory (similar to `copyDirectoryFromFixture`). **Do not** use `toContain()` to validate partial file content.
+Use `expectFileMatches(testEnv, relativePath, fixtureSubDir?)` to verify that a file in the temporary test directory matches a fixture file at the same relative path. The optional `fixtureSubDir` parameter specifies a subdirectory within the fixture directory (similar to `copyDirectoryFromFixture`).
+
+- **Do not** use `toContain()` to validate partial file content.
+- **Use expectFileMatches consistently** -- when updating test behavior, prefer modifying TestEnvironment over writing manual file verification
 
 All network-related functionality should be recorded and replayed with `nock`. Make sure to filter out sensitive data such as API keys when you do so.
 

@@ -36,6 +36,7 @@ This command follows an 8-step process for implementing specifications. Use the 
 - **Explain initial approaches** if the user wants to know why you did things a certain way
 - **Ask for clarification** when user feedback seems to contradict the spec
 - **Commit regularly** but don't include development environment files (`.claude/` changes)
+- **Make sure to actually commit first** before recording the implementation commit - don't be distracted by user guidance on the proper implementation steps and forget to commit
 
 ### Common Patterns to Avoid
 
