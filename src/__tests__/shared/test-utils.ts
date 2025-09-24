@@ -43,14 +43,23 @@ export function copyTestFile(env: TestEnvironment, filePath: string): string {
 export function expectFileMatches(
   env: TestEnvironment,
   relativePath: string,
-  fixtureSubDir?: string
+  fixtureSubDir?: string,
+  replacements?: Record<string, string>
 ): void {
   const tempFilePath = path.join(env.tempDir, relativePath);
-  const result = fs.readFileSync(tempFilePath, 'utf8');
+  let result = fs.readFileSync(tempFilePath, 'utf8');
   const expectedPath = fixtureSubDir
     ? path.resolve(env.originalCwd, env.fixtureDir, fixtureSubDir, relativePath)
     : path.resolve(env.originalCwd, env.fixtureDir, relativePath);
   const expected = fs.readFileSync(expectedPath, 'utf8');
+
+  // Apply string replacements to result if provided
+  if (replacements) {
+    for (const [searchValue, replaceValue] of Object.entries(replacements)) {
+      result = result.replace(new RegExp(searchValue, 'g'), replaceValue);
+    }
+  }
+
   expect(result).toBe(expected);
 }
 

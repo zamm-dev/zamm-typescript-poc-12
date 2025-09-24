@@ -4,6 +4,10 @@ export * from './shared/file-utils';
 export * from './shared/frontmatter';
 export * from './shared/file-resolver';
 export * from './shared/git-utils';
+export {
+  BaseWorkflowService,
+  WorktreeWorkflowService,
+} from './shared/workflow-service';
 export * from './commands/organize';
 export * from './commands/info';
 export * from './commands/implement';

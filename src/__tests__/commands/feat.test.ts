@@ -139,6 +139,28 @@ describe('ZAMM CLI Feat Command', () => {
 
       // Verify spec file was created with exact expected content
       expectFileMatches(testEnv, 'docs/spec-history/user-authentication.md');
+
+      // Verify base directory .zamm/.gitignore matches fixture
+      expectFileMatches(testEnv, '.zamm/.gitignore');
+
+      // Verify base state content using expectFileMatches with path replacement
+      expectFileMatches(testEnv, '.zamm/base-state.json', undefined, {
+        [fs.realpathSync(worktreePath)]: '/path/to/worktree',
+      });
+
+      // Create a worktree test environment to verify worktree .zamm files
+      const worktreeTestEnv = {
+        ...testEnv,
+        tempDir: worktreePath,
+      };
+
+      // Verify worktree .zamm files match fixtures
+      expectFileMatches(worktreeTestEnv, '.zamm/.gitignore', 'worktree');
+      expectFileMatches(
+        worktreeTestEnv,
+        '.zamm/current-workflow-state.json',
+        'worktree'
+      );
     });
   });
 });
