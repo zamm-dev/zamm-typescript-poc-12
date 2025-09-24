@@ -137,8 +137,15 @@ describe('ZAMM CLI Feat Command', () => {
       }).trim();
       expect(branches).toBe('zamm/user-authentication');
 
-      // Verify spec file was created with exact expected content
-      expectFileMatches(testEnv, 'docs/spec-history/user-authentication.md');
+      // Verify spec file was created in the worktree with exact expected content
+      const worktreeTestEnv = {
+        ...testEnv,
+        tempDir: worktreePath,
+      };
+      expectFileMatches(
+        worktreeTestEnv,
+        'docs/spec-history/user-authentication.md'
+      );
     });
   });
 });

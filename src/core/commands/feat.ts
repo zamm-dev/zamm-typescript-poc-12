@@ -108,9 +108,9 @@ export async function featStart(options: FeatStartOptions): Promise<void> {
     options.description
   );
 
-  // Create spec file in docs/spec-history/
+  // Create spec file in docs/spec-history/ of the worktree
   const specFilePath = path.join(
-    gitRoot,
+    siblingPath,
     'docs',
     'spec-history',
     `${siblingDirName}.md`
