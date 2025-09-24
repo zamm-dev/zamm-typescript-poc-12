@@ -1,0 +1,560 @@
+[
+  {
+    "scope": "https://api.anthropic.com:443",
+    "method": "POST",
+    "path": "/v1/messages",
+    "body": {
+      "model": "claude-3-haiku-20240307",
+      "max_tokens": 100,
+      "messages": [
+        {
+          "role": "user",
+          "content": "Suggest a concise git branch name (lowercase, words separated by hyphens) for this feature description: \"Add user authentication\". Respond with just the branch name, no explanation."
+        }
+      ]
+    },
+    "status": 200,
+    "response": [
+      "1f8b08000000000000137590cd6ac3301084df65ce32388993529d1b2825d7f4528a10d2265662af5c69155282dfbd3834f48f9e16e69b1996b9207868f4796fead976f7745a6f9633a6e6fc70bf3ec8ee71f3bc8582bc0f34b92867bb2728a4d84d82cd3964b12c50e8a3a70e1aaeb3c553b5a85a1b8ea59ad7f3a65ed4775070918558a05f2eb746a1f394bd1e8d922955b6484b2cc159099131be2a6489834964736468107b2325313e41a6b742ec089a4bd72994eb8ffa82c0431123f1489ca19b9582b3ae25e3125dbbcd4f437de389acff8fddb2533f0d2df5946c6796fd5fff179db5bfe9a8108b7c97560a99d229383212284163dad5dbe4318e1f40e0cf0fa5010000"
+    ],
+    "rawHeaders": {
+      "anthropic-organization-id": "3ed899f0-c029-400b-bc4c-5cc677834d8d",
+      "anthropic-ratelimit-input-tokens-limit": "100000",
+      "anthropic-ratelimit-input-tokens-remaining": "100000",
+      "anthropic-ratelimit-input-tokens-reset": "2025-09-24T06:36:42Z",
+      "anthropic-ratelimit-output-tokens-limit": "20000",
+      "anthropic-ratelimit-output-tokens-remaining": "20000",
+      "anthropic-ratelimit-output-tokens-reset": "2025-09-24T06:36:42Z",
+      "anthropic-ratelimit-requests-limit": "1000",
+      "anthropic-ratelimit-requests-remaining": "999",
+      "anthropic-ratelimit-requests-reset": "2025-09-24T06:36:42Z",
+      "anthropic-ratelimit-tokens-limit": "120000",
+      "anthropic-ratelimit-tokens-remaining": "120000",
+      "anthropic-ratelimit-tokens-reset": "2025-09-24T06:36:42Z",
+      "cf-cache-status": "DYNAMIC",
+      "cf-ray": "984044dd280ff03c-DFW",
+      "connection": "keep-alive",
+      "content-encoding": "gzip",
+      "content-type": "application/json",
+      "date": "Wed, 24 Sep 2025 06:36:42 GMT",
+      "request-id": "req_011CTSmE5MVzYgP8N8dxRdLZ",
+      "server": "cloudflare",
+      "strict-transport-security": "max-age=31536000; includeSubDomains; preload",
+      "transfer-encoding": "chunked",
+      "via": "1.1 google",
+      "x-envoy-upstream-service-time": "242",
+      "x-robots-tag": "none"
+    },
+    "reqheaders": {
+      "accept": "application/json",
+      "anthropic-version": "2023-06-01",
+      "content-type": "application/json",
+      "x-api-key": "sk-FILTERED",
+      "x-stainless-arch": "arm64",
+      "x-stainless-lang": "js",
+      "x-stainless-os": "MacOS",
+      "x-stainless-package-version": "0.63.1",
+      "x-stainless-retry-count": "0",
+      "x-stainless-runtime": "node",
+      "x-stainless-runtime-version": "v24.3.0",
+      "x-stainless-timeout": "600"
+    },
+    "responseIsBinary": false
+  },
+  {
+    "scope": "https://api.anthropic.com:443",
+    "method": "POST",
+    "path": "/v1/messages",
+    "body": {
+      "model": "claude-3-haiku-20240307",
+      "max_tokens": 100,
+      "messages": [
+        {
+          "role": "user",
+          "content": "Create a concise H1 markdown title for a specification about: \"Add user authentication\". Respond with just the title text without the # symbol."
+        }
+      ]
+    },
+    "status": 200,
+    "response": [
+      "1f8b08000000000000137590cd6ac33010845f25cc5901274ed2a25b02bdb5a792f6508a50a52556634b8eb4322dc6ef5e6c6afa474f0bf3cd0ccbf47016124d3aa962757738be6e7797dbeefc78b19b9bfb876d7e693b08f07b4ba38b52d22782400cf528e8945c62ed19024db05443c2d43a5b5a96cb4abb735eae8bf5a6288b2b0898e0993c433ef57323d3db989d8ec4dedac531515cec3357e4d919cd2e780ccf028943ab22e9143c24c85bc5397a7c8244974cde10a4cf752d90a73f650fe7dbcc8ac3997c822caf058c3615291369ea563f0dc5cc2369fb1f9bb3633fb515351475adb6cd5fff175d55bfe92010327f9776028962e70c29761421316e6b75b418860f88cd4124a9010000"
+    ],
+    "rawHeaders": {
+      "anthropic-organization-id": "3ed899f0-c029-400b-bc4c-5cc677834d8d",
+      "anthropic-ratelimit-input-tokens-limit": "100000",
+      "anthropic-ratelimit-input-tokens-remaining": "100000",
+      "anthropic-ratelimit-input-tokens-reset": "2025-09-24T06:36:43Z",
+      "anthropic-ratelimit-output-tokens-limit": "20000",
+      "anthropic-ratelimit-output-tokens-remaining": "20000",
+      "anthropic-ratelimit-output-tokens-reset": "2025-09-24T06:36:43Z",
+      "anthropic-ratelimit-requests-limit": "1000",
+      "anthropic-ratelimit-requests-remaining": "999",
+      "anthropic-ratelimit-requests-reset": "2025-09-24T06:36:43Z",
+      "anthropic-ratelimit-tokens-limit": "120000",
+      "anthropic-ratelimit-tokens-remaining": "120000",
+      "anthropic-ratelimit-tokens-reset": "2025-09-24T06:36:43Z",
+      "cf-cache-status": "DYNAMIC",
+      "cf-ray": "984044e06aadf03c-DFW",
+      "connection": "keep-alive",
+      "content-encoding": "gzip",
+      "content-type": "application/json",
+      "date": "Wed, 24 Sep 2025 06:36:43 GMT",
+      "request-id": "req_011CTSmE7bBtf4E9xyjmd51b",
+      "server": "cloudflare",
+      "strict-transport-security": "max-age=31536000; includeSubDomains; preload",
+      "transfer-encoding": "chunked",
+      "via": "1.1 google",
+      "x-envoy-upstream-service-time": "201",
+      "x-robots-tag": "none"
+    },
+    "reqheaders": {
+      "accept": "application/json",
+      "anthropic-version": "2023-06-01",
+      "content-type": "application/json",
+      "x-api-key": "sk-FILTERED",
+      "x-stainless-arch": "arm64",
+      "x-stainless-lang": "js",
+      "x-stainless-os": "MacOS",
+      "x-stainless-package-version": "0.63.1",
+      "x-stainless-retry-count": "0",
+      "x-stainless-runtime": "node",
+      "x-stainless-runtime-version": "v24.3.0",
+      "x-stainless-timeout": "600"
+    },
+    "responseIsBinary": false
+  },
+  {
+    "scope": "https://api.anthropic.com:443",
+    "method": "POST",
+    "path": "/v1/messages",
+    "body": {
+      "model": "claude-3-haiku-20240307",
+      "max_tokens": 100,
+      "messages": [
+        {
+          "role": "user",
+          "content": "Suggest a concise git branch name (lowercase, words separated by hyphens) for this feature description: \"Some feature\". Respond with just the branch name, no explanation."
+        }
+      ]
+    },
+    "status": 200,
+    "response": [
+      "1f8b080000000000001375904b4b04311084ff4b9d3330fb147214f4b0ae273d8822a14d7a77c2ce2463d2117599ff2eb338f8c253437d5545534778078d2eef4d3ddbaeae97f7f3ddfae2b23cddc6cdddf95573f3be8582bcf53cba3867da3314526c478172f659280814bae8b885866da938ae165543fe50aa793d5fd68bfa0c0a3606e120d00fc7a951f875cc9e8e468e1d573b262989313c2a6489bd494c3906687070464a0af804999f0b07cbd0a1b4ad42393da78ff0a12f62241e3864e8e54ac1926dd8d8c4243e06f3d3504f3c31b9ffd8941dfbb96fb8e344ad59757ffd5f74d6fca683422cf25d5a2b644e2fdeb211cf695c4128384a0ec3f0018caacf9c9e010000"
+    ],
+    "rawHeaders": {
+      "anthropic-organization-id": "3ed899f0-c029-400b-bc4c-5cc677834d8d",
+      "anthropic-ratelimit-input-tokens-limit": "100000",
+      "anthropic-ratelimit-input-tokens-remaining": "100000",
+      "anthropic-ratelimit-input-tokens-reset": "2025-09-24T06:36:43Z",
+      "anthropic-ratelimit-output-tokens-limit": "20000",
+      "anthropic-ratelimit-output-tokens-remaining": "20000",
+      "anthropic-ratelimit-output-tokens-reset": "2025-09-24T06:36:43Z",
+      "anthropic-ratelimit-requests-limit": "1000",
+      "anthropic-ratelimit-requests-remaining": "999",
+      "anthropic-ratelimit-requests-reset": "2025-09-24T06:36:43Z",
+      "anthropic-ratelimit-tokens-limit": "120000",
+      "anthropic-ratelimit-tokens-remaining": "120000",
+      "anthropic-ratelimit-tokens-reset": "2025-09-24T06:36:43Z",
+      "cf-cache-status": "DYNAMIC",
+      "cf-ray": "984044e35cfbf03c-DFW",
+      "connection": "keep-alive",
+      "content-encoding": "gzip",
+      "content-type": "application/json",
+      "date": "Wed, 24 Sep 2025 06:36:43 GMT",
+      "request-id": "req_011CTSmE9exha7jFYFiNZbvF",
+      "server": "cloudflare",
+      "strict-transport-security": "max-age=31536000; includeSubDomains; preload",
+      "transfer-encoding": "chunked",
+      "via": "1.1 google",
+      "x-envoy-upstream-service-time": "257",
+      "x-robots-tag": "none"
+    },
+    "reqheaders": {
+      "accept": "application/json",
+      "anthropic-version": "2023-06-01",
+      "content-type": "application/json",
+      "x-api-key": "sk-FILTERED",
+      "x-stainless-arch": "arm64",
+      "x-stainless-lang": "js",
+      "x-stainless-os": "MacOS",
+      "x-stainless-package-version": "0.63.1",
+      "x-stainless-retry-count": "0",
+      "x-stainless-runtime": "node",
+      "x-stainless-runtime-version": "v24.3.0",
+      "x-stainless-timeout": "600"
+    },
+    "responseIsBinary": false
+  },
+  {
+    "scope": "https://api.anthropic.com:443",
+    "method": "POST",
+    "path": "/v1/messages",
+    "body": {
+      "model": "claude-3-haiku-20240307",
+      "max_tokens": 100,
+      "messages": [
+        {
+          "role": "user",
+          "content": "Create a concise H1 markdown title for a specification about: \"Some feature\". Respond with just the title text without the # symbol."
+        }
+      ]
+    },
+    "status": 200,
+    "response": [
+      "1f8b080000000000001375904f4b033114c4bf8acc39856d6ba9e4a8e0450551f0221262327443779335792996b2df5db658fc87a707f39b191e7340f0d0e8cbc634f387fb907657b55e5c3dddac1797bc93dbfd6b8282ec074e2e96623784424edd24d85242111b050a7df2eca0e13a5b3d67cb596bc3b6ce16cde2bc59366b28b8148551a09f0fa746e1fb943d1e8dc7d4f3ec9a566a26c6178522693099b6a4080d466fa4e6884f50f856191da163ed3a857a7c4e1f10e250c548da3216e8e55ac159d7d2b84c2b2145f3d3d09c78a6f5ffb15376eae7d0b267b69d59f57ffd5f74defea6a342aaf25d5a2914e65d70341298a1310dea6df618c70f31af1c559e010000"
+    ],
+    "rawHeaders": {
+      "anthropic-organization-id": "3ed899f0-c029-400b-bc4c-5cc677834d8d",
+      "anthropic-ratelimit-input-tokens-limit": "100000",
+      "anthropic-ratelimit-input-tokens-remaining": "100000",
+      "anthropic-ratelimit-input-tokens-reset": "2025-09-24T06:36:44Z",
+      "anthropic-ratelimit-output-tokens-limit": "20000",
+      "anthropic-ratelimit-output-tokens-remaining": "20000",
+      "anthropic-ratelimit-output-tokens-reset": "2025-09-24T06:36:44Z",
+      "anthropic-ratelimit-requests-limit": "1000",
+      "anthropic-ratelimit-requests-remaining": "999",
+      "anthropic-ratelimit-requests-reset": "2025-09-24T06:36:44Z",
+      "anthropic-ratelimit-tokens-limit": "120000",
+      "anthropic-ratelimit-tokens-remaining": "120000",
+      "anthropic-ratelimit-tokens-reset": "2025-09-24T06:36:44Z",
+      "cf-cache-status": "DYNAMIC",
+      "cf-ray": "984044e6bfb5f03c-DFW",
+      "connection": "keep-alive",
+      "content-encoding": "gzip",
+      "content-type": "application/json",
+      "date": "Wed, 24 Sep 2025 06:36:44 GMT",
+      "request-id": "req_011CTSmEBtecpJpGydfh2tWy",
+      "server": "cloudflare",
+      "strict-transport-security": "max-age=31536000; includeSubDomains; preload",
+      "transfer-encoding": "chunked",
+      "via": "1.1 google",
+      "x-envoy-upstream-service-time": "253",
+      "x-robots-tag": "none"
+    },
+    "reqheaders": {
+      "accept": "application/json",
+      "anthropic-version": "2023-06-01",
+      "content-type": "application/json",
+      "x-api-key": "sk-FILTERED",
+      "x-stainless-arch": "arm64",
+      "x-stainless-lang": "js",
+      "x-stainless-os": "MacOS",
+      "x-stainless-package-version": "0.63.1",
+      "x-stainless-retry-count": "0",
+      "x-stainless-runtime": "node",
+      "x-stainless-runtime-version": "v24.3.0",
+      "x-stainless-timeout": "600"
+    },
+    "responseIsBinary": false
+  },
+  {
+    "scope": "https://api.anthropic.com:443",
+    "method": "POST",
+    "path": "/v1/messages",
+    "body": {
+      "model": "claude-3-haiku-20240307",
+      "max_tokens": 100,
+      "messages": [
+        {
+          "role": "user",
+          "content": "Suggest a concise git branch name (lowercase, words separated by hyphens) for this feature description: \"Complex feature\". Respond with just the branch name, no explanation."
+        }
+      ]
+    },
+    "status": 200,
+    "response": [
+      "1f8b080000000000001375904b4b04311084ff4b9d3330fb52cc4df6207815bd888490b43bd9cd74c6a4e3ae2ef3df6516175f786aa8afaa68ea88e0a1d1978d6967576cdf17e97ea0f5e196efeacd7a7fbddd3f4041de069a5c548add1014728a93604b09452c0b14fae42942c3455b3d358ba6b361579b793b5fb68bf6120a2eb1100bf4e3f1dc287498b2a7a3e1523f443a34cf64a566c2f8a450240d26932d89a141ec8dd4ccf804855e2ab12368ae312ad4d37ffa88c043152369475ca0972b05675d47c665b212129b9f86f6cc3359ff1f3b67a77e1a3aea29db6856fd5fff179d75bfe9a890aa7c972e140ae5d7e0c848a00c8d69536fb3c7387e00e42ce453a1010000"
+    ],
+    "rawHeaders": {
+      "anthropic-organization-id": "3ed899f0-c029-400b-bc4c-5cc677834d8d",
+      "anthropic-ratelimit-input-tokens-limit": "100000",
+      "anthropic-ratelimit-input-tokens-remaining": "100000",
+      "anthropic-ratelimit-input-tokens-reset": "2025-09-24T06:36:44Z",
+      "anthropic-ratelimit-output-tokens-limit": "20000",
+      "anthropic-ratelimit-output-tokens-remaining": "20000",
+      "anthropic-ratelimit-output-tokens-reset": "2025-09-24T06:36:44Z",
+      "anthropic-ratelimit-requests-limit": "1000",
+      "anthropic-ratelimit-requests-remaining": "999",
+      "anthropic-ratelimit-requests-reset": "2025-09-24T06:36:44Z",
+      "anthropic-ratelimit-tokens-limit": "120000",
+      "anthropic-ratelimit-tokens-remaining": "120000",
+      "anthropic-ratelimit-tokens-reset": "2025-09-24T06:36:44Z",
+      "cf-cache-status": "DYNAMIC",
+      "cf-ray": "984044e9ea16f03c-DFW",
+      "connection": "keep-alive",
+      "content-encoding": "gzip",
+      "content-type": "application/json",
+      "date": "Wed, 24 Sep 2025 06:36:44 GMT",
+      "request-id": "req_011CTSmEE6bynab8faorQD3e",
+      "server": "cloudflare",
+      "strict-transport-security": "max-age=31536000; includeSubDomains; preload",
+      "transfer-encoding": "chunked",
+      "via": "1.1 google",
+      "x-envoy-upstream-service-time": "217",
+      "x-robots-tag": "none"
+    },
+    "reqheaders": {
+      "accept": "application/json",
+      "anthropic-version": "2023-06-01",
+      "content-type": "application/json",
+      "x-api-key": "sk-FILTERED",
+      "x-stainless-arch": "arm64",
+      "x-stainless-lang": "js",
+      "x-stainless-os": "MacOS",
+      "x-stainless-package-version": "0.63.1",
+      "x-stainless-retry-count": "0",
+      "x-stainless-runtime": "node",
+      "x-stainless-runtime-version": "v24.3.0",
+      "x-stainless-timeout": "600"
+    },
+    "responseIsBinary": false
+  },
+  {
+    "scope": "https://api.anthropic.com:443",
+    "method": "POST",
+    "path": "/v1/messages",
+    "body": {
+      "model": "claude-3-haiku-20240307",
+      "max_tokens": 100,
+      "messages": [
+        {
+          "role": "user",
+          "content": "Create a concise H1 markdown title for a specification about: \"Complex feature\". Respond with just the title text without the # symbol."
+        }
+      ]
+    },
+    "status": 200,
+    "response": [
+      "1f8b080000000000001375904f4b033114c4bf4a99730adbaeba929b14bc8817bd08222124cfddd86c92262f522dfbdd658bc57f787a30bf99e13107380b89b1f4aa59b5fb9bf78b975ddfa59eef6ecd46b797f5e10a02fc9668765129ba2708e4e8674197e20aebc01018a3250f09e375b5b46c978376dbba5c37ebb3a66d3a0898189802433e1e4e8d4cfb397b3c129b38264ffbc53569ae9916f7898c7b7646b38b01d39340e19854265d62800405abb8e6804f5068572918820cd57b817afc561ee042aaac386e2914c8b61330da0ca44ca663b7fa69684e3c93b6ffb15376eea734d048597b753efef57fd1d5f09b4e02b1f277a91328945f9d21c58e3224e685adce16d3f401a70e9adfaf010000"
+    ],
+    "rawHeaders": {
+      "anthropic-organization-id": "3ed899f0-c029-400b-bc4c-5cc677834d8d",
+      "anthropic-ratelimit-input-tokens-limit": "100000",
+      "anthropic-ratelimit-input-tokens-remaining": "100000",
+      "anthropic-ratelimit-input-tokens-reset": "2025-09-24T06:36:45Z",
+      "anthropic-ratelimit-output-tokens-limit": "20000",
+      "anthropic-ratelimit-output-tokens-remaining": "20000",
+      "anthropic-ratelimit-output-tokens-reset": "2025-09-24T06:36:45Z",
+      "anthropic-ratelimit-requests-limit": "1000",
+      "anthropic-ratelimit-requests-remaining": "999",
+      "anthropic-ratelimit-requests-reset": "2025-09-24T06:36:45Z",
+      "anthropic-ratelimit-tokens-limit": "120000",
+      "anthropic-ratelimit-tokens-remaining": "120000",
+      "anthropic-ratelimit-tokens-reset": "2025-09-24T06:36:45Z",
+      "cf-cache-status": "DYNAMIC",
+      "cf-ray": "984044ecfc74f03c-DFW",
+      "connection": "keep-alive",
+      "content-encoding": "gzip",
+      "content-type": "application/json",
+      "date": "Wed, 24 Sep 2025 06:36:45 GMT",
+      "request-id": "req_011CTSmEGC7YtTsnSzkek5Jn",
+      "server": "cloudflare",
+      "strict-transport-security": "max-age=31536000; includeSubDomains; preload",
+      "transfer-encoding": "chunked",
+      "via": "1.1 google",
+      "x-envoy-upstream-service-time": "238",
+      "x-robots-tag": "none"
+    },
+    "reqheaders": {
+      "accept": "application/json",
+      "anthropic-version": "2023-06-01",
+      "content-type": "application/json",
+      "x-api-key": "sk-FILTERED",
+      "x-stainless-arch": "arm64",
+      "x-stainless-lang": "js",
+      "x-stainless-os": "MacOS",
+      "x-stainless-package-version": "0.63.1",
+      "x-stainless-retry-count": "0",
+      "x-stainless-runtime": "node",
+      "x-stainless-runtime-version": "v24.3.0",
+      "x-stainless-timeout": "600"
+    },
+    "responseIsBinary": false
+  },
+  {
+    "scope": "https://api.anthropic.com:443",
+    "method": "POST",
+    "path": "/v1/messages",
+    "body": {
+      "model": "claude-3-haiku-20240307",
+      "max_tokens": 100,
+      "messages": [
+        {
+          "role": "user",
+          "content": "Suggest a concise git branch name (lowercase, words separated by hyphens) for this feature description: \"Feature with prefix\". Respond with just the branch name, no explanation."
+        }
+      ]
+    },
+    "status": 200,
+    "response": [
+      "1f8b080000000000001375904b6bc3301084ffcb9c65701e6d8a6ebe97905028855284903691882db9d22a751afcdf8b43435ff4b430dfccb0cc19de42a2cb7b55cfb60fc3d3a6099be3ba695c7c5cbd9fd62ede43804f3d4d2eca59ef090229b693a073f69975600874d1520b09d3ea62a95a544efb43a9e6f57c592fea15044c0c4c81219fcfd746a661ca5e8ec48e349744d59b6757f589767ec0f8229039f62a91ce31408282555c52c027c8f45a2818820ca56d05cae54779860f7d61c5f14021432e6f058c368e9449a4d9c7a07e1aea2b4fa4ed7fec9a9dfaa977d451d2adbae9fefabfe8ccfda6a3402cfc5dba13c8948ede90624f0912d3ae56278b71fc0059fc9e14a5010000"
+    ],
+    "rawHeaders": {
+      "anthropic-organization-id": "3ed899f0-c029-400b-bc4c-5cc677834d8d",
+      "anthropic-ratelimit-input-tokens-limit": "100000",
+      "anthropic-ratelimit-input-tokens-remaining": "100000",
+      "anthropic-ratelimit-input-tokens-reset": "2025-09-24T06:36:45Z",
+      "anthropic-ratelimit-output-tokens-limit": "20000",
+      "anthropic-ratelimit-output-tokens-remaining": "20000",
+      "anthropic-ratelimit-output-tokens-reset": "2025-09-24T06:36:45Z",
+      "anthropic-ratelimit-requests-limit": "1000",
+      "anthropic-ratelimit-requests-remaining": "999",
+      "anthropic-ratelimit-requests-reset": "2025-09-24T06:36:45Z",
+      "anthropic-ratelimit-tokens-limit": "120000",
+      "anthropic-ratelimit-tokens-remaining": "120000",
+      "anthropic-ratelimit-tokens-reset": "2025-09-24T06:36:45Z",
+      "cf-cache-status": "DYNAMIC",
+      "cf-ray": "984044f06f49f03c-DFW",
+      "connection": "keep-alive",
+      "content-encoding": "gzip",
+      "content-type": "application/json",
+      "date": "Wed, 24 Sep 2025 06:36:45 GMT",
+      "request-id": "req_011CTSmEJYkJsVaxC6rHKnfd",
+      "server": "cloudflare",
+      "strict-transport-security": "max-age=31536000; includeSubDomains; preload",
+      "transfer-encoding": "chunked",
+      "via": "1.1 google",
+      "x-envoy-upstream-service-time": "220",
+      "x-robots-tag": "none"
+    },
+    "reqheaders": {
+      "accept": "application/json",
+      "anthropic-version": "2023-06-01",
+      "content-type": "application/json",
+      "x-api-key": "sk-FILTERED",
+      "x-stainless-arch": "arm64",
+      "x-stainless-lang": "js",
+      "x-stainless-os": "MacOS",
+      "x-stainless-package-version": "0.63.1",
+      "x-stainless-retry-count": "0",
+      "x-stainless-runtime": "node",
+      "x-stainless-runtime-version": "v24.3.0",
+      "x-stainless-timeout": "600"
+    },
+    "responseIsBinary": false
+  },
+  {
+    "scope": "https://api.anthropic.com:443",
+    "method": "POST",
+    "path": "/v1/messages",
+    "body": {
+      "model": "claude-3-haiku-20240307",
+      "max_tokens": 100,
+      "messages": [
+        {
+          "role": "user",
+          "content": "Create a concise H1 markdown title for a specification about: \"Feature with prefix\". Respond with just the title text without the # symbol."
+        }
+      ]
+    },
+    "status": 200,
+    "response": [
+      "1f8b08000000000000137590cd6ac33010845f25cc5901c74e9a560f904b7b480ab9b41421a44d2c624b8eb46a5d82dfbd38d4f48f9e16e69b1996b9c05948b4e9a88ac5e3d35db9daae36f5fe7eb7df3daccfcb437fe320c0ef1d8d2e4a491f09023134a3a0537289b56708b4c1520309d3e86c695ecd6bed4e795e16e5b2a88a35044cf04c9e219f2f5323533f66af4762439a73a4d99be37ab68d74703d861781c4a15391740a1e12e4ade21c3d3e41a273266f08d2e7a611c8d71fe505ce7799158713f90459dd0a186d6a5226926617bcfa6928261e49dbffd8941dfba9aba9a5a81bb56afffabfe8a2fe4d078190f9bbb41648145f9d21c58e2224c65dad8e16c3f001d75d35fba5010000"
+    ],
+    "rawHeaders": {
+      "anthropic-organization-id": "3ed899f0-c029-400b-bc4c-5cc677834d8d",
+      "anthropic-ratelimit-input-tokens-limit": "100000",
+      "anthropic-ratelimit-input-tokens-remaining": "100000",
+      "anthropic-ratelimit-input-tokens-reset": "2025-09-24T06:36:46Z",
+      "anthropic-ratelimit-output-tokens-limit": "20000",
+      "anthropic-ratelimit-output-tokens-remaining": "20000",
+      "anthropic-ratelimit-output-tokens-reset": "2025-09-24T06:36:46Z",
+      "anthropic-ratelimit-requests-limit": "1000",
+      "anthropic-ratelimit-requests-remaining": "999",
+      "anthropic-ratelimit-requests-reset": "2025-09-24T06:36:46Z",
+      "anthropic-ratelimit-tokens-limit": "120000",
+      "anthropic-ratelimit-tokens-remaining": "120000",
+      "anthropic-ratelimit-tokens-reset": "2025-09-24T06:36:46Z",
+      "cf-cache-status": "DYNAMIC",
+      "cf-ray": "984044f369c9f03c-DFW",
+      "connection": "keep-alive",
+      "content-encoding": "gzip",
+      "content-type": "application/json",
+      "date": "Wed, 24 Sep 2025 06:36:46 GMT",
+      "request-id": "req_011CTSmELb2uzdDu8hkotPx4",
+      "server": "cloudflare",
+      "strict-transport-security": "max-age=31536000; includeSubDomains; preload",
+      "transfer-encoding": "chunked",
+      "via": "1.1 google",
+      "x-envoy-upstream-service-time": "222",
+      "x-robots-tag": "none"
+    },
+    "reqheaders": {
+      "accept": "application/json",
+      "anthropic-version": "2023-06-01",
+      "content-type": "application/json",
+      "x-api-key": "sk-FILTERED",
+      "x-stainless-arch": "arm64",
+      "x-stainless-lang": "js",
+      "x-stainless-os": "MacOS",
+      "x-stainless-package-version": "0.63.1",
+      "x-stainless-retry-count": "0",
+      "x-stainless-runtime": "node",
+      "x-stainless-runtime-version": "v24.3.0",
+      "x-stainless-timeout": "600"
+    },
+    "responseIsBinary": false
+  },
+  {
+    "scope": "https://api.anthropic.com:443",
+    "method": "POST",
+    "path": "/v1/messages",
+    "body": {
+      "model": "claude-3-haiku-20240307",
+      "max_tokens": 100,
+      "messages": [
+        {
+          "role": "user",
+          "content": "The branch name \"user-authentication\" conflicts. Suggest a different git branch name (lowercase, words separated by hyphens) for: \"Add user authentication\". Respond with just the branch name, no explanation."
+        }
+      ]
+    },
+    "status": 200,
+    "response": [
+      "1f8b080000000000001375905b4bc5301084ffcb3ca7d073e911f32622f824e89b88842559db70daa4261b3952fadfa5078b377c5a986f6658668277d018726beacdfef132bd849babe1ba79b83ddda58edaf6fe0005791f797171ced4321452ec178172f65928081486e8b88786eda938ae765547fe58aa6dbdddd7bbfa020a3606e120d04fd3da287c5ab2e7a35132a78a8a74989f15b2c4d124a61c033438382325057c82ccaf858365e850fa5ea19c3fd3137c188b1889470e19bad92a58b21d1b9b98c4c7607e1aea952726f71f5bb34b3f8f1d0f9ca837cdf0d7ff4537dd6f3a2bc422dfa58342e6f4e62d1bf19ca0b1ace92839ccf30774d385739b010000"
+    ],
+    "rawHeaders": {
+      "anthropic-organization-id": "3ed899f0-c029-400b-bc4c-5cc677834d8d",
+      "anthropic-ratelimit-input-tokens-limit": "100000",
+      "anthropic-ratelimit-input-tokens-remaining": "100000",
+      "anthropic-ratelimit-input-tokens-reset": "2025-09-24T06:36:46Z",
+      "anthropic-ratelimit-output-tokens-limit": "20000",
+      "anthropic-ratelimit-output-tokens-remaining": "20000",
+      "anthropic-ratelimit-output-tokens-reset": "2025-09-24T06:36:46Z",
+      "anthropic-ratelimit-requests-limit": "1000",
+      "anthropic-ratelimit-requests-remaining": "999",
+      "anthropic-ratelimit-requests-reset": "2025-09-24T06:36:46Z",
+      "anthropic-ratelimit-tokens-limit": "120000",
+      "anthropic-ratelimit-tokens-remaining": "120000",
+      "anthropic-ratelimit-tokens-reset": "2025-09-24T06:36:46Z",
+      "cf-cache-status": "DYNAMIC",
+      "cf-ray": "984044f67bd1f03c-DFW",
+      "connection": "keep-alive",
+      "content-encoding": "gzip",
+      "content-type": "application/json",
+      "date": "Wed, 24 Sep 2025 06:36:46 GMT",
+      "request-id": "req_011CTSmENfoJn4ppwngGhhoq",
+      "server": "cloudflare",
+      "strict-transport-security": "max-age=31536000; includeSubDomains; preload",
+      "transfer-encoding": "chunked",
+      "via": "1.1 google",
+      "x-envoy-upstream-service-time": "213",
+      "x-robots-tag": "none"
+    },
+    "reqheaders": {
+      "accept": "application/json",
+      "anthropic-version": "2023-06-01",
+      "content-type": "application/json",
+      "x-api-key": "sk-FILTERED",
+      "x-stainless-arch": "arm64",
+      "x-stainless-lang": "js",
+      "x-stainless-os": "MacOS",
+      "x-stainless-package-version": "0.63.1",
+      "x-stainless-retry-count": "0",
+      "x-stainless-runtime": "node",
+      "x-stainless-runtime-version": "v24.3.0",
+      "x-stainless-timeout": "600"
+    },
+    "responseIsBinary": false
+  }
+]
