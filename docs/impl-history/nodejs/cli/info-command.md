@@ -5,7 +5,7 @@ specs:
   - id: FYR697
     path: /docs/specs/cli/README.md
   - id: SOB239
-    path: /docs/specs/cli/tests/info-command.md
+    path: /docs/specs/cli/info/tests.md
 impl:
   id: IEU463
   path: /docs/impls/nodejs.md

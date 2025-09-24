@@ -5,7 +5,7 @@ specs:
   - id: FYR697
     path: /docs/specs/cli/README.md
   - id: MLM844
-    path: /docs/specs/cli/tests/organize-single-file.md
+    path: /docs/specs/cli/organize/tests/single-file.md
 impl:
   id: IEU463
   path: /docs/impls/nodejs.md

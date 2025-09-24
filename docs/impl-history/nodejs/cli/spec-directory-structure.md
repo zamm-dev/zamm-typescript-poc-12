@@ -3,9 +3,9 @@ id: TTZ448
 type: impl-history
 specs:
   - id: SOB239
-    path: /docs/specs/cli/tests/info-command.md
+    path: /docs/specs/cli/info/tests.md
   - id: MLM844
-    path: /docs/specs/cli/tests/organize-single-file.md
+    path: /docs/specs/cli/organize/tests/single-file.md
 impl:
   id: IEU463
   path: /docs/impls/nodejs.md
