@@ -9,7 +9,11 @@ The `feat` command deals with ZAMM behavior during a feature lifecycle.
 
 ## Workflow Lifecycle
 
-ZAMM assumes the use of a Git worktree workflow in collaboration with Claude Code. ZAMM tracks the progression of this workflow through its various stages through the use of a `.zamm/` directory that is entirely Git-ignored via a `.zamm/.gitignore` file.
+ZAMM assumes the use of a Git worktree workflow in collaboration with Claude Code. ZAMM tracks the progression of this workflow through its various stages through the use of a `.zamm/` directory that is entirely Git-ignored via a `.zamm/.gitignore` file:
+
+```gitignore
+*
+```
 
 ### `.zamm/` in the base directory
 
@@ -54,3 +58,15 @@ There should be a `.zamm/current-workflow-state.json` file that keeps track of t
 
 > [!NOTE]
 > In total, there are three LLM calls here: initial branch name, spec title, and optionally alternative branch names for conflicts.
+
+## Implementation Notes
+
+You may want to keep the following things in mind when implementing this spec:
+
+### Path Resolution
+
+You may want to resolve symlinks before storing worktree paths in `base-state.json`. Otherwise, you may run into inconsistent path handling across different platforms (e.g., macOS `/var` vs `/private/var` symlink issues).
+
+### Service Separation
+
+You may want to separate base directory operations from worktree directory operations using distinct classes or modules to avoid confusion about which context operations should be performed in.
