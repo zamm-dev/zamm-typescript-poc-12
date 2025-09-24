@@ -43,7 +43,7 @@ export class BaseWorkflowService extends WorkflowService {
       const initialState: BaseState = { worktrees: {} };
       await fs.promises.writeFile(
         baseStatePath,
-        JSON.stringify(initialState, null, 2)
+        JSON.stringify(initialState, null, 2) + '\n'
       );
     }
   }
@@ -79,7 +79,7 @@ export class BaseWorkflowService extends WorkflowService {
 
     await fs.promises.writeFile(
       baseStatePath,
-      JSON.stringify(baseState, null, 2)
+      JSON.stringify(baseState, null, 2) + '\n'
     );
   }
 
@@ -145,7 +145,7 @@ export class WorktreeWorkflowService extends WorkflowService {
     const initialState: CurrentWorkflowState = { state: 'INITIAL' };
     await fs.promises.writeFile(
       currentStatePath,
-      JSON.stringify(initialState, null, 2)
+      JSON.stringify(initialState, null, 2) + '\n'
     );
   }
 
@@ -162,7 +162,7 @@ export class WorktreeWorkflowService extends WorkflowService {
     const state: CurrentWorkflowState = { state: newState };
     await fs.promises.writeFile(
       currentStatePath,
-      JSON.stringify(state, null, 2)
+      JSON.stringify(state, null, 2) + '\n'
     );
   }
 
