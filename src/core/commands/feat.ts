@@ -4,6 +4,10 @@ import * as fs from 'fs';
 import { getIdProvider } from '../shared/id-provider';
 import { findGitRoot } from '../shared/file-utils';
 import { AnthropicService } from '../shared/anthropic-service';
+import {
+  BaseWorkflowService,
+  WorktreeWorkflowService,
+} from '../shared/workflow-service';
 
 export interface FeatStartOptions {
   description: string;
@@ -48,6 +52,9 @@ export async function featStart(options: FeatStartOptions): Promise<void> {
   if (!gitRoot) {
     throw new Error('Not in a git repository');
   }
+
+  // 1. Initialize .zamm/ structure in the base directory if it hasn't already been
+  await BaseWorkflowService.initialize(gitRoot);
 
   // Get branch name suggestion from Anthropic
   const rawBranchName = await anthropicService.suggestBranchName(
@@ -135,4 +142,14 @@ ${options.description}
 `;
 
   fs.writeFileSync(specFilePath, frontmatter);
+
+  // 5. Initialize .zamm/ structure in the fresh worktree directory
+  await WorktreeWorkflowService.initialize(siblingPath);
+
+  // 6. Update .zamm/ in the base directory to track this new worktree directory
+  await BaseWorkflowService.addWorktree(gitRoot, branchName, siblingPath);
+
+  // 7. Show the user a message telling them to run the commands
+  console.log(`\nWorkflow initialized! Next steps:`);
+  console.log(`cd ../${siblingDirName} && claude "/change-spec"`);
 }

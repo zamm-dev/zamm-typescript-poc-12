@@ -38,3 +38,23 @@ export interface Commit {
   sha: string;
   message?: string;
 }
+
+export type WorkflowState =
+  | 'INITIAL'
+  | 'SPEC-UPDATED'
+  | 'SPEC-IMPLEMENTED'
+  | 'COMPLETED';
+
+export interface WorktreeInfo {
+  branch: string;
+  path: string;
+  state: WorkflowState;
+}
+
+export interface BaseState {
+  worktrees: Record<string, WorktreeInfo>;
+}
+
+export interface CurrentWorkflowState {
+  state: WorkflowState;
+}

@@ -42,7 +42,8 @@ src/
 │   │   ├── frontmatter.ts    # YAML frontmatter parsing and manipulation
 │   │   ├── file-resolver.ts  # File detection and resolution
 │   │   ├── git-utils.ts      # Git repository operations
-│   │   └── anthropic-service.ts # Anthropic LLM API integration
+│   │   ├── anthropic-service.ts # Anthropic LLM API integration
+│   │   └── workflow-service.ts  # ZAMM workflow lifecycle tracking services
 │   └── index.ts            # Core module exports
 ├── scripts/                # Development and maintenance scripts
 │   └── record-api-calls.ts # Script to record Anthropic API responses for testing
@@ -69,7 +70,26 @@ All TypeScript source files must be in the `src/` directory to maintain proper t
   - **impl create**: Generate reference implementation file for a spec and implementation
   - **impl record**: Record commit hashes and messages in implementation file frontmatter
 - **feat**: Feature lifecycle management commands
-  - **feat start**: Start a new feature with Git worktree and spec file using LLM suggestions
+  - **feat start**: Start a new feature with Git worktree, spec file, and workflow state tracking using LLM suggestions
+
+## ZAMM Workflow Tracking
+
+The implementation includes workflow lifecycle tracking through `.zamm/` directories:
+
+### Base Directory (Git Repository Root)
+
+- **`.zamm/base-state.json`**: Tracks all active worktrees, their branches, paths, and current states
+- **`.zamm/.gitignore`**: Ignores all `.zamm/` contents from Git tracking
+
+### Worktree Directories
+
+- **`.zamm/current-workflow-state.json`**: Tracks the current workflow state (`INITIAL`, `SPEC-UPDATED`, `SPEC-IMPLEMENTED`, `COMPLETED`)
+- **`.zamm/.gitignore`**: Ignores all `.zamm/` contents from Git tracking
+
+### Workflow Services
+
+- **BaseWorkflowService**: Manages base directory workflow state
+- **WorktreeWorkflowService**: Manages individual worktree workflow state
 
 ## Development
 
@@ -104,7 +124,7 @@ Test setup avoids runtime string replacement (e.g., `content.replace()`) and ins
 
 Use `copyTestFile` to copy test fixtures into the same corresponding path in a temporary test directory.
 
-Use `expectFileMatches(testEnv, relativePath, fixtureSubDir?)` to verify that a file in the temporary test directory matches a fixture file at the same relative path. The optional `fixtureSubDir` parameter specifies a subdirectory within the fixture directory (similar to `copyDirectoryFromFixture`).
+Use `expectFileMatches(testEnv, relativePath, fixtureSubDir?, replacements?)` to verify that a file in the temporary test directory matches a fixture file at the same relative path. The optional `fixtureSubDir` parameter specifies a subdirectory within the fixture directory (similar to `copyDirectoryFromFixture`). The optional `replacements` parameter allows for dynamic content replacement (e.g., replacing dynamic paths with fixed placeholders for testing).
 
 - **Do not** use `toContain()` to validate partial file content.
 - **Use expectFileMatches consistently** -- when updating test behavior, prefer modifying TestEnvironment over writing manual file verification
