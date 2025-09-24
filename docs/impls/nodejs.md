@@ -50,6 +50,8 @@ src/
 └── index.ts                # Library exports
 ```
 
+All TypeScript source files must be in the `src/` directory to maintain proper type checking. Place scripts and utilities in `src/scripts/` rather than bypassing TypeScript compilation. Build artifacts (`.js`, `.d.ts`, `.map` files) are generated in `dist/` and should not be modified directly.
+
 ## Commands
 
 - **Format**: `npm run format` - Format code with Prettier
@@ -77,18 +79,18 @@ src/
 
 ## Git Hooks
 
+Git hooks are configured via Husky in the `prepare` script that is triggered via `npm install`:
+
 - **Pre-commit**: Automatically runs linting, formatting on staged files, and builds the project
 - **Pre-push**: Runs full test suite before push
 
-### Setup on Fresh Clone
+### Setup on Fresh Clone/Worktree
 
 After cloning the repository, run:
 
 ```bash
 npm install
 ```
-
-The `prepare` script will automatically set up git hooks via Husky.
 
 ## Testing Guidelines
 
@@ -102,7 +104,9 @@ Test setup avoids runtime string replacement (e.g., `content.replace()`) and ins
 
 Use `copyTestFile` to copy test fixtures into the same corresponding path in a temporary test directory.
 
-Use `expectFileMatches(testEnv, relativePath, fixtureSubDir?)` to verify that a file in the temporary test directory matches a fixture file at the same relative path. The optional `fixtureSubDir` parameter specifies a subdirectory within the fixture directory (similar to `copyDirectoryFromFixture`).
+Use `expectFileMatches(testEnv, relativePath, fixtureSubDir?)` to verify that a file in the temporary test directory matches a fixture file at the same relative path. The optional `fixtureSubDir` parameter specifies a subdirectory within the fixture directory (similar to `copyDirectoryFromFixture`). **Do not** use `toContain()` to validate partial file content.
+
+All network-related functionality should be recorded and replayed with `nock`. Make sure to filter out sensitive data such as API keys when you do so.
 
 ## Known Issues
 
@@ -119,45 +123,3 @@ npm test -- --testPathPattern=implement.test.ts
 ```
 
 This change affects Jest CLI usage and may impact development workflows that rely on running individual test files. See https://jestjs.io/docs/cli for more information.
-
-## Development Guidance for Future Agents
-
-### Key Development Feedback and Lessons Learned
-
-1. **Respect TypeScript Configuration**
-   - **Lesson**: Always work within the existing `src/` directory structure rather than trying to bypass TypeScript compilation
-   - **Context**: When adding new scripts or utilities, place them in `src/scripts/` to maintain proper type checking
-   - **Anti-pattern**: Excluding directories from TypeScript config to avoid compilation issues
-
-2. **Don't Remove Working Code Without Understanding Context**
-   - **Lesson**: When cleaning up "useless files", verify what they actually are before deletion
-   - **Context**: Build artifacts (`.js`, `.d.ts`, `.map` files) vs source code (`.ts` files)
-   - **Best Practice**: Use `ls -la` to understand file types before removal
-
-3. **Mock Verification in Testing**
-   - **Lesson**: Always verify that mocks are actually being used in tests
-   - **Implementation**: Add usage counters and verification methods to confirm API interception
-   - **Why**: Ensures tests are hitting actual endpoints, not just passing without real validation
-
-4. **API Security in Testing**
-   - **Lesson**: Filter sensitive data (API keys) but match on actual test headers for proper validation
-   - **Pattern**: Record with filtered keys (`sk-FILTERED`), but match tests against actual test values
-   - **Implementation**: Use regex replacement in recordings while maintaining functional header matching
-
-5. **Commit Hygiene**
-   - **Lesson**: Don't include development/IDE files (like `.claude/` changes) in commits
-   - **Command**: Use `git restore --staged .claude/` to exclude development environment state
-   - **Focus**: Commits should contain only actual implementation changes
-
-6. **Testing with Real API Responses**
-   - **Lesson**: Use actual API recordings (nock) rather than mocked responses for more realistic testing
-   - **Benefits**: Better coverage of real API behavior, proper response format validation
-   - **Tools**: Nock with proper header matching and API key filtering
-
-### Established Best Practices
-
-- **Type Safety**: All code must pass TypeScript strict mode compilation
-- **Test Isolation**: Create controlled test environments rather than relying on excessive mocking
-- **Security**: Always filter sensitive data in recordings but maintain functional header matching
-- **Documentation**: Record both successful patterns and failed approaches for future reference
-- **Incremental Development**: Commit working code frequently, but keep commits focused and clean
