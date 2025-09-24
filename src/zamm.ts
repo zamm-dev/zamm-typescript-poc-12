@@ -11,6 +11,7 @@ import {
   getInfoByIdOrPath,
   generateImplementationNote,
   recordCommits,
+  recordSpecCommits,
   ImplementOptions,
   splitFile,
   SplitOptions,
@@ -149,6 +150,22 @@ function recordCommitsWithErrorHandling(
   }
 }
 
+function recordSpecCommitsWithErrorHandling(
+  idOrPath: string,
+  options: { lastNCommits: number }
+): void {
+  try {
+    recordSpecCommits(idOrPath, options.lastNCommits);
+    console.log(
+      chalk.green(`✓ Recorded ${options.lastNCommits} commit(s) to ${idOrPath}`)
+    );
+  } catch (error) {
+    const errorMessage = error instanceof Error ? error.message : String(error);
+    console.error(chalk.red(`Error: ${errorMessage}`));
+    process.exit(1);
+  }
+}
+
 const implCommand = program
   .command('impl')
   .alias('i')
@@ -206,6 +223,21 @@ featCommand
   .description('Start a new feature with worktree and spec file')
   .argument('<description...>', 'feature description')
   .action(featStartWithErrorHandling);
+
+const specCommand = program
+  .command('spec')
+  .description('Specification management commands');
+
+specCommand
+  .command('record')
+  .description('Record commit hashes in spec file')
+  .requiredOption(
+    '--last-n-commits <n>',
+    'number of recent commits to record',
+    parseInt
+  )
+  .argument('<id-or-path>', 'spec ID or file path to update')
+  .action(recordSpecCommitsWithErrorHandling);
 
 export { setIdProvider, resetIdProvider };
 

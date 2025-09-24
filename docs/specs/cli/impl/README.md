@@ -43,5 +43,10 @@ The command should validate that the target file has `type: ref-impl` in its fro
 
 If the `commits` field already exists, the new commits should be prepended to the existing list, maintaining chronological order with the most recent commits first.
 
+The command must also validate that the current directory is within a git repository before attempting to retrieve commit information. If not in a git repository, the command should exit with an appropriate error message.
+
 > [!NOTE]
 > For detailed examples and test cases, see [Test Spec KYT921](./tests/implement-command.md).
+
+> [!NOTE]
+> The `impl record` command is meant to do almost the exact same thing as the `spec record` command. As such, when editing this spec, consider editing [Spec PWQ070](/docs/specs/cli/spec/README.md) as well.
