@@ -27,7 +27,7 @@ The `feat` command deals with ZAMM behavior during a feature lifecycle.
 
    **Conflict Resolution**: If the branch name or directory already exists, ask the LLM for an alternative name suggestion and retry. Allow up to 3 attempts before failing with an appropriate error message.
 
-3. Create a new Spec file in `docs/spec-history/<sibling-directory-path>.md` with the same name as the sibling directory path, except with a Markdown file extension. This file should contain:
+3. Create a new Spec file in the worktree directory at `docs/spec-history/<sibling-directory-path>.md` with the same name as the sibling directory path, except with a Markdown file extension. This file should contain:
    - The same frontmatter that the `organize` command would populate it with, as specified in [Spec HJQ793](/llm-autostart/docs/specs/cli/organize/README.md)
    - An H1 Markdown title. Ask the LLM to come up with this as well
    - The original command input string, serving as the body for this specification file
