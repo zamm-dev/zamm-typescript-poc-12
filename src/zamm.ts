@@ -14,6 +14,8 @@ import {
   ImplementOptions,
   splitFile,
   SplitOptions,
+  featStart,
+  FeatStartOptions,
 } from './core/index';
 
 const program = new Command();
@@ -174,6 +176,36 @@ implCommand
     'reference implementation ID or file path to update'
   )
   .action(recordCommitsWithErrorHandling);
+
+async function featStartWithErrorHandling(args: string[]): Promise<void> {
+  try {
+    const description = args.join(' ');
+    if (!description.trim()) {
+      throw new Error('Description is required');
+    }
+
+    const featOptions: FeatStartOptions = {
+      description: description.trim(),
+    };
+
+    await featStart(featOptions);
+    console.log(chalk.green('✓ Feature started successfully'));
+  } catch (error) {
+    const errorMessage = error instanceof Error ? error.message : String(error);
+    console.error(chalk.red(`Error: ${errorMessage}`));
+    process.exit(1);
+  }
+}
+
+const featCommand = program
+  .command('feat')
+  .description('Feature lifecycle management commands');
+
+featCommand
+  .command('start')
+  .description('Start a new feature with worktree and spec file')
+  .argument('<description...>', 'feature description')
+  .action(featStartWithErrorHandling);
 
 export { setIdProvider, resetIdProvider };
 

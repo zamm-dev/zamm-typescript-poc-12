@@ -8,3 +8,4 @@ export * from './commands/organize';
 export * from './commands/info';
 export * from './commands/implement';
 export * from './commands/split';
+export * from './commands/feat';
