@@ -111,6 +111,20 @@ Use `expectFileMatches(testEnv, relativePath, fixtureSubDir?)` to verify that a 
 
 All network-related functionality should be recorded and replayed with `nock`. Make sure to filter out sensitive data such as API keys when you do so.
 
+### Recording API Calls for Tests
+
+To record new Anthropic API responses for testing, use the `record-api-calls.ts` script:
+
+```bash
+# Set your real Anthropic API key
+export ANTHROPIC_API_KEY=sk-your-actual-key
+
+# Run the recording script
+npx tsx src/scripts/record-api-calls.ts
+```
+
+This script records actual API responses for the feat command test scenarios and saves them as sanitized nock recordings in `src/__tests__/nock-recordings/feat-recordings.json`. The recorded responses are then used by tests to ensure deterministic behavior without making real API calls during test runs.
+
 ## Known Issues
 
 ### Jest CLI Options

@@ -48,3 +48,15 @@ export function isGitRepository(): boolean {
     return false;
   }
 }
+
+export function branchExists(branchName: string, gitRoot: string): boolean {
+  try {
+    execSync(`git show-ref --verify --quiet refs/heads/${branchName}`, {
+      cwd: gitRoot,
+      stdio: 'ignore',
+    });
+    return true;
+  } catch {
+    return false;
+  }
+}

@@ -54,7 +54,7 @@ export class AnthropicService {
       messages: [
         {
           role: 'user',
-          content: `The branch name "${conflictingBranchName}" conflicts. Suggest a different git branch name (lowercase, words separated by hyphens) for: "${description}". Respond with just the branch name, no explanation.`,
+          content: `The branch name "${conflictingBranchName}" conflicts. Suggest a **different** git branch name (lowercase, words separated by hyphens) for: "${description}". Respond with just the branch name, no explanation. Remember, it MUST be different from "${conflictingBranchName}".`,
         },
       ],
     });

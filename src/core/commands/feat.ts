@@ -4,6 +4,7 @@ import * as fs from 'fs';
 import { getIdProvider } from '../shared/id-provider';
 import { findGitRoot } from '../shared/file-utils';
 import { AnthropicService } from '../shared/anthropic-service';
+import { branchExists } from '../shared/git-utils';
 
 export interface FeatStartOptions {
   description: string;
@@ -58,48 +59,47 @@ export async function featStart(options: FeatStartOptions): Promise<void> {
     gitRoot
   );
 
-  // Create git worktree, retry with new name if conflict occurs
+  // Check for conflicts proactively and retry with new name if needed
   let retryCount = 0;
   const maxRetries = 3;
 
   while (retryCount < maxRetries) {
-    try {
+    // Check if branch already exists
+    const branchAlreadyExists = branchExists(branchName, gitRoot);
+    // Check if directory already exists
+    const directoryAlreadyExists = fs.existsSync(siblingPath);
+
+    if (branchAlreadyExists || directoryAlreadyExists) {
+      retryCount++;
+
+      if (retryCount >= maxRetries) {
+        const conflicts = [];
+        if (branchAlreadyExists) conflicts.push(`branch '${branchName}'`);
+        if (directoryAlreadyExists)
+          conflicts.push(`directory '${siblingPath}'`);
+
+        throw new Error(
+          `Failed to create unique branch/directory after ${maxRetries} attempts: ${conflicts.join(' and ')} already exist`
+        );
+      }
+
+      // Ask Claude for a new branch name
+      const rawRetryBranchName =
+        await anthropicService.suggestAlternativeBranchName(
+          options.description,
+          branchName
+        );
+      ({ branchName, siblingDirName, siblingPath } = processBranchName(
+        rawRetryBranchName,
+        gitRoot
+      ));
+    } else {
+      // No conflicts, create the worktree
       execSync(`git worktree add "${siblingPath}" -b "${branchName}"`, {
         cwd: gitRoot,
         stdio: 'inherit',
       });
       break; // Success, exit the loop
-    } catch (error) {
-      const errorMessage =
-        error instanceof Error ? error.message : String(error);
-
-      // Check if it's a conflict error
-      if (
-        errorMessage.includes('already exists') ||
-        errorMessage.includes('not a valid branch name')
-      ) {
-        retryCount++;
-
-        if (retryCount >= maxRetries) {
-          throw new Error(
-            `Failed to create unique branch/directory after ${maxRetries} attempts: ${errorMessage}`
-          );
-        }
-
-        // Ask Claude for a new branch name
-        const rawRetryBranchName =
-          await anthropicService.suggestAlternativeBranchName(
-            options.description,
-            branchName
-          );
-        ({ branchName, siblingDirName, siblingPath } = processBranchName(
-          rawRetryBranchName,
-          gitRoot
-        ));
-      } else {
-        // Some other error, rethrow
-        throw error;
-      }
     }
   }
 

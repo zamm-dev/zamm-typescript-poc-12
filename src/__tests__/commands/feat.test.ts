@@ -63,6 +63,11 @@ describe('ZAMM CLI Feat Command', () => {
     execSync('git config user.email "test@example.com"', { stdio: 'pipe' });
     execSync('git config user.name "Test User"', { stdio: 'pipe' });
 
+    // Create initial commit so we can create branches
+    fs.writeFileSync(path.join(testSubDir, 'README.md'), '# Test Repo');
+    execSync('git add README.md', { stdio: 'pipe' });
+    execSync('git commit -m "Initial commit"', { stdio: 'pipe' });
+
     testEnv = {
       tempDir: testSubDir,
       originalCwd,
@@ -145,6 +150,48 @@ describe('ZAMM CLI Feat Command', () => {
       expectFileMatches(
         worktreeTestEnv,
         'docs/spec-history/user-authentication.md'
+      );
+    });
+
+    it('should handle branch name conflicts proactively', async () => {
+      const options: FeatStartOptions = {
+        description: 'Add user authentication',
+      };
+
+      // First, create a branch that will conflict
+      execSync('git branch zamm/user-authentication', {
+        cwd: testEnv.tempDir,
+        stdio: 'pipe',
+      });
+
+      await featStart(options);
+
+      // Verify that a different branch name was used (not the original conflicting one)
+      const siblingDirs = fs.readdirSync(path.dirname(testEnv.tempDir));
+      expect(siblingDirs).toContain('user-authentication-feature');
+      expect(siblingDirs).not.toContain('user-authentication');
+
+      // Verify the branch was created with alternative name
+      const worktreePath = path.join(
+        path.dirname(testEnv.tempDir),
+        'user-authentication-feature'
+      );
+      const branches = execSync('git branch --show-current', {
+        stdio: 'pipe',
+        cwd: worktreePath,
+        encoding: 'utf-8',
+      }).trim();
+      expect(branches).toBe('zamm/user-authentication-feature');
+
+      // Verify spec file was created in the alternative worktree
+      const worktreeTestEnv = {
+        ...testEnv,
+        tempDir: worktreePath,
+      };
+      expectFileMatches(
+        worktreeTestEnv,
+        'docs/spec-history/user-authentication-feature.md',
+        'conflict-resolution'
       );
     });
   });
