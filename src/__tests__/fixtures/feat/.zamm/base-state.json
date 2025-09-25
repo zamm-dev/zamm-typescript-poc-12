@@ -1,0 +1,9 @@
+{
+  "worktrees": {
+    "zamm/user-authentication": {
+      "branch": "zamm/user-authentication",
+      "path": "/path/to/worktree",
+      "state": "INITIAL"
+    }
+  }
+}

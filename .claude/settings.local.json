@@ -26,7 +26,8 @@
       "Bash(pnpm build:*)",
       "Bash(pnpm exec playwright test:*)",
       "WebSearch",
-      "Bash(pnpm exec tsc:*)"
+      "Bash(pnpm exec tsc:*)",
+      "Bash(git reset:*)"
     ],
     "deny": [],
     "ask": []

@@ -16,6 +16,7 @@ src/
 │   │   ├── organize.test.ts  # Organize command tests
 │   │   ├── info.test.ts      # Info command tests
 │   │   ├── implement.test.ts # Implement command tests
+│   │   ├── spec.test.ts      # Spec command tests
 │   │   └── feat.test.ts      # Feature lifecycle command tests
 │   ├── shared/             # Shared test utilities
 │   │   ├── test-utils.ts     # Test utilities with directory copying
@@ -28,12 +29,14 @@ src/
 │       ├── info/           # Info command test fixtures
 │       ├── organize/       # Organize command test fixtures
 │       ├── implement/      # Implement command test fixtures
+│       ├── spec/           # Spec command test fixtures with before/after structure
 │       └── feat/           # Feat command test fixtures
 ├── core/                   # Core business logic
 │   ├── commands/           # Command-specific implementations
 │   │   ├── organize.ts       # Organize command logic
 │   │   ├── info.ts           # Info command logic
 │   │   ├── implement.ts      # Implement command logic
+│   │   ├── spec.ts           # Spec command logic
 │   │   └── feat.ts           # Feature lifecycle command logic
 │   ├── shared/             # Shared utilities and types
 │   │   ├── types.ts          # Type definitions
@@ -42,7 +45,10 @@ src/
 │   │   ├── frontmatter.ts    # YAML frontmatter parsing and manipulation
 │   │   ├── file-resolver.ts  # File detection and resolution
 │   │   ├── git-utils.ts      # Git repository operations
-│   │   └── anthropic-service.ts # Anthropic LLM API integration
+│   │   ├── file-types.ts     # File type utilities for consistent error messages
+│   │   ├── commit-recorder.ts # Shared commit recording logic for impl/spec commands
+│   │   ├── anthropic-service.ts # Anthropic LLM API integration
+│   │   └── workflow-service.ts  # ZAMM workflow lifecycle tracking services
 │   └── index.ts            # Core module exports
 ├── scripts/                # Development and maintenance scripts
 │   └── record-api-calls.ts # Script to record Anthropic API responses for testing
@@ -68,8 +74,29 @@ All TypeScript source files must be in the `src/` directory to maintain proper t
 - **impl/i**: Implementation management commands
   - **impl create**: Generate reference implementation file for a spec and implementation
   - **impl record**: Record commit hashes and messages in implementation file frontmatter
+- **spec**: Specification management commands
+  - **spec record**: Record commit hashes and messages in spec-history file frontmatter
 - **feat**: Feature lifecycle management commands
-  - **feat start**: Start a new feature with Git worktree and spec file using LLM suggestions
+  - **feat start**: Start a new feature with Git worktree, spec file, and workflow state tracking using LLM suggestions
+
+## ZAMM Workflow Tracking
+
+The implementation includes workflow lifecycle tracking through `.zamm/` directories:
+
+### Base Directory (Git Repository Root)
+
+- **`.zamm/base-state.json`**: Tracks all active worktrees, their branches, paths, and current states
+- **`.zamm/.gitignore`**: Ignores all `.zamm/` contents from Git tracking
+
+### Worktree Directories
+
+- **`.zamm/current-workflow-state.json`**: Tracks the current workflow state (`INITIAL`, `SPEC-UPDATED`, `SPEC-IMPLEMENTED`, `COMPLETED`)
+- **`.zamm/.gitignore`**: Ignores all `.zamm/` contents from Git tracking
+
+### Workflow Services
+
+- **BaseWorkflowService**: Manages base directory workflow state
+- **WorktreeWorkflowService**: Manages individual worktree workflow state
 
 ## Development
 
@@ -104,7 +131,7 @@ Test setup avoids runtime string replacement (e.g., `content.replace()`) and ins
 
 Use `copyTestFile` to copy test fixtures into the same corresponding path in a temporary test directory.
 
-Use `expectFileMatches(testEnv, relativePath, fixtureSubDir?)` to verify that a file in the temporary test directory matches a fixture file at the same relative path. The optional `fixtureSubDir` parameter specifies a subdirectory within the fixture directory (similar to `copyDirectoryFromFixture`).
+Use `expectFileMatches(testEnv, relativePath, fixtureSubDir?, replacements?)` to verify that a file in the temporary test directory matches a fixture file at the same relative path. The optional `fixtureSubDir` parameter specifies a subdirectory within the fixture directory (similar to `copyDirectoryFromFixture`). The optional `replacements` parameter allows for dynamic content replacement (e.g., replacing dynamic paths with fixed placeholders for testing).
 
 - **Do not** use `toContain()` to validate partial file content.
 - **Use expectFileMatches consistently** -- when updating test behavior, prefer modifying TestEnvironment over writing manual file verification
@@ -140,3 +167,37 @@ npm test -- --testPathPattern=implement.test.ts
 ```
 
 This change affects Jest CLI usage and may impact development workflows that rely on running individual test files. See https://jestjs.io/docs/cli for more information.
+
+### Jest Test Discovery and Command Files
+
+When adding new command files to `src/core/commands/`, ensure they don't match Jest's test patterns or they will be executed as tests. The current Jest configuration excludes `src/core/` and `src/scripts/` directories via `testPathIgnorePatterns`.
+
+If Jest tries to run a command file as a test, update the `testPathIgnorePatterns` in `jest.config.js`.
+
+## Development Guidelines for LLM Agents
+
+### Code Reuse Patterns
+
+When implementing commands that share similar logic (like commit recording), extract shared functionality into `src/core/shared/` utilities:
+
+- Use dependency injection patterns with callback functions for command-specific validation
+- Extract common error messaging utilities to ensure consistency
+- Follow the established pattern of `shared/commit-recorder.ts` for reusable business logic
+
+### Test Fixture Organization
+
+For commands that modify files, use before/after fixture structure:
+
+- `fixtures/{command}/before/` - initial state files
+- `fixtures/{command}/after/` - expected output files
+- `fixtures/{command}/before-with-{scenario}/` - scenario-specific initial states
+- Avoid `fs.writeFileSync` in tests; use fixture files for exact matching
+
+### CLI Integration
+
+New commands follow this pattern:
+
+1. Command logic in `src/core/commands/{command}.ts`
+2. Export from `src/core/index.ts`
+3. Add CLI integration in `src/zamm.ts` with error handling wrapper
+4. Update this documentation with command descriptions

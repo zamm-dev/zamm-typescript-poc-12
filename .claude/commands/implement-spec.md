@@ -21,12 +21,15 @@ This command follows an 8-step process for implementing specifications. Use the 
 ### Architecture and Code Quality
 
 - Extract service layers for external integrations (e.g., API clients)
+- Separate concerns with distinct service classes (e.g., BaseService vs WorktreeService)
 - Use proper error types instead of throwing generic errors
+- Use type assertions and proper error handling for JSON parsing
 
 ### Testing Strategy
 
 - Create comprehensive test suites that verify the complete workflow
 - Use exact file content matching with fixtures rather than partial string matching
+- Use `git add -f` for test fixtures that would be ignored by `.gitignore` files
 - Consolidate related test cases into single comprehensive tests
 - Set up isolated test environments rather than relying on extensive mocking
 - For API integrations, record real responses and filter sensitive data appropriately
@@ -36,6 +39,7 @@ This command follows an 8-step process for implementing specifications. Use the 
 
 - **Explain initial approaches** if the user wants to know why you did things a certain way
 - **Ask for clarification** when user feedback seems to contradict the spec
+- **Keep spec documentation concise** - and do not put implementation details into specs, only newly learned requirements!
 - **Commit regularly** but don't include development environment files (`.claude/` changes)
 - **Make sure to actually commit first** before recording the implementation commit - don't be distracted by user guidance on the proper implementation steps and forget to commit
 - **ALWAYS run `git add -A` before committing** - forgetting to stage changes is a recurring issue
