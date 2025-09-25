@@ -7,11 +7,12 @@ This command follows an 8-step process for implementing specifications. Use the 
 1. **Project Analysis**: Run `eza . --tree --git-ignore` to understand the entire project structure
 2. **Spec Analysis**: Run `git diff main` to understand the latest requested spec changes and implementation requirements
 3. **Implementation**: Implement the specification following development best practices (see guidelines below)
+   3.5. **Code Commit**: ALWAYS commit the implementation code changes before proceeding to documentation steps
 4. **Documentation Generation**: Run `zamm impl create --spec <new-spec-file> --for docs/impls/nodejs.md`
 5. **Implementation Documentation**: Update the generated plan file with surprises, errors, and implementation guidance. The goal of this step is to warn future readers about anything they should take into account when re-implementing this spec.
 6. **Commit Recording**: Run `zamm impl record <ref-impl> --last-n-commits <N>`, where `<N>` is the total number of commits you've made and `<ref-impl>` is the file path or ID of the plan file you just edited.
 7. **Development Documentation**: Update `docs/impls/` with concise _implementation-specific_ development guidance for future agents (e.g. changes to project structure, dev commands, or anything else of note to future LLM agents working on this specific project). You should **never** duplicate feature documentation in this step -- that information belongs in the specs in `docs/`.
-8. **Spec Updates**: Update the original spec with learned requirements that apply to all implementations. This should be things that were originally left underspecified in the original spec.
+8. **Spec Updates**: Update the main spec (NOT spec-history) with learned requirements that apply to all implementations. Keep spec-history files concise as changelog entries. Write specs as present-tense directives for future implementers.
 9. Make another commit with all the documentation updates. This commit does not need to be recorded in any spec files.
 10. **Collaboration Improvements**: Update `.claude/commands/implement-spec.md` with improvements to future collaboration with the user, based on what happened in this interaction.
 
@@ -37,6 +38,9 @@ This command follows an 8-step process for implementing specifications. Use the 
 - **Ask for clarification** when user feedback seems to contradict the spec
 - **Commit regularly** but don't include development environment files (`.claude/` changes)
 - **Make sure to actually commit first** before recording the implementation commit - don't be distracted by user guidance on the proper implementation steps and forget to commit
+- **ALWAYS run `git add -A` before committing** - forgetting to stage changes is a recurring issue
+- **Clean up ALL debugging files and code before committing** - this includes temporary files, console.log statements, commented code, and unused imports
+- **Use `echo >>` to add trailing newlines to files** - the editing tools don't handle trailing newlines properly
 
 ### Common Patterns to Avoid
 
