@@ -7,4 +7,6 @@ commits:
 
 # Properly handle duplicate Git branches in `feat start`
 
-Handle the error "fatal: a branch named 'zamm/spec-record-for-spec-history' already exists" in `feat start`. There should already be code to handle this, but it appears that code is not handling it
+Handle the error "fatal: a branch named 'zamm/spec-record-for-spec-history' already exists" in `feat start`. There should already be code to handle this, but it appears that code is not handling it.
+
+Fix by implementing proactive conflict checking instead of reactive error handling.
