@@ -138,7 +138,9 @@ Use `expectFileMatches(testEnv, relativePath, fixtureSubDir?, replacements?)` to
 
 ### Service Testing Strategy
 
-External services use unit tests with configurable mocks and separate API tests with nock recordings.
+External services use unit tests with Jest built-in mocks and separate API tests with nock recordings.
+
+- **Configure ESLint properly** for Jest tests by disabling `@typescript-eslint/unbound-method` and enabling `jest/unbound-method` rules. See https://stackoverflow.com/a/70350452
 
 All network-related functionality should be recorded and replayed with `nock`. Make sure to filter out sensitive data such as API keys when you do so.
 
