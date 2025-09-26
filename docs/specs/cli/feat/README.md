@@ -57,7 +57,7 @@ There should be a `.zamm/current-workflow-state.json` file that keeps track of t
    ```
 
 > [!NOTE]
-> In total, there are three LLM calls here: initial branch name, spec title, and optionally alternative branch names for conflicts.
+> In total, there are three LLM calls here: initial branch name, spec title, and optionally alternative branch names for conflicts. The prompts are documented in [Spec IWO186](./prompts.md).
 
 ## Implementation Notes
 
