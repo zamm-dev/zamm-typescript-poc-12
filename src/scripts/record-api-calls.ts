@@ -22,7 +22,7 @@ async function recordApiCalls(): Promise<void> {
     console.log('Spec title:', specTitle);
     const altBranchName = await anthropicService.suggestAlternativeBranchName(
       'Add user authentication',
-      'zamm/user-authentication'
+      branchName
     );
     console.log('Alternative branch name:', altBranchName);
 

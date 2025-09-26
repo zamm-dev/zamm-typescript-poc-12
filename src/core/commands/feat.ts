@@ -58,7 +58,7 @@ export async function featStart(options: FeatStartOptions): Promise<void> {
   await BaseWorkflowService.initialize(gitRoot);
 
   // Get branch name suggestion from Anthropic
-  const rawBranchName = await anthropicService.suggestBranchName(
+  let rawBranchName = await anthropicService.suggestBranchName(
     options.description
   );
   let { branchName, siblingDirName, siblingPath } = processBranchName(
@@ -91,13 +91,12 @@ export async function featStart(options: FeatStartOptions): Promise<void> {
       }
 
       // Ask Claude for a new branch name
-      const rawRetryBranchName =
-        await anthropicService.suggestAlternativeBranchName(
-          options.description,
-          branchName
-        );
+      rawBranchName = await anthropicService.suggestAlternativeBranchName(
+        options.description,
+        rawBranchName
+      );
       ({ branchName, siblingDirName, siblingPath } = processBranchName(
-        rawRetryBranchName,
+        rawBranchName,
         gitRoot
       ));
     } else {

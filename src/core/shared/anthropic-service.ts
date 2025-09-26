@@ -39,7 +39,7 @@ export class RealAnthropicService implements AnthropicService {
       messages: [
         {
           role: 'user',
-          content: `Suggest a concise git branch name (lowercase, words separated by hyphens) for this feature description: "${description}". Respond with just the branch name, no explanation.`,
+          content: `Suggest a concise git branch name (lowercase, words separated by hyphens) for this feature description: "${description}". Respond with just the branch name, no explanation. The branch name should be 3 words or less.`,
         },
       ],
     });
@@ -63,7 +63,15 @@ export class RealAnthropicService implements AnthropicService {
       messages: [
         {
           role: 'user',
-          content: `The branch name "${conflictingBranchName}" conflicts. Suggest a **different** git branch name (lowercase, words separated by hyphens) for: "${description}". Respond with just the branch name, no explanation. Remember, it MUST be different from "${conflictingBranchName}".`,
+          content: `Suggest a concise git branch name (lowercase, words separated by hyphens) for this feature description: "${description}". Respond with just the branch name, no explanation. The branch name should be 3 words or less.`,
+        },
+        {
+          role: 'assistant',
+          content: conflictingBranchName,
+        },
+        {
+          role: 'user',
+          content: `The branch "${conflictingBranchName}" already exists. Please suggest a **different** git branch name that's 3 words or less. Remember, it MUST be different from "${conflictingBranchName}".`,
         },
       ],
     });

@@ -3,6 +3,7 @@ const tsPlugin = require('@typescript-eslint/eslint-plugin');
 const tsParser = require('@typescript-eslint/parser');
 const prettierConfig = require('eslint-config-prettier');
 const prettierPlugin = require('eslint-plugin-prettier');
+const jestPlugin = require('eslint-plugin-jest');
 
 module.exports = [
   js.configs.recommended,
@@ -77,6 +78,7 @@ module.exports = [
     plugins: {
       '@typescript-eslint': tsPlugin,
       prettier: prettierPlugin,
+      jest: jestPlugin,
     },
     rules: {
       ...tsPlugin.configs.recommended.rules,
@@ -87,6 +89,8 @@ module.exports = [
       ],
       'prefer-const': 'error',
       'no-console': 'off',
+      '@typescript-eslint/unbound-method': 'off',
+      'jest/unbound-method': 'error',
     },
   },
   {

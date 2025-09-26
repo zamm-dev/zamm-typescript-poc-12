@@ -54,16 +54,16 @@ describe('RealAnthropicService Unit Tests', () => {
       'Add user authentication'
     );
 
-    expect(branchName).toBe('user-authentication');
+    expect(branchName).toBe('add-user-auth');
   });
 
   it('should suggest alternative branch name via API', async () => {
     const altBranchName = await anthropicService.suggestAlternativeBranchName(
       'Add user authentication',
-      'zamm/user-authentication'
+      'add-user-auth'
     );
 
-    expect(altBranchName).toBe('user-authentication-feature');
+    expect(altBranchName).toBe('user-authentication');
   });
 
   it('should suggest spec title via API', async () => {

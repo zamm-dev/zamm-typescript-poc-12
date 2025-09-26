@@ -26,32 +26,10 @@ class TestIdProvider implements IdProvider {
   }
 }
 
-class MockAnthropicService implements AnthropicService {
-  constructor(
-    private branchName: string,
-    private alternativeBranchName: string,
-    private specTitle: string
-  ) {}
-
-  async suggestBranchName(_description: string): Promise<string> {
-    return Promise.resolve(this.branchName);
-  }
-
-  async suggestAlternativeBranchName(
-    _description: string,
-    _conflictingBranchName: string
-  ): Promise<string> {
-    return Promise.resolve(this.alternativeBranchName);
-  }
-
-  async suggestSpecTitle(_description: string): Promise<string> {
-    return Promise.resolve(this.specTitle);
-  }
-}
-
 describe('ZAMM CLI Feat Command', () => {
   let testEnv: TestEnvironment;
   let testBaseDir: string;
+  let mockAnthropicService: jest.Mocked<AnthropicService>;
 
   beforeAll(() => {
     // Create a base directory for all feat tests
@@ -94,19 +72,24 @@ describe('ZAMM CLI Feat Command', () => {
     };
 
     setIdProvider(new TestIdProvider());
-    setAnthropicService(
-      new MockAnthropicService(
-        'user-authentication',
-        'user-authentication-feature',
-        'Add User Authentication'
-      )
-    );
+
+    // Create Jest mock for AnthropicService
+    mockAnthropicService = {
+      suggestBranchName: jest.fn().mockResolvedValue('user-authentication'),
+      suggestAlternativeBranchName: jest
+        .fn()
+        .mockResolvedValue('user-authentication-feature'),
+      suggestSpecTitle: jest.fn().mockResolvedValue('Add User Authentication'),
+    };
+
+    setAnthropicService(mockAnthropicService);
   });
 
   afterEach(() => {
     cleanupTestEnvironment(testEnv);
     resetIdProvider();
     resetAnthropicService();
+    jest.clearAllMocks();
   });
 
   describe('featStart', () => {
@@ -160,6 +143,14 @@ describe('ZAMM CLI Feat Command', () => {
         '.zamm/current-workflow-state.json',
         'worktree'
       );
+
+      // Verify Anthropic service was called with correct arguments
+      expect(mockAnthropicService.suggestBranchName).toHaveBeenCalledWith(
+        'Add user authentication'
+      );
+      expect(mockAnthropicService.suggestSpecTitle).toHaveBeenCalledWith(
+        'Add user authentication'
+      );
     });
 
     it('should handle branch name conflicts proactively', async () => {
@@ -201,6 +192,17 @@ describe('ZAMM CLI Feat Command', () => {
         worktreeTestEnv,
         'docs/spec-history/user-authentication-feature.md',
         'conflict-resolution'
+      );
+
+      // Verify Anthropic service was called with correct arguments
+      expect(mockAnthropicService.suggestBranchName).toHaveBeenCalledWith(
+        'Add user authentication'
+      );
+      expect(
+        mockAnthropicService.suggestAlternativeBranchName
+      ).toHaveBeenCalledWith('Add user authentication', 'user-authentication');
+      expect(mockAnthropicService.suggestSpecTitle).toHaveBeenCalledWith(
+        'Add user authentication'
       );
     });
   });
