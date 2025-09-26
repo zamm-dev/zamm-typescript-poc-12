@@ -1,6 +1,6 @@
 #!/usr/bin/env npx tsx
 
-import { AnthropicService } from '../core/shared/anthropic-service';
+import { RealAnthropicService } from '../core/shared/anthropic-service';
 import { NockRecorder } from '../__tests__/shared/nock-utils';
 
 async function recordApiCalls(): Promise<void> {
@@ -10,7 +10,7 @@ async function recordApiCalls(): Promise<void> {
   recorder.startRecording();
 
   try {
-    const anthropicService = new AnthropicService();
+    const anthropicService = new RealAnthropicService();
 
     const branchName = await anthropicService.suggestBranchName(
       'Add user authentication'

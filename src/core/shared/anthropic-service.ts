@@ -7,7 +7,16 @@ export class AnthropicError extends Error {
   }
 }
 
-export class AnthropicService {
+export interface AnthropicService {
+  suggestBranchName(description: string): Promise<string>;
+  suggestAlternativeBranchName(
+    description: string,
+    conflictingBranchName: string
+  ): Promise<string>;
+  suggestSpecTitle(description: string): Promise<string>;
+}
+
+export class RealAnthropicService implements AnthropicService {
   private anthropic: Anthropic;
 
   constructor() {
@@ -88,4 +97,18 @@ export class AnthropicService {
       );
     }
   }
+}
+
+let globalAnthropicService: AnthropicService = new RealAnthropicService();
+
+export function setAnthropicService(service: AnthropicService): void {
+  globalAnthropicService = service;
+}
+
+export function resetAnthropicService(): void {
+  globalAnthropicService = new RealAnthropicService();
+}
+
+export function getAnthropicService(): AnthropicService {
+  return globalAnthropicService;
 }

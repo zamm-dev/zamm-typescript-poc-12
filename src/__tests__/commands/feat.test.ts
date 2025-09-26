@@ -14,7 +14,11 @@ import {
   cleanupTestEnvironment,
   expectFileMatches,
 } from '../shared/test-utils';
-import { NockRecorder } from '../shared/nock-utils';
+import {
+  AnthropicService,
+  setAnthropicService,
+  resetAnthropicService,
+} from '../../core/shared/anthropic-service';
 
 class TestIdProvider implements IdProvider {
   generateId(): string {
@@ -22,26 +26,41 @@ class TestIdProvider implements IdProvider {
   }
 }
 
+class MockAnthropicService implements AnthropicService {
+  constructor(
+    private branchName: string,
+    private alternativeBranchName: string,
+    private specTitle: string
+  ) {}
+
+  async suggestBranchName(_description: string): Promise<string> {
+    return Promise.resolve(this.branchName);
+  }
+
+  async suggestAlternativeBranchName(
+    _description: string,
+    _conflictingBranchName: string
+  ): Promise<string> {
+    return Promise.resolve(this.alternativeBranchName);
+  }
+
+  async suggestSpecTitle(_description: string): Promise<string> {
+    return Promise.resolve(this.specTitle);
+  }
+}
+
 describe('ZAMM CLI Feat Command', () => {
   let testEnv: TestEnvironment;
-  let originalApiKey: string | undefined;
   let testBaseDir: string;
-  let nockRecorder: NockRecorder;
 
   beforeAll(() => {
     // Create a base directory for all feat tests
     testBaseDir = fs.mkdtempSync(path.join(os.tmpdir(), 'zamm-feat-tests-'));
-
-    // Initialize nock recorder
-    nockRecorder = new NockRecorder('feat-recordings.json');
   });
 
   afterAll(() => {
     // Clean up the entire test directory
     fs.rmSync(testBaseDir, { recursive: true, force: true });
-
-    // Clean up nock
-    nockRecorder.clear();
   });
 
   beforeEach(() => {
@@ -75,50 +94,22 @@ describe('ZAMM CLI Feat Command', () => {
     };
 
     setIdProvider(new TestIdProvider());
-
-    // Set up API key for tests
-    originalApiKey = process.env.ANTHROPIC_API_KEY;
-    process.env.ANTHROPIC_API_KEY = 'test-api-key';
-
-    // Set up nock recordings for API calls
-    nockRecorder.playbackRecordings();
+    setAnthropicService(
+      new MockAnthropicService(
+        'user-authentication',
+        'user-authentication-feature',
+        'Add User Authentication'
+      )
+    );
   });
 
   afterEach(() => {
     cleanupTestEnvironment(testEnv);
     resetIdProvider();
-
-    // Restore API key
-    if (originalApiKey) {
-      process.env.ANTHROPIC_API_KEY = originalApiKey;
-    } else {
-      delete process.env.ANTHROPIC_API_KEY;
-    }
-
-    // Verify that at least one mock was used during the test
-    // Skip verification for tests that should not make API calls
-    if (process.env.ANTHROPIC_API_KEY === 'test-api-key') {
-      nockRecorder.verifyMocksUsed();
-    }
-
-    // Reset nock for next test
-    nockRecorder.clear();
-    nockRecorder.playbackRecordings();
+    resetAnthropicService();
   });
 
   describe('featStart', () => {
-    it('should throw error when ANTHROPIC_API_KEY is missing', async () => {
-      delete process.env.ANTHROPIC_API_KEY;
-
-      const options: FeatStartOptions = {
-        description: 'Add user authentication',
-      };
-
-      await expect(featStart(options)).rejects.toThrow(
-        'ANTHROPIC_API_KEY environment variable is required'
-      );
-    });
-
     it('should create worktree, branch, and spec file successfully', async () => {
       const options: FeatStartOptions = {
         description: 'Add user authentication',

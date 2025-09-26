@@ -136,6 +136,13 @@ Use `expectFileMatches(testEnv, relativePath, fixtureSubDir?, replacements?)` to
 - **Do not** use `toContain()` to validate partial file content.
 - **Use expectFileMatches consistently** -- when updating test behavior, prefer modifying TestEnvironment over writing manual file verification
 
+### Service Testing Strategy
+
+External services use a two-tiered testing approach:
+
+- **Unit Tests**: Use mock service implementations (e.g., `MockAnthropicService`) to test command logic with predictable responses, eliminating network dependencies
+- **Integration Tests**: Test real service implementations (e.g., `RealAnthropicService`) with recorded API responses using nock to ensure actual API compatibility
+
 All network-related functionality should be recorded and replayed with `nock`. Make sure to filter out sensitive data such as API keys when you do so.
 
 ### Recording API Calls for Tests
@@ -183,6 +190,37 @@ When implementing commands that share similar logic (like commit recording), ext
 - Use dependency injection patterns with callback functions for command-specific validation
 - Extract common error messaging utilities to ensure consistency
 - Follow the established pattern of `shared/commit-recorder.ts` for reusable business logic
+
+### Service Dependency Injection
+
+External services follow the IdProvider pattern for dependency injection:
+
+- **Interface Definition**: Services define contracts through interfaces (e.g., `AnthropicService`)
+- **Real Implementation**: Production implementations (e.g., `RealAnthropicService`) integrate with actual APIs
+- **Mock Implementation**: Test implementations (e.g., `MockAnthropicService`) return predictable values for unit testing
+- **Integration Testing**: Real service implementations are tested separately with recorded API responses using nock
+- **Command Integration**: Commands accept service instances via optional parameters with production defaults
+
+Example pattern:
+
+```typescript
+// Service interface
+export interface AnthropicService {
+  suggestBranchName(description: string): Promise<string>;
+}
+
+// Command accepts service via dependency injection
+export interface FeatStartOptions {
+  description: string;
+  anthropicService?: AnthropicService; // Optional, defaults to real service
+}
+
+export async function featStart(options: FeatStartOptions): Promise<void> {
+  const anthropicService =
+    options.anthropicService || new RealAnthropicService();
+  // ... use service
+}
+```
 
 ### Test Fixture Organization
 

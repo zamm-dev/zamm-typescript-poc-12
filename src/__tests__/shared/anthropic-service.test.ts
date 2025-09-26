@@ -1,0 +1,76 @@
+import { RealAnthropicService } from '../../core/shared/anthropic-service';
+import { NockRecorder } from './nock-utils';
+import * as nock from 'nock';
+
+describe('RealAnthropicService Unit Tests', () => {
+  let originalApiKey: string | undefined;
+  let nockRecorder: NockRecorder;
+  let anthropicService: RealAnthropicService;
+
+  beforeAll(() => {
+    nockRecorder = new NockRecorder('feat-recordings.json');
+  });
+
+  afterAll(() => {
+    nock.cleanAll();
+    nock.restore();
+  });
+
+  beforeEach(() => {
+    originalApiKey = process.env.ANTHROPIC_API_KEY;
+    process.env.ANTHROPIC_API_KEY = 'test-api-key';
+
+    anthropicService = new RealAnthropicService();
+    nockRecorder.playbackRecordings();
+  });
+
+  afterEach(() => {
+    if (originalApiKey) {
+      process.env.ANTHROPIC_API_KEY = originalApiKey;
+    } else {
+      delete process.env.ANTHROPIC_API_KEY;
+    }
+
+    // Check if all nock mocks were used (only if we set up mocks)
+    if (process.env.ANTHROPIC_API_KEY === 'test-api-key') {
+      expect(nock.isDone()).toBe(true);
+    }
+
+    nock.cleanAll();
+    nockRecorder.clear();
+    nockRecorder.playbackRecordings();
+  });
+
+  it('should throw error when ANTHROPIC_API_KEY is missing', () => {
+    delete process.env.ANTHROPIC_API_KEY;
+
+    expect(() => new RealAnthropicService()).toThrow(
+      'ANTHROPIC_API_KEY environment variable is required'
+    );
+  });
+
+  it('should suggest branch name via API', async () => {
+    const branchName = await anthropicService.suggestBranchName(
+      'Add user authentication'
+    );
+
+    expect(branchName).toBe('user-authentication');
+  });
+
+  it('should suggest alternative branch name via API', async () => {
+    const altBranchName = await anthropicService.suggestAlternativeBranchName(
+      'Add user authentication',
+      'zamm/user-authentication'
+    );
+
+    expect(altBranchName).toBe('user-authentication-feature');
+  });
+
+  it('should suggest spec title via API', async () => {
+    const specTitle = await anthropicService.suggestSpecTitle(
+      'Add user authentication'
+    );
+
+    expect(specTitle).toBe('Add User Authentication');
+  });
+});

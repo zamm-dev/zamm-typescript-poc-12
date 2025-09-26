@@ -3,7 +3,7 @@ import * as path from 'path';
 import * as fs from 'fs';
 import { getIdProvider } from '../shared/id-provider';
 import { findGitRoot } from '../shared/file-utils';
-import { AnthropicService } from '../shared/anthropic-service';
+import { getAnthropicService } from '../shared/anthropic-service';
 import { branchExists } from '../shared/git-utils';
 import {
   BaseWorkflowService,
@@ -45,8 +45,8 @@ function processBranchName(
 }
 
 export async function featStart(options: FeatStartOptions): Promise<void> {
-  // Initialize Anthropic service
-  const anthropicService = new AnthropicService();
+  // Get Anthropic service from global singleton
+  const anthropicService = getAnthropicService();
 
   // Find git root
   const gitRoot = findGitRoot(process.cwd());
