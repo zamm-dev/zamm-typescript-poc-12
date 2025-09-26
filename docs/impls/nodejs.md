@@ -199,28 +199,7 @@ External services follow the IdProvider pattern for dependency injection:
 - **Real Implementation**: Production implementations (e.g., `RealAnthropicService`) integrate with actual APIs
 - **Mock Implementation**: Test implementations (e.g., `MockAnthropicService`) return predictable values for unit testing
 - **Integration Testing**: Real service implementations are tested separately with recorded API responses using nock
-- **Command Integration**: Commands accept service instances via optional parameters with production defaults
-
-Example pattern:
-
-```typescript
-// Service interface
-export interface AnthropicService {
-  suggestBranchName(description: string): Promise<string>;
-}
-
-// Command accepts service via dependency injection
-export interface FeatStartOptions {
-  description: string;
-  anthropicService?: AnthropicService; // Optional, defaults to real service
-}
-
-export async function featStart(options: FeatStartOptions): Promise<void> {
-  const anthropicService =
-    options.anthropicService || new RealAnthropicService();
-  // ... use service
-}
-```
+- **Command Integration**: Commands use global singleton pattern with getter functions
 
 ### Test Fixture Organization
 
