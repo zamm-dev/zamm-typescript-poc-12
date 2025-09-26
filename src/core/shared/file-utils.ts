@@ -1,5 +1,6 @@
 import * as fs from 'fs';
 import * as path from 'path';
+import { BaseWorkflowService } from './workflow-service';
 
 export function findGitRoot(startPath: string): string | null {
   let currentPath = path.resolve(startPath);
@@ -61,4 +62,26 @@ export function resolveTitleFromFile(filePath: string): string {
   } catch {
     return filePath;
   }
+}
+
+export async function getDocsDirectory(): Promise<string> {
+  const gitRoot = findGitRoot(process.cwd());
+  if (!gitRoot) {
+    throw new Error('Not in a git repository');
+  }
+
+  const redirectDir = await BaseWorkflowService.getRedirectDirectory(gitRoot);
+  if (redirectDir) {
+    if (!fs.existsSync(redirectDir)) {
+      throw new Error(`Redirect directory does not exist: ${redirectDir}`);
+    }
+    return redirectDir;
+  }
+
+  const defaultDocsPath = path.join(gitRoot, 'docs');
+  if (!fs.existsSync(defaultDocsPath)) {
+    throw new Error('docs/ directory not found and no redirect configured');
+  }
+
+  return defaultDocsPath;
 }

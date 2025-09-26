@@ -1,17 +1,18 @@
 import * as fs from 'fs';
 import * as path from 'path';
 import { FileInfo } from './types';
-import { findGitRoot, findMarkdownFiles } from './file-utils';
+import { findGitRoot, findMarkdownFiles, getDocsDirectory } from './file-utils';
 import { parseFrontmatter } from './frontmatter';
 
-export function detectFileType(filePath: string, gitRoot: string): string {
-  const relativePath = path.relative(gitRoot, filePath);
+export async function detectFileType(filePath: string): Promise<string> {
+  const docsDir = await getDocsDirectory();
+  const relativePath = path.relative(docsDir, filePath);
 
-  if (relativePath === 'docs/README.md') {
+  if (relativePath === 'README.md') {
     return 'project';
   }
 
-  if (relativePath.startsWith('docs/impls/')) {
+  if (relativePath.startsWith('impls/')) {
     return 'implementation';
   }
 
@@ -23,24 +24,20 @@ export function detectFileType(filePath: string, gitRoot: string): string {
     return 'test';
   }
 
-  if (relativePath.startsWith('docs/specs/')) {
+  if (relativePath.startsWith('specs/')) {
     return 'spec';
   }
 
   return 'spec';
 }
 
-export function findFileById(id: string): string | null {
+export async function findFileById(id: string): Promise<string | null> {
   const gitRoot = findGitRoot(process.cwd());
   if (!gitRoot) {
     throw new Error('Not in a git repository');
   }
 
-  const docsPath = path.join(gitRoot, 'docs');
-  if (!fs.existsSync(docsPath)) {
-    throw new Error('docs/ directory not found');
-  }
-
+  const docsPath = await getDocsDirectory();
   const markdownFiles = findMarkdownFiles(docsPath);
 
   for (const filePath of markdownFiles) {
@@ -59,7 +56,7 @@ export function findFileById(id: string): string | null {
   return null;
 }
 
-export function getFileInfo(filePath: string): FileInfo {
+export async function getFileInfo(filePath: string): Promise<FileInfo> {
   const absolutePath = path.resolve(filePath);
 
   if (!fs.existsSync(absolutePath)) {
@@ -80,25 +77,32 @@ export function getFileInfo(filePath: string): FileInfo {
     );
   }
 
-  const relativePath = path.relative(gitRoot, absolutePath);
-  const fileType = detectFileType(absolutePath, gitRoot);
+  const docsDir = await getDocsDirectory();
+  const fileType = frontmatter.type || (await detectFileType(absolutePath));
+
+  // Path relative to docs directory for internal storage
+  const docsRelativePath = path.relative(docsDir, absolutePath);
+
+  // Path relative to current directory for user display
+  const currentDirRelativePath = path.relative(process.cwd(), absolutePath);
 
   return {
     id: frontmatter.id,
     type: fileType,
-    filePath: `/${relativePath}`,
+    filePath: `/${docsRelativePath}`,
+    displayPath: currentDirRelativePath,
     absolutePath,
     gitRoot,
   };
 }
 
-export function resolveFileInfo(idOrPath: string): FileInfo {
+export async function resolveFileInfo(idOrPath: string): Promise<FileInfo> {
   let filePath: string;
 
   if (fs.existsSync(path.resolve(idOrPath))) {
     filePath = path.resolve(idOrPath);
   } else {
-    const foundPath = findFileById(idOrPath);
+    const foundPath = await findFileById(idOrPath);
     if (!foundPath) {
       throw new Error(
         `No file found matching the given ID or path: ${idOrPath}`
@@ -107,5 +111,5 @@ export function resolveFileInfo(idOrPath: string): FileInfo {
     filePath = foundPath;
   }
 
-  return getFileInfo(filePath);
+  return await getFileInfo(filePath);
 }

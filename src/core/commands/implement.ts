@@ -2,41 +2,38 @@ import * as fs from 'fs';
 import * as path from 'path';
 import * as yaml from 'js-yaml';
 import { FileInfo, ImplementOptions } from '../shared/types';
-import { findGitRoot } from '../shared/file-utils';
+import { findGitRoot, getDocsDirectory } from '../shared/file-utils';
 import { resolveFileInfo } from '../shared/file-resolver';
 import { getIdProvider } from '../shared/id-provider';
 import { getFileTypeLabel, getFileTypeDescription } from '../shared/file-types';
 import { recordCommitsToFile } from '../shared/commit-recorder';
 
-function getNewImplementationNotePath(
+async function getNewImplementationNotePath(
   gitRoot: string,
   implInfo: FileInfo,
   specInfo: FileInfo
-): string {
+): Promise<string> {
   // Get implementation file name for directory structure
   const implFileName = path.basename(implInfo.absolutePath, '.md');
 
-  const normalizedGitRoot = fs.realpathSync(gitRoot);
+  const docsDir = await getDocsDirectory();
   const normalizedSpecPath = fs.realpathSync(specInfo.absolutePath);
-  const specRelativePath = path.relative(normalizedGitRoot, normalizedSpecPath);
+  const specRelativePath = path.relative(docsDir, normalizedSpecPath);
 
   // Extract subdirectory from spec path
   let specSubPath: string;
-  if (specRelativePath.startsWith('docs/specs/')) {
+  if (specRelativePath.startsWith('specs/')) {
+    specSubPath = path.dirname(specRelativePath.substring('specs/'.length));
+  } else if (specRelativePath.startsWith('spec-history/')) {
     specSubPath = path.dirname(
-      specRelativePath.substring('docs/specs/'.length)
-    );
-  } else if (specRelativePath.startsWith('docs/spec-history/')) {
-    specSubPath = path.dirname(
-      specRelativePath.substring('docs/spec-history/'.length)
+      specRelativePath.substring('spec-history/'.length)
     );
   } else {
     specSubPath = path.dirname(specRelativePath);
   }
 
   const implHistoryDir = path.join(
-    gitRoot,
-    'docs',
+    docsDir,
     'impl-history',
     implFileName,
     specSubPath
@@ -52,15 +49,17 @@ function getNewImplementationNotePath(
   return newFilePath;
 }
 
-export function generateImplementationNote(options: ImplementOptions): string {
+export async function generateImplementationNote(
+  options: ImplementOptions
+): Promise<string> {
   const gitRoot = findGitRoot(process.cwd());
   if (!gitRoot) {
     throw new Error('Not in a git repository');
   }
 
   // Get the actual IDs by resolving the file info first
-  const specInfo = resolveFileInfo(options.specIdOrPath);
-  const implInfo = resolveFileInfo(options.implIdOrPath);
+  const specInfo = await resolveFileInfo(options.specIdOrPath);
+  const implInfo = await resolveFileInfo(options.implIdOrPath);
 
   if (specInfo.type !== 'spec' && specInfo.type !== 'test') {
     throw new Error(
@@ -91,7 +90,11 @@ export function generateImplementationNote(options: ImplementOptions): string {
     },
   };
 
-  const newFilePath = getNewImplementationNotePath(gitRoot, implInfo, specInfo);
+  const newFilePath = await getNewImplementationNotePath(
+    gitRoot,
+    implInfo,
+    specInfo
+  );
 
   const yamlFrontmatter = yaml
     .dump(frontmatter, {
@@ -112,14 +115,17 @@ TODO: LLM agent, please put implementation plan details here and rename this fil
   return newFilePath;
 }
 
-export function recordCommits(idOrPath: string, lastNCommits: number): void {
-  recordCommitsToFile(idOrPath, lastNCommits, {
+export async function recordCommits(
+  idOrPath: string,
+  lastNCommits: number
+): Promise<void> {
+  await recordCommitsToFile(idOrPath, lastNCommits, {
     validateFile: (fileInfo: FileInfo) => {
       // Validate that the file is a reference implementation
       if (fileInfo.type !== 'ref-impl') {
         const typeDescription = getFileTypeDescription(fileInfo.type);
         throw new Error(
-          `Error: Implementation commits have to be added to implementation files. The file you entered, ${getFileTypeLabel(fileInfo.type)} ${fileInfo.id} at ${fileInfo.filePath.substring(1)}, is a ${typeDescription} file.`
+          `Error: Implementation commits have to be added to implementation files. The file you entered, ${getFileTypeLabel(fileInfo.type)} ${fileInfo.id} at ${fileInfo.displayPath}, is a ${typeDescription} file.`
         );
       }
     },

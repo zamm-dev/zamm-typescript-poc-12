@@ -16,3 +16,4 @@ export * from './commands/implement';
 export * from './commands/split';
 export * from './commands/feat';
 export * from './commands/spec';
+export * from './commands/redirect';

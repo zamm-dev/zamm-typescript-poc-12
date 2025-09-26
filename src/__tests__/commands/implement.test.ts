@@ -48,7 +48,7 @@ describe('ZAMM CLI Implement Command', () => {
   }
 
   describe('generateImplementationNote', () => {
-    it('should create reference implementation for spec and implementation by ID', () => {
+    it('should create reference implementation for spec and implementation by ID', async () => {
       createTestFile('docs/specs/features/authentication.md');
       createTestFile('docs/impls/python.md');
 
@@ -57,7 +57,7 @@ describe('ZAMM CLI Implement Command', () => {
         implIdOrPath: 'IMP002',
       };
 
-      const resultPath = generateImplementationNote(options);
+      const resultPath = await generateImplementationNote(options);
 
       expect(resultPath).toMatch(
         /docs\/impl-history\/python\/features\/new-XYZ789-impl\.md$/
@@ -72,7 +72,7 @@ describe('ZAMM CLI Implement Command', () => {
       expect(content).toBe(expectedContent);
     });
 
-    it('should create reference implementation for spec and implementation by path', () => {
+    it('should create reference implementation for spec and implementation by path', async () => {
       const specPath = createTestFile('docs/specs/features/authentication.md');
       const implPath = createTestFile('docs/impls/python.md');
 
@@ -81,7 +81,7 @@ describe('ZAMM CLI Implement Command', () => {
         implIdOrPath: implPath,
       };
 
-      const resultPath = generateImplementationNote(options);
+      const resultPath = await generateImplementationNote(options);
 
       expect(resultPath).toMatch(
         /docs\/impl-history\/python\/features\/new-XYZ789-impl\.md$/
@@ -96,7 +96,7 @@ describe('ZAMM CLI Implement Command', () => {
       expect(content).toBe(expectedContent);
     });
 
-    it('should create impl-history directory if it does not exist', () => {
+    it('should create impl-history directory if it does not exist', async () => {
       createTestFile('docs/specs/features/authentication.md');
       createTestFile('docs/impls/python.md');
 
@@ -111,12 +111,12 @@ describe('ZAMM CLI Implement Command', () => {
         implIdOrPath: 'IMP002',
       };
 
-      generateImplementationNote(options);
+      await generateImplementationNote(options);
 
       expect(fs.existsSync(implHistoryDir)).toBe(true);
     });
 
-    it('should work with test file type as spec', () => {
+    it('should work with test file type as spec', async () => {
       const testSpecPath = path.join(
         testEnv.tempDir,
         'docs/specs/cli/tests/info-command.md'
@@ -135,7 +135,7 @@ describe('ZAMM CLI Implement Command', () => {
         implIdOrPath: 'IMP002',
       };
 
-      const resultPath = generateImplementationNote(options);
+      const resultPath = await generateImplementationNote(options);
 
       expect(fs.existsSync(resultPath)).toBe(true);
       expect(resultPath).toMatch(
@@ -143,7 +143,7 @@ describe('ZAMM CLI Implement Command', () => {
       );
     });
 
-    it('should error for non-existent spec ID', () => {
+    it('should error for non-existent spec ID', async () => {
       createTestFile('docs/impls/python.md');
 
       const options: ImplementOptions = {
@@ -151,12 +151,12 @@ describe('ZAMM CLI Implement Command', () => {
         implIdOrPath: 'IMP002',
       };
 
-      expect(() => generateImplementationNote(options)).toThrow(
+      await expect(generateImplementationNote(options)).rejects.toThrow(
         'No file found matching the given ID or path: NOTFOUND'
       );
     });
 
-    it('should error for non-existent implementation ID', () => {
+    it('should error for non-existent implementation ID', async () => {
       createTestFile('docs/specs/features/authentication.md');
 
       const options: ImplementOptions = {
@@ -164,12 +164,12 @@ describe('ZAMM CLI Implement Command', () => {
         implIdOrPath: 'NOTFOUND',
       };
 
-      expect(() => generateImplementationNote(options)).toThrow(
+      await expect(generateImplementationNote(options)).rejects.toThrow(
         'No file found matching the given ID or path: NOTFOUND'
       );
     });
 
-    it('should error for wrong spec file type', () => {
+    it('should error for wrong spec file type', async () => {
       createTestFile('docs/impls/python.md');
       const wrongSpecPath = createTestFile('docs/README.md');
 
@@ -178,12 +178,12 @@ describe('ZAMM CLI Implement Command', () => {
         implIdOrPath: 'IMP002',
       };
 
-      expect(() => generateImplementationNote(options)).toThrow(
+      await expect(generateImplementationNote(options)).rejects.toThrow(
         "Spec file must be of type 'spec' or 'test', got 'project'"
       );
     });
 
-    it('should error for wrong implementation file type', () => {
+    it('should error for wrong implementation file type', async () => {
       createTestFile('docs/specs/features/authentication.md');
       const wrongImplPath = createTestFile('docs/README.md');
 
@@ -192,12 +192,12 @@ describe('ZAMM CLI Implement Command', () => {
         implIdOrPath: wrongImplPath,
       };
 
-      expect(() => generateImplementationNote(options)).toThrow(
+      await expect(generateImplementationNote(options)).rejects.toThrow(
         "Implementation file must be of type 'implementation', got 'project'"
       );
     });
 
-    it('should error when not in git repository', () => {
+    it('should error when not in git repository', async () => {
       fs.rmSync(path.join(testEnv.tempDir, '.git'), {
         recursive: true,
         force: true,
@@ -208,7 +208,7 @@ describe('ZAMM CLI Implement Command', () => {
         implIdOrPath: 'IMP002',
       };
 
-      expect(() => generateImplementationNote(options)).toThrow(
+      await expect(generateImplementationNote(options)).rejects.toThrow(
         'Not in a git repository'
       );
     });
@@ -220,11 +220,11 @@ describe('ZAMM CLI Implement Command', () => {
       return getLastNCommits(3).map(c => c.sha);
     }
 
-    it('should record commits by ID', () => {
+    it('should record commits by ID', async () => {
       createTestFile('docs/specs/features/impl-history/initial-auth.md');
       createTestCommits();
 
-      recordCommits('NOT123', 2);
+      await recordCommits('NOT123', 2);
 
       expectFileMatches(
         testEnv,
@@ -233,13 +233,13 @@ describe('ZAMM CLI Implement Command', () => {
       );
     });
 
-    it('should record commits by file path', () => {
+    it('should record commits by file path', async () => {
       const testFile = createTestFile(
         'docs/specs/features/impl-history/initial-auth.md'
       );
       createTestCommits();
 
-      recordCommits(testFile, 2);
+      await recordCommits(testFile, 2);
 
       expectFileMatches(
         testEnv,
@@ -248,7 +248,7 @@ describe('ZAMM CLI Implement Command', () => {
       );
     });
 
-    it('should prepend new commits to existing commits', () => {
+    it('should prepend new commits to existing commits', async () => {
       const testFile = path.join(
         testEnv.tempDir,
         'docs/specs/features/impl-history/initial-auth.md'
@@ -264,7 +264,7 @@ describe('ZAMM CLI Implement Command', () => {
       fs.writeFileSync(testFile, contentWithCommits);
 
       createTestCommits();
-      recordCommits('NOT123', 2);
+      await recordCommits('NOT123', 2);
 
       expectFileMatches(
         testEnv,
@@ -273,27 +273,27 @@ describe('ZAMM CLI Implement Command', () => {
       );
     });
 
-    it('should error for non-existent file ID', () => {
+    it('should error for non-existent file ID', async () => {
       // Create the docs directory structure first
       createTestFile('docs/specs/features/impl-history/initial-auth.md');
       createTestCommits();
 
-      expect(() => recordCommits('NOTFOUND', 1)).toThrow(
+      await expect(recordCommits('NOTFOUND', 1)).rejects.toThrow(
         'No file found matching the given ID or path: NOTFOUND'
       );
     });
 
-    it('should error for file without proper frontmatter', () => {
+    it('should error for file without proper frontmatter', async () => {
       const testFile = path.join(testEnv.tempDir, 'no-frontmatter.md');
       fs.writeFileSync(testFile, 'Just some content without frontmatter');
       createTestCommits();
 
-      expect(() => recordCommits(testFile, 1)).toThrow(
+      await expect(recordCommits(testFile, 1)).rejects.toThrow(
         'File does not have proper YAML frontmatter with an id field'
       );
     });
 
-    it('should error when not in git repository', () => {
+    it('should error when not in git repository', async () => {
       createTestFile('docs/specs/features/impl-history/initial-auth.md');
 
       fs.rmSync(path.join(testEnv.tempDir, '.git'), {
@@ -301,34 +301,34 @@ describe('ZAMM CLI Implement Command', () => {
         force: true,
       });
 
-      expect(() => recordCommits('NOT123', 1)).toThrow(
+      await expect(recordCommits('NOT123', 1)).rejects.toThrow(
         'Not in a git repository'
       );
     });
 
-    it('should error when attempting to record commits to a spec file', () => {
+    it('should error when attempting to record commits to a spec file', async () => {
       createTestFile('docs/specs/features/authentication.md');
       createTestCommits();
 
-      expect(() => recordCommits('XYZ789', 1)).toThrow(
+      await expect(recordCommits('XYZ789', 1)).rejects.toThrow(
         'Error: Implementation commits have to be added to implementation files. The file you entered, Spec XYZ789 at docs/specs/features/authentication.md, is a specification file.'
       );
     });
 
-    it('should error when attempting to record commits to an implementation file', () => {
+    it('should error when attempting to record commits to an implementation file', async () => {
       createTestFile('docs/impls/python.md');
       createTestCommits();
 
-      expect(() => recordCommits('IMP002', 1)).toThrow(
+      await expect(recordCommits('IMP002', 1)).rejects.toThrow(
         'Error: Implementation commits have to be added to implementation files. The file you entered, Impl IMP002 at docs/impls/python.md, is a implementation file.'
       );
     });
 
-    it('should error when attempting to record commits to a project file', () => {
+    it('should error when attempting to record commits to a project file', async () => {
       createTestFile('docs/README.md');
       createTestCommits();
 
-      expect(() => recordCommits('PRJ001', 1)).toThrow(
+      await expect(recordCommits('PRJ001', 1)).rejects.toThrow(
         'Error: Implementation commits have to be added to implementation files. The file you entered, Proj PRJ001 at docs/README.md, is a project file.'
       );
     });

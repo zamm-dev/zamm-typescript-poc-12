@@ -17,6 +17,8 @@ import {
   SplitOptions,
   featStart,
   FeatStartOptions,
+  setRedirect,
+  RedirectOptions,
 } from './core/index';
 
 const program = new Command();
@@ -38,14 +40,14 @@ program
     );
   });
 
-function organizeFileWithErrorHandling(filePath?: string): void {
+async function organizeFileWithErrorHandling(filePath?: string): Promise<void> {
   try {
     if (filePath) {
-      organizeFile(filePath);
+      await organizeFile(filePath);
       console.log(chalk.green(`✓ Organized ${filePath}`));
     } else {
-      organizeAllFiles();
-      console.log(chalk.green('✓ Organized all files in docs/'));
+      await organizeAllFiles();
+      console.log(chalk.green('✓ Organized all files in configured directory'));
     }
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : String(error);
@@ -64,9 +66,9 @@ program
   )
   .action(organizeFileWithErrorHandling);
 
-function infoWithErrorHandling(idOrPath: string): void {
+async function infoWithErrorHandling(idOrPath: string): Promise<void> {
   try {
-    const info = getInfoByIdOrPath(idOrPath);
+    const info = await getInfoByIdOrPath(idOrPath);
     console.log(info);
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : String(error);
@@ -81,10 +83,10 @@ program
   .argument('<id-or-path>', 'file ID or file path to get information about')
   .action(infoWithErrorHandling);
 
-function splitWithErrorHandling(
+async function splitWithErrorHandling(
   mainFile: string,
   options: { into: string[] }
-): void {
+): Promise<void> {
   try {
     const fileNames = Array.isArray(options.into)
       ? options.into
@@ -95,7 +97,7 @@ function splitWithErrorHandling(
       newFileNames: fileNames,
     };
 
-    splitFile(splitOptions);
+    await splitFile(splitOptions);
 
     console.log(
       chalk.green(`✓ Split ${mainFile} into ${fileNames.length} file(s)`)
@@ -114,16 +116,16 @@ program
   .requiredOption('--into <filenames...>', 'new filenames to split off')
   .action(splitWithErrorHandling);
 
-function implementWithErrorHandling(options: {
+async function implementWithErrorHandling(options: {
   spec: string;
   for: string;
-}): void {
+}): Promise<void> {
   try {
     const implementOptions: ImplementOptions = {
       specIdOrPath: options.spec,
       implIdOrPath: options.for,
     };
-    const newFilePath = generateImplementationNote(implementOptions);
+    const newFilePath = await generateImplementationNote(implementOptions);
     console.log(
       chalk.green(`✓ Created reference implementation: ${newFilePath}`)
     );
@@ -134,12 +136,12 @@ function implementWithErrorHandling(options: {
   }
 }
 
-function recordCommitsWithErrorHandling(
+async function recordCommitsWithErrorHandling(
   idOrPath: string,
   options: { lastNCommits: number }
-): void {
+): Promise<void> {
   try {
-    recordCommits(idOrPath, options.lastNCommits);
+    await recordCommits(idOrPath, options.lastNCommits);
     console.log(
       chalk.green(`✓ Recorded ${options.lastNCommits} commit(s) to ${idOrPath}`)
     );
@@ -150,12 +152,12 @@ function recordCommitsWithErrorHandling(
   }
 }
 
-function recordSpecCommitsWithErrorHandling(
+async function recordSpecCommitsWithErrorHandling(
   idOrPath: string,
   options: { lastNCommits: number }
-): void {
+): Promise<void> {
   try {
-    recordSpecCommits(idOrPath, options.lastNCommits);
+    await recordSpecCommits(idOrPath, options.lastNCommits);
     console.log(
       chalk.green(`✓ Recorded ${options.lastNCommits} commit(s) to ${idOrPath}`)
     );
@@ -238,6 +240,24 @@ specCommand
   )
   .argument('<id-or-path>', 'spec ID or file path to update')
   .action(recordSpecCommitsWithErrorHandling);
+
+async function redirectWithErrorHandling(directory: string): Promise<void> {
+  try {
+    const redirectOptions: RedirectOptions = { directory };
+    await setRedirect(redirectOptions);
+    console.log(chalk.green(`✓ Set redirect directory to: ${directory}`));
+  } catch (error) {
+    const errorMessage = error instanceof Error ? error.message : String(error);
+    console.error(chalk.red(`Error: ${errorMessage}`));
+    process.exit(1);
+  }
+}
+
+program
+  .command('redirect')
+  .description('Set a custom base directory instead of docs/')
+  .argument('<directory>', 'directory to use as base instead of docs/')
+  .action(redirectWithErrorHandling);
 
 export { setIdProvider, resetIdProvider };
 

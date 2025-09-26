@@ -1,7 +1,11 @@
 import * as fs from 'fs';
 import * as path from 'path';
 import * as yaml from 'js-yaml';
-import { findGitRoot, findMarkdownFiles } from '../shared/file-utils';
+import {
+  findGitRoot,
+  findMarkdownFiles,
+  getDocsDirectory,
+} from '../shared/file-utils';
 import {
   parseFrontmatter,
   updateReferenceImplPaths,
@@ -11,7 +15,7 @@ import { Frontmatter } from '../shared/types';
 import { detectFileType } from '../shared/file-resolver';
 import { getIdProvider } from '../shared/id-provider';
 
-export function organizeFile(filePath: string): void {
+export async function organizeFile(filePath: string): Promise<void> {
   const absolutePath = path.resolve(filePath);
 
   if (!fs.existsSync(absolutePath)) {
@@ -26,7 +30,7 @@ export function organizeFile(filePath: string): void {
   const fileContent = fs.readFileSync(absolutePath, 'utf8');
   const { frontmatter, body } = parseFrontmatter(fileContent);
 
-  const fileType = detectFileType(absolutePath, gitRoot);
+  const fileType = await detectFileType(absolutePath);
 
   const baseUpdatedFrontmatter: Frontmatter = {
     id: frontmatter.id || getIdProvider().generateId(),
@@ -38,7 +42,7 @@ export function organizeFile(filePath: string): void {
 
   // Update derived metadata for ref-impl files
   if (fileType === 'ref-impl') {
-    updatedFrontmatter = updateReferenceImplPaths(baseUpdatedFrontmatter);
+    updatedFrontmatter = await updateReferenceImplPaths(baseUpdatedFrontmatter);
     updatedFrontmatter = updateCommitMessages(updatedFrontmatter);
   }
 
@@ -54,20 +58,16 @@ export function organizeFile(filePath: string): void {
   fs.writeFileSync(absolutePath, newContent);
 }
 
-export function organizeAllFiles(): void {
+export async function organizeAllFiles(): Promise<void> {
   const gitRoot = findGitRoot(process.cwd());
   if (!gitRoot) {
     throw new Error('Not in a git repository');
   }
 
-  const docsPath = path.join(gitRoot, 'docs');
-  if (!fs.existsSync(docsPath)) {
-    throw new Error('docs/ directory not found');
-  }
-
+  const docsPath = await getDocsDirectory();
   const markdownFiles = findMarkdownFiles(docsPath);
 
   for (const filePath of markdownFiles) {
-    organizeFile(filePath);
+    await organizeFile(filePath);
   }
 }

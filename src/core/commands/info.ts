@@ -1,7 +1,11 @@
 import * as fs from 'fs';
 import * as path from 'path';
 import { FileInfo, Implementation } from '../shared/types';
-import { findMarkdownFiles, resolveTitleFromFile } from '../shared/file-utils';
+import {
+  findMarkdownFiles,
+  resolveTitleFromFile,
+  getDocsDirectory,
+} from '../shared/file-utils';
 import { parseFrontmatter } from '../shared/frontmatter';
 import { resolveFileInfo } from '../shared/file-resolver';
 
@@ -22,8 +26,9 @@ function formatFileType(type: string): string {
   }
 }
 
-export function getProjectImplementations(gitRoot: string): Implementation[] {
-  const implsPath = path.join(gitRoot, 'docs', 'impls');
+export async function getProjectImplementations(): Promise<Implementation[]> {
+  const docsDir = await getDocsDirectory();
+  const implsPath = path.join(docsDir, 'impls');
 
   if (!fs.existsSync(implsPath)) {
     return [];
@@ -134,12 +139,12 @@ export function formatFileInfo(
   return output;
 }
 
-export function getInfoByIdOrPath(idOrPath: string): string {
-  const fileInfo = resolveFileInfo(idOrPath);
+export async function getInfoByIdOrPath(idOrPath: string): Promise<string> {
+  const fileInfo = await resolveFileInfo(idOrPath);
 
   let implementations: Implementation[] | undefined;
   if (fileInfo.type === 'project') {
-    implementations = getProjectImplementations(fileInfo.gitRoot);
+    implementations = await getProjectImplementations();
   }
 
   return formatFileInfo(fileInfo, implementations);

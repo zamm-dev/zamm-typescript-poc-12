@@ -52,14 +52,14 @@ export function addCommitsToFrontmatter(
   return updatedFrontmatter;
 }
 
-function updateFileReference(
+async function updateFileReference(
   fileRef: FileReference,
   validateTypes = false,
   expectedTypes: string[] = [],
   refType = 'file'
-): FileReference {
+): Promise<FileReference> {
   try {
-    const fileInfo = resolveFileInfo(fileRef.id);
+    const fileInfo = await resolveFileInfo(fileRef.id);
 
     if (
       validateTypes &&
@@ -90,16 +90,18 @@ function updateFileReference(
   }
 }
 
-export function updateReferenceImplPaths(
+export async function updateReferenceImplPaths(
   frontmatter: Frontmatter,
   validateTypes = false
-): Frontmatter {
+): Promise<Frontmatter> {
   const updatedFrontmatter = { ...frontmatter };
 
   // Update spec paths
   if (updatedFrontmatter.specs && Array.isArray(updatedFrontmatter.specs)) {
-    updatedFrontmatter.specs = updatedFrontmatter.specs.map(spec =>
-      updateFileReference(spec, validateTypes, ['spec', 'test'], 'Spec')
+    updatedFrontmatter.specs = await Promise.all(
+      updatedFrontmatter.specs.map(spec =>
+        updateFileReference(spec, validateTypes, ['spec', 'test'], 'Spec')
+      )
     );
   }
 
@@ -109,7 +111,7 @@ export function updateReferenceImplPaths(
     typeof updatedFrontmatter.impl === 'object' &&
     updatedFrontmatter.impl.id
   ) {
-    updatedFrontmatter.impl = updateFileReference(
+    updatedFrontmatter.impl = await updateFileReference(
       updatedFrontmatter.impl,
       validateTypes,
       ['implementation'],

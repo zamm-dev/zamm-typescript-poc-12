@@ -81,26 +81,26 @@ describe('ZAMM CLI Info Command', () => {
   });
 
   describe('getProjectImplementations', () => {
-    it('should find all implementation files', () => {
+    it('should find all implementation files', async () => {
       createTestFile('docs/impls/nodejs.md');
       createTestFile('docs/impls/python.md');
 
-      const implementations = getProjectImplementations(testEnv.tempDir);
+      const implementations = await getProjectImplementations();
       expect(implementations).toEqual([
         { id: 'IMP001', name: 'Node.js Implementation' },
         { id: 'IMP002', name: 'Python Implementation' },
       ]);
     });
 
-    it('should return empty array if no implementations found', () => {
-      const implementations = getProjectImplementations(testEnv.tempDir);
+    it('should return empty array if no implementations found', async () => {
+      const implementations = await getProjectImplementations();
       expect(implementations).toEqual([]);
     });
 
-    it('should handle files without proper frontmatter', () => {
+    it('should handle files without proper frontmatter', async () => {
       createTestFile('docs/impls/broken.md');
 
-      const implementations = getProjectImplementations(testEnv.tempDir);
+      const implementations = await getProjectImplementations();
       expect(implementations).toEqual([]);
     });
   });
@@ -111,6 +111,7 @@ describe('ZAMM CLI Info Command', () => {
         id: 'XYZ789',
         type: 'spec',
         filePath: '/docs/specs/features/authentication.md',
+        displayPath: 'docs/specs/features/authentication.md',
         absolutePath: '/some/path',
         gitRoot: '/root',
       };
@@ -126,6 +127,7 @@ describe('ZAMM CLI Info Command', () => {
         id: 'PRJ001',
         type: 'project',
         filePath: '/docs/README.md',
+        displayPath: 'docs/README.md',
         absolutePath: '/some/path',
         gitRoot: '/root',
       };
@@ -160,6 +162,7 @@ Implementations:
           id: 'TEST123',
           type,
           filePath: '/docs/test.md',
+          displayPath: 'docs/test.md',
           absolutePath: '/some/path',
           gitRoot: '/root',
         };

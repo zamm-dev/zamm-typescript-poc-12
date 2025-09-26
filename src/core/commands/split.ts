@@ -12,7 +12,7 @@ export interface SplitOptions {
   newFileNames: string[];
 }
 
-export function splitFile(options: SplitOptions): void {
+export async function splitFile(options: SplitOptions): Promise<void> {
   const { mainFilePath, newFileNames } = options;
 
   const absoluteMainPath = path.resolve(mainFilePath);
@@ -80,7 +80,7 @@ export function splitFile(options: SplitOptions): void {
     }
 
     // Generate frontmatter for the new file, inheriting type from parent
-    const fileType = detectFileType(newFilePath, gitRoot);
+    const fileType = await detectFileType(newFilePath);
     const parentType = mainFrontmatter.type || fileType;
 
     const newFileFrontmatter: Frontmatter = {

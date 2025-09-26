@@ -5,7 +5,8 @@ export interface IdProvider {
 export interface FileInfo {
   id: string;
   type: string;
-  filePath: string;
+  filePath: string; // Path relative to docs directory (for internal storage)
+  displayPath: string; // Path relative to current directory (for user output)
   absolutePath: string;
   gitRoot: string;
 }
@@ -52,6 +53,7 @@ export interface WorktreeInfo {
 }
 
 export interface BaseState {
+  redirectDirectory?: string;
   worktrees: Record<string, WorktreeInfo>;
 }
 

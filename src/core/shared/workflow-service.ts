@@ -127,6 +127,59 @@ export class BaseWorkflowService extends WorkflowService {
       return null;
     }
   }
+
+  static async setRedirectDirectory(
+    gitRoot: string,
+    redirectDir: string
+  ): Promise<void> {
+    await this.initialize(gitRoot);
+
+    const baseStatePath = path.join(
+      gitRoot,
+      this.ZAMM_DIR,
+      this.BASE_STATE_FILE
+    );
+
+    let baseState: BaseState;
+    try {
+      const content = await fs.promises.readFile(baseStatePath, 'utf-8');
+      baseState = JSON.parse(content) as BaseState;
+    } catch (error) {
+      throw new Error(
+        `Failed to read base state: ${error instanceof Error ? error.message : String(error)}`
+      );
+    }
+
+    // Resolve to absolute path for consistency
+    const absoluteRedirectDir = path.resolve(redirectDir);
+
+    // Validate that directory exists
+    if (!fs.existsSync(absoluteRedirectDir)) {
+      throw new Error(`Directory does not exist: ${redirectDir}`);
+    }
+
+    // Check if directory is accessible
+    try {
+      await fs.promises.access(
+        absoluteRedirectDir,
+        fs.constants.R_OK | fs.constants.W_OK
+      );
+    } catch {
+      throw new Error(`Directory is not accessible: ${redirectDir}`);
+    }
+
+    baseState.redirectDirectory = absoluteRedirectDir;
+
+    await fs.promises.writeFile(
+      baseStatePath,
+      JSON.stringify(baseState, null, 2) + '\n'
+    );
+  }
+
+  static async getRedirectDirectory(gitRoot: string): Promise<string | null> {
+    const baseState = await this.getBaseState(gitRoot);
+    return baseState?.redirectDirectory || null;
+  }
 }
 
 export class WorktreeWorkflowService extends WorkflowService {
