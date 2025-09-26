@@ -138,10 +138,7 @@ Use `expectFileMatches(testEnv, relativePath, fixtureSubDir?, replacements?)` to
 
 ### Service Testing Strategy
 
-External services use a two-tiered testing approach:
-
-- **Unit Tests**: Use mock service implementations (e.g., `MockAnthropicService`) to test command logic with predictable responses, eliminating network dependencies
-- **Integration Tests**: Test real service implementations (e.g., `RealAnthropicService`) with recorded API responses using nock to ensure actual API compatibility
+External services use unit tests with configurable mocks and separate API tests with nock recordings.
 
 All network-related functionality should be recorded and replayed with `nock`. Make sure to filter out sensitive data such as API keys when you do so.
 
@@ -193,13 +190,7 @@ When implementing commands that share similar logic (like commit recording), ext
 
 ### Service Dependency Injection
 
-External services follow the IdProvider pattern for dependency injection:
-
-- **Interface Definition**: Services define contracts through interfaces (e.g., `AnthropicService`)
-- **Real Implementation**: Production implementations (e.g., `RealAnthropicService`) integrate with actual APIs
-- **Mock Implementation**: Test implementations (e.g., `MockAnthropicService`) return predictable values for unit testing
-- **Integration Testing**: Real service implementations are tested separately with recorded API responses using nock
-- **Command Integration**: Commands use global singleton pattern with getter functions
+External services follow the IdProvider singleton pattern with interfaces, real implementations, and test mocks in test files.
 
 ### Test Fixture Organization
 

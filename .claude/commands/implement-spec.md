@@ -35,6 +35,16 @@ This command follows an 8-step process for implementing specifications. Use the 
 - For API integrations, record real responses and filter sensitive data appropriately
 - Always verify that mocks are actually used in tests
 
+### Service Dependency Injection
+
+- Don't put "I" in front of interfaces. Name the interface as usual, and name the implementations to be more specific instantiations of the interface. For examples, see AnthropicService and IdProvider
+- Use singleton patterns for external services with getter/setter functions following the IdProvider pattern
+- Mock implementations should accept constructor parameters instead of hardcoded return values
+- Test fixture files should remain unchanged during a refactor - update tests to match expected responses, not the other way around
+- Command option interfaces should match the actual commandline arguments provided by the user. Commands should not accept service dependencies - they should use global singletons.
+- Mock service definitions belong in test files, not in the main codebase
+- API validation (like missing keys) should happen in real implementations, not in commands
+
 ### User Collaboration
 
 - **Explain initial approaches** if the user wants to know why you did things a certain way
