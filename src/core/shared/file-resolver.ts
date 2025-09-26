@@ -80,8 +80,12 @@ export async function getFileInfo(filePath: string): Promise<FileInfo> {
   const docsDir = await getDocsDirectory();
   const fileType = frontmatter.type || (await detectFileType(absolutePath));
 
+  // Resolve symlinks to ensure consistent path representation (e.g., /var vs /private/var on macOS)
+  const resolvedDocsDir = fs.realpathSync(docsDir);
+  const resolvedAbsolutePath = fs.realpathSync(absolutePath);
+
   // Path relative to docs directory for internal storage
-  const docsRelativePath = path.relative(docsDir, absolutePath);
+  const docsRelativePath = path.relative(resolvedDocsDir, resolvedAbsolutePath);
 
   // Path relative to current directory for user display
   const currentDirRelativePath = path.relative(process.cwd(), absolutePath);

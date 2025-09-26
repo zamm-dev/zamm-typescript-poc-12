@@ -29,13 +29,17 @@ class TestIdProvider implements IdProvider {
 
 describe('ZAMM CLI Implement Command', () => {
   let testEnv: TestEnvironment;
+  let originalCwd: string;
 
   beforeEach(() => {
+    originalCwd = process.cwd();
     testEnv = setupTestEnvironment('src/__tests__/fixtures/implement');
     setIdProvider(new TestIdProvider());
+    process.chdir(testEnv.tempDir);
   });
 
   afterEach(() => {
+    process.chdir(originalCwd);
     cleanupTestEnvironment(testEnv);
     resetIdProvider();
   });
