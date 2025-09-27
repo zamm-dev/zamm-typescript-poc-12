@@ -67,7 +67,7 @@ export function formatFileInfo(
   implementations?: Implementation[]
 ): string {
   const typeFormatted = formatFileType(fileInfo.type);
-  let output = `ID: ${fileInfo.id}\nType: ${typeFormatted}\nFile Path: ${fileInfo.filePath}`;
+  let output = `ID: ${fileInfo.id}\nType: ${typeFormatted}\nFile Path: ${fileInfo.displayPath}`;
 
   if (implementations && implementations.length > 0) {
     output += '\nImplementations:';

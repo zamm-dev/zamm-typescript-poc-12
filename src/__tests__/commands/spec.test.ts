@@ -26,13 +26,17 @@ class TestIdProvider implements IdProvider {
 
 describe('ZAMM CLI Spec Command', () => {
   let testEnv: TestEnvironment;
+  let originalCwd: string;
 
   beforeEach(() => {
+    originalCwd = process.cwd();
     testEnv = setupTestEnvironment('src/__tests__/fixtures/spec');
+    process.chdir(testEnv.tempDir);
     setIdProvider(new TestIdProvider());
   });
 
   afterEach(() => {
+    process.chdir(originalCwd);
     cleanupTestEnvironment(testEnv);
     resetIdProvider();
   });
@@ -59,11 +63,11 @@ describe('ZAMM CLI Spec Command', () => {
   }
 
   describe('recordSpecCommits', () => {
-    it('should record commits by ID for spec in spec-history', () => {
+    it('should record commits by ID for spec in spec-history', async () => {
       // Create a spec file in spec-history directory
       createTestFile('docs/spec-history/user-authentication.md', 'before');
       createTestCommits();
-      recordSpecCommits('XYZ789', 2);
+      await recordSpecCommits('XYZ789', 2);
       expectFileMatches(
         testEnv,
         'docs/spec-history/user-authentication.md',
@@ -71,13 +75,13 @@ describe('ZAMM CLI Spec Command', () => {
       );
     });
 
-    it('should record commits by file path for spec in spec-history', () => {
+    it('should record commits by file path for spec in spec-history', async () => {
       const testFile = createTestFile(
         'docs/spec-history/user-authentication.md',
         'before'
       );
       createTestCommits();
-      recordSpecCommits(testFile, 2);
+      await recordSpecCommits(testFile, 2);
       expectFileMatches(
         testEnv,
         'docs/spec-history/user-authentication.md',
@@ -85,14 +89,14 @@ describe('ZAMM CLI Spec Command', () => {
       );
     });
 
-    it('should prepend new commits to existing commits', () => {
+    it('should prepend new commits to existing commits', async () => {
       // Use the existing commit fixture
       createTestFile(
         'docs/spec-history/user-authentication.md',
         'before-with-existing-commits'
       );
       createTestCommits();
-      recordSpecCommits('XYZ789', 2);
+      await recordSpecCommits('XYZ789', 2);
       expectFileMatches(
         testEnv,
         'docs/spec-history/user-authentication.md',
@@ -100,15 +104,15 @@ describe('ZAMM CLI Spec Command', () => {
       );
     });
 
-    it('should error for non-existent file ID', () => {
+    it('should error for non-existent file ID', async () => {
       // Create docs directory but no matching file
       createTestFile('docs/spec-history/user-authentication.md', 'before');
-      expect(() => recordSpecCommits('NONEXISTENT', 2)).toThrow(
+      await expect(recordSpecCommits('NONEXISTENT', 2)).rejects.toThrow(
         'No file found matching the given ID or path: NONEXISTENT'
       );
     });
 
-    it('should error for file without proper frontmatter', () => {
+    it('should error for file without proper frontmatter', async () => {
       const testFile = path.join(
         testEnv.tempDir,
         'docs/spec-history/broken.md'
@@ -116,12 +120,12 @@ describe('ZAMM CLI Spec Command', () => {
       fs.mkdirSync(path.dirname(testFile), { recursive: true });
       fs.writeFileSync(testFile, 'No frontmatter here');
 
-      expect(() => recordSpecCommits(testFile, 2)).toThrow(
+      await expect(recordSpecCommits(testFile, 2)).rejects.toThrow(
         'File does not have proper YAML frontmatter with an id field'
       );
     });
 
-    it('should error when not in git repository', () => {
+    it('should error when not in git repository', async () => {
       // Create a temporary non-git directory
       const originalProjectCwd = testEnv.originalCwd; // Store the project's original working directory
       const nonGitEnv = setupTestEnvironment('src/__tests__/fixtures/spec');
@@ -141,7 +145,7 @@ describe('ZAMM CLI Spec Command', () => {
           sourceEnv,
           'docs/spec-history/user-authentication.md'
         );
-        expect(() => recordSpecCommits(testFile, 2)).toThrow(
+        await expect(recordSpecCommits(testFile, 2)).rejects.toThrow(
           'Not in a git repository'
         );
       } finally {
@@ -149,28 +153,28 @@ describe('ZAMM CLI Spec Command', () => {
       }
     });
 
-    it('should error when attempting to record commits to a non-spec file', () => {
+    it('should error when attempting to record commits to a non-spec file', async () => {
       // Create an implementation file and try to record spec commits to it
       createTestFile('docs/impls/python.md');
       createTestCommits();
-      expect(() => recordSpecCommits('IMP002', 2)).toThrow(
+      await expect(recordSpecCommits('IMP002', 2)).rejects.toThrow(
         'Error: Spec commits have to be added to spec files. The file you entered, Impl IMP002 at docs/impls/python.md, is a implementation file.'
       );
     });
 
-    it('should error when attempting to record commits to a spec file not in spec-history', () => {
+    it('should error when attempting to record commits to a spec file not in spec-history', async () => {
       // Create a regular spec file (not in spec-history) and try to record commits
       createTestFile('docs/specs/features/authentication.md');
       createTestCommits();
-      expect(() => recordSpecCommits('XYZ789', 2)).toThrow(
+      await expect(recordSpecCommits('XYZ789', 2)).rejects.toThrow(
         'Error: Spec commit recording only applies to files in docs/spec-history/. The file you entered, Spec XYZ789 at docs/specs/features/authentication.md, is not in the spec-history directory.'
       );
     });
 
-    it('should error when attempting to record commits to a project file', () => {
+    it('should error when attempting to record commits to a project file', async () => {
       createTestFile('docs/README.md');
       createTestCommits();
-      expect(() => recordSpecCommits('PRJ001', 2)).toThrow(
+      await expect(recordSpecCommits('PRJ001', 2)).rejects.toThrow(
         'Error: Spec commits have to be added to spec files. The file you entered, Proj PRJ001 at docs/README.md, is a project file.'
       );
     });

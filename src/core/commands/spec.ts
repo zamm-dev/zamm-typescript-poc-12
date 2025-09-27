@@ -12,7 +12,7 @@ export async function recordSpecCommits(
       if (fileInfo.type !== 'spec') {
         const typeDescription = getFileTypeDescription(fileInfo.type);
         throw new Error(
-          `Error: Spec commits have to be added to spec files. The file you entered, ${getFileTypeLabel(fileInfo.type)} ${fileInfo.id} at ${fileInfo.filePath.substring(1)}, is a ${typeDescription} file.`
+          `Error: Spec commits have to be added to spec files. The file you entered, ${getFileTypeLabel(fileInfo.type)} ${fileInfo.id} at ${fileInfo.displayPath}, is a ${typeDescription} file.`
         );
       }
 
@@ -20,7 +20,7 @@ export async function recordSpecCommits(
       const normalizedPath = fileInfo.filePath.replace(/^\/+/, '');
       if (!normalizedPath.startsWith('spec-history/')) {
         throw new Error(
-          `Error: Spec commit recording only applies to files in spec-history/. The file you entered, ${getFileTypeLabel(fileInfo.type)} ${fileInfo.id} at ${fileInfo.filePath.substring(1)}, is not in the spec-history directory.`
+          `Error: Spec commit recording only applies to files in docs/spec-history/. The file you entered, ${getFileTypeLabel(fileInfo.type)} ${fileInfo.id} at ${fileInfo.displayPath}, is not in the spec-history directory.`
         );
       }
     },

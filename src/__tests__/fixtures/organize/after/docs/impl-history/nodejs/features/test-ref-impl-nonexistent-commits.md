@@ -3,10 +3,10 @@ id: REF004
 type: ref-impl
 specs:
   - id: AUTH001
-    path: /docs/specs/features/authentication.md
+    path: /specs/features/authentication.md
 impl:
   id: IMPL001
-  path: /docs/impls/test-nodejs.md
+  path: /impls/test-nodejs.md
 commits:
   - sha: nonexistent1234567890abcdef1234567890abcdef123456
   - sha: alsonotreal7890abcdef1234567890abcdef1234567890a

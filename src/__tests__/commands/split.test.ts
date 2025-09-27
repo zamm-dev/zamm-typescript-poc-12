@@ -26,29 +26,33 @@ class MockIdProvider {
 
 describe('ZAMM CLI Split Command', () => {
   let testEnv: TestEnvironment;
+  let originalCwd: string;
 
   beforeEach(() => {
+    originalCwd = process.cwd();
     testEnv = setupTestEnvironment('src/__tests__/fixtures/split');
+    process.chdir(testEnv.tempDir);
   });
 
   afterEach(() => {
+    process.chdir(originalCwd);
     cleanupTestEnvironment(testEnv);
     resetIdProvider();
   });
 
-  function runSplitCommand(options: SplitOptions): void {
-    splitFile(options);
+  async function runSplitCommand(options: SplitOptions): Promise<void> {
+    await splitFile(options);
   }
 
   describe('Split File', () => {
-    it('should split a regular file into a folder with README.md and new file with frontmatter', () => {
+    it('should split a regular file into a folder with README.md and new file with frontmatter', async () => {
       setIdProvider(new MockIdProvider(['DEF456']));
       copyDirectoryFromFixture(testEnv, 'before-regular-file');
       createDeterministicCommits(testEnv.tempDir);
 
       const mainFilePath = path.join(testEnv.tempDir, 'docs/specs/features.md');
 
-      runSplitCommand({
+      await runSplitCommand({
         mainFilePath,
         newFileNames: ['authentication.md'],
       });
@@ -71,7 +75,7 @@ describe('ZAMM CLI Split Command', () => {
       expect(fs.existsSync(originalFilePath)).toBe(false);
     });
 
-    it('should split an existing README.md file in the same directory with frontmatter', () => {
+    it('should split an existing README.md file in the same directory with frontmatter', async () => {
       setIdProvider(new MockIdProvider(['DEF456']));
       copyDirectoryFromFixture(testEnv, 'before-existing-readme');
       createDeterministicCommits(testEnv.tempDir);
@@ -81,7 +85,7 @@ describe('ZAMM CLI Split Command', () => {
         'docs/specs/features/README.md'
       );
 
-      runSplitCommand({
+      await runSplitCommand({
         mainFilePath,
         newFileNames: ['authentication.md'],
       });
@@ -97,13 +101,13 @@ describe('ZAMM CLI Split Command', () => {
       );
     });
 
-    it('should automatically append .md extension if not provided', () => {
+    it('should automatically append .md extension if not provided', async () => {
       copyDirectoryFromFixture(testEnv, 'before-regular-file');
       createDeterministicCommits(testEnv.tempDir);
 
       const mainFilePath = path.join(testEnv.tempDir, 'docs/specs/features.md');
 
-      runSplitCommand({
+      await runSplitCommand({
         mainFilePath,
         newFileNames: ['authentication'], // No .md extension
       });
@@ -116,7 +120,7 @@ describe('ZAMM CLI Split Command', () => {
       expect(fs.existsSync(newFilePath)).toBe(true);
     });
 
-    it('should split a regular file into multiple files with frontmatter', () => {
+    it('should split a regular file into multiple files with frontmatter', async () => {
       setIdProvider(new MockIdProvider(['DEF456', 'GHI789']));
       copyDirectoryFromFixture(testEnv, 'before-regular-file');
       createDeterministicCommits(testEnv.tempDir);
@@ -124,7 +128,7 @@ describe('ZAMM CLI Split Command', () => {
       const mainFilePath = path.join(testEnv.tempDir, 'docs/specs/features.md');
 
       // Split into multiple files at once
-      runSplitCommand({
+      await runSplitCommand({
         mainFilePath,
         newFileNames: ['authentication.md', 'user-management.md'],
       });
@@ -156,7 +160,7 @@ describe('ZAMM CLI Split Command', () => {
       expect(fs.existsSync(originalFilePath)).toBe(false);
     });
 
-    it('should error if main file does not exist', () => {
+    it('should error if main file does not exist', async () => {
       copyDirectoryFromFixture(testEnv, 'before-regular-file');
       createDeterministicCommits(testEnv.tempDir);
 
@@ -165,39 +169,39 @@ describe('ZAMM CLI Split Command', () => {
         'docs/specs/nonexistent.md'
       );
 
-      expect(() => {
+      await expect(
         runSplitCommand({
           mainFilePath,
           newFileNames: ['new-file.md'],
-        });
-      }).toThrow('File not found');
+        })
+      ).rejects.toThrow('File not found');
     });
 
-    it('should error if new file already exists (regular file case)', () => {
+    it('should error if new file already exists (regular file case)', async () => {
       copyDirectoryFromFixture(testEnv, 'before-regular-file');
       createDeterministicCommits(testEnv.tempDir);
 
       const mainFilePath = path.join(testEnv.tempDir, 'docs/specs/features.md');
 
       // First split
-      runSplitCommand({
+      await runSplitCommand({
         mainFilePath,
         newFileNames: ['authentication.md'],
       });
 
       // Try to split again with same new filename
-      expect(() => {
+      await expect(
         runSplitCommand({
           mainFilePath: path.join(
             testEnv.tempDir,
             'docs/specs/features/README.md'
           ),
           newFileNames: ['authentication.md'],
-        });
-      }).toThrow('File already exists');
+        })
+      ).rejects.toThrow('File already exists');
     });
 
-    it('should error if directory already exists (non-README case)', () => {
+    it('should error if directory already exists (non-README case)', async () => {
       copyDirectoryFromFixture(testEnv, 'before-regular-file');
       createDeterministicCommits(testEnv.tempDir);
 
@@ -210,15 +214,15 @@ describe('ZAMM CLI Split Command', () => {
       );
       fs.mkdirSync(conflictingDirPath, { recursive: true });
 
-      expect(() => {
+      await expect(
         runSplitCommand({
           mainFilePath,
           newFileNames: ['authentication.md'],
-        });
-      }).toThrow('Directory already exists');
+        })
+      ).rejects.toThrow('Directory already exists');
     });
 
-    it('should error if used on reference implementation file', () => {
+    it('should error if used on reference implementation file', async () => {
       copyDirectoryFromFixture(testEnv, 'before-regular-file');
       createDeterministicCommits(testEnv.tempDir);
 
@@ -231,17 +235,17 @@ describe('ZAMM CLI Split Command', () => {
       const refImplFile = path.join(implHistoryDir, 'test-impl.md');
       fs.writeFileSync(refImplFile, '# Test Implementation');
 
-      expect(() => {
+      await expect(
         runSplitCommand({
           mainFilePath: refImplFile,
           newFileNames: ['new-file.md'],
-        });
-      }).toThrow(
+        })
+      ).rejects.toThrow(
         'Split command does not apply to reference implementation files'
       );
     });
 
-    it('should error if used on spec history file', () => {
+    it('should error if used on spec history file', async () => {
       copyDirectoryFromFixture(testEnv, 'before-regular-file');
       createDeterministicCommits(testEnv.tempDir);
 
@@ -254,17 +258,17 @@ describe('ZAMM CLI Split Command', () => {
       const specHistoryFile = path.join(specHistoryDir, 'test-spec.md');
       fs.writeFileSync(specHistoryFile, '# Test Spec History');
 
-      expect(() => {
+      await expect(
         runSplitCommand({
           mainFilePath: specHistoryFile,
           newFileNames: ['new-file.md'],
-        });
-      }).toThrow(
+        })
+      ).rejects.toThrow(
         'Split command does not apply to reference implementation files or spec changelog files'
       );
     });
 
-    it('should error if not in a git repository', () => {
+    it('should error if not in a git repository', async () => {
       // Create a temporary directory without git initialization
       const originalCwd = process.cwd();
       const tempDirNoGit = fs.mkdtempSync(
@@ -278,12 +282,12 @@ describe('ZAMM CLI Split Command', () => {
         fs.mkdirSync(path.dirname(mainFilePath), { recursive: true });
         fs.writeFileSync(mainFilePath, '# Test file');
 
-        expect(() => {
+        await expect(
           runSplitCommand({
             mainFilePath,
             newFileNames: ['new-file.md'],
-          });
-        }).toThrow('Not in a git repository');
+          })
+        ).rejects.toThrow('Not in a git repository');
       } finally {
         process.chdir(originalCwd);
         fs.rmSync(tempDirNoGit, { recursive: true, force: true });

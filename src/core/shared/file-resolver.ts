@@ -6,7 +6,20 @@ import { parseFrontmatter } from './frontmatter';
 
 export async function detectFileType(filePath: string): Promise<string> {
   const docsDir = await getDocsDirectory();
-  const relativePath = path.relative(docsDir, filePath);
+
+  // Resolve symlinks to ensure consistent path representation (e.g., /var vs /private/var on macOS)
+  const resolvedDocsDir = fs.realpathSync(docsDir);
+
+  // For non-existent files, use the path as-is instead of resolving symlinks
+  let resolvedFilePath: string;
+  try {
+    resolvedFilePath = fs.realpathSync(filePath);
+  } catch {
+    // File doesn't exist, use absolute path for consistent calculation
+    resolvedFilePath = path.resolve(filePath);
+  }
+
+  const relativePath = path.relative(resolvedDocsDir, resolvedFilePath);
 
   if (relativePath === 'README.md') {
     return 'project';
@@ -16,11 +29,11 @@ export async function detectFileType(filePath: string): Promise<string> {
     return 'implementation';
   }
 
-  if (relativePath.includes('/impl-history/')) {
+  if (relativePath.includes('impl-history/')) {
     return 'ref-impl';
   }
 
-  if (relativePath.includes('/tests/')) {
+  if (relativePath.includes('tests/')) {
     return 'test';
   }
 
