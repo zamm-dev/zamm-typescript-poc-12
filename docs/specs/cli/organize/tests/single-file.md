@@ -173,10 +173,10 @@ id: REF001
 type: ref-impl
 specs:
   - id: AUTH001
-    path: /docs/specs/features/authentication.md
+    path: /specs/features/authentication.md
 impl:
   id: IMPL001
-  path: /docs/impls/nodejs.md
+  path: /impls/nodejs.md
 ---
 
 # Authentication Implementation
@@ -235,10 +235,10 @@ id: REF002
 type: ref-impl
 specs:
   - id: AUTH001
-    path: /docs/specs/features/authentication.md
+    path: /specs/features/authentication.md
 impl:
   id: IMPL001
-  path: /docs/impls/nodejs.md
+  path: /impls/nodejs.md
 commits:
   - sha: e779995e60790757d2ed7e3ff8e87a2617e8c3c6
   - sha: 4bd28bec045891fff0ccb1e549d88f17f34d6827
@@ -255,10 +255,10 @@ id: REF002
 type: ref-impl
 specs:
   - id: AUTH001
-    path: /docs/specs/features/authentication.md
+    path: /specs/features/authentication.md
 impl:
   id: IMPL001
-  path: /docs/impls/nodejs.md
+  path: /impls/nodejs.md
 commits:
   - sha: e779995e60790757d2ed7e3ff8e87a2617e8c3c6
     message: Test commit 3
@@ -279,10 +279,10 @@ id: REF002
 type: ref-impl
 specs:
   - id: AUTH001
-    path: /docs/specs/features/authentication.md
+    path: /specs/features/authentication.md
 impl:
   id: IMPL001
-  path: /docs/impls/nodejs.md
+  path: /impls/nodejs.md
 commits:
   - sha: e779995e60790757d2ed7e3ff8e87a2617e8c3c6
     message: 'incorrect 1'
@@ -301,10 +301,10 @@ id: REF002
 type: ref-impl
 specs:
   - id: AUTH001
-    path: /docs/specs/features/authentication.md
+    path: /specs/features/authentication.md
 impl:
   id: IMPL001
-  path: /docs/impls/nodejs.md
+  path: /impls/nodejs.md
 commits:
   - sha: e779995e60790757d2ed7e3ff8e87a2617e8c3c6
     message: Test commit 3
@@ -325,10 +325,10 @@ id: REF004
 type: ref-impl
 specs:
   - id: AUTH001
-    path: /docs/specs/features/authentication.md
+    path: /specs/features/authentication.md
 impl:
   id: IMPL001
-  path: /docs/impls/nodejs.md
+  path: /impls/nodejs.md
 commits:
   - sha: nonexistent1234567890abcdef1234567890abcdef123456
     message: "This commit doesn't exist"
@@ -347,10 +347,10 @@ id: REF004
 type: ref-impl
 specs:
   - id: AUTH001
-    path: /docs/specs/features/authentication.md
+    path: /specs/features/authentication.md
 impl:
   id: IMPL001
-  path: /docs/impls/nodejs.md
+  path: /impls/nodejs.md
 commits:
   - sha: nonexistent1234567890abcdef1234567890abcdef123456
   - sha: alsonotreal7890abcdef1234567890abcdef1234567890a

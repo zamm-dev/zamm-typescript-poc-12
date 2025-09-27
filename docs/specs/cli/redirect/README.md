@@ -12,8 +12,9 @@ The `redirect <dir>` command allows ZAMM to use another directory instead of `do
 When `zamm redirect <dir>` is executed:
 
 1. **Validate directory**: Ensure the specified directory exists and is accessible
-2. **Store redirect**: Save the redirect directory path in `.zamm/base-state.json`
-3. **Update operations**: All subsequent ZAMM operations should use the specified directory as the base instead of `docs/`
+2. **Resolve path**: Convert relative paths to absolute paths for consistent storage
+3. **Store redirect**: Save the redirect directory path in `.zamm/base-state.json`
+4. **Update operations**: All subsequent ZAMM operations should use the specified directory as the base instead of `docs/`
 
 ## Storage Format
 
@@ -31,11 +32,13 @@ The redirect directory should be stored in `.zamm/base-state.json` with a new fi
 - If no redirect is configured, ZAMM should continue using `docs/` as the default base directory
 - Once a redirect is configured, all ZAMM commands should operate on the redirected directory
 - The redirect should persist across ZAMM command invocations
-- The redirect directory path should be resolved to an absolute path at runtime for easy troubleshooting
+- The redirect directory path should be resolved to an absolute path at configuration time and stored as an absolute path for consistent access
+- Directory validation should occur both at configuration time and at runtime when accessing the redirect directory
 - If the redirect directory becomes inaccessible, ZAMM should provide a clear error message
 
 ## Error Handling
 
+- If not executed within a git repository, show an error message and exit
 - If the specified directory does not exist, show an error message and exit
 - If the directory is not accessible due to permissions, show an appropriate error message
 - If `.zamm/base-state.json` cannot be written, show an error about the inability to save the configuration

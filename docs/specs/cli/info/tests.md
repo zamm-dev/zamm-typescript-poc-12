@@ -42,7 +42,7 @@ should output:
 ```
 ID: XYZ789
 Type: Specification
-File Path: /docs/specs/features/authentication.md
+File Path: docs/specs/features/authentication.md
 ```
 
 ## Info for Project File with Implementations
@@ -105,7 +105,7 @@ should output:
 ```
 ID: PRJ001
 Type: Project
-File Path: /docs/README.md
+File Path: docs/README.md
 Implementations:
   - IMP001: Node.js Implementation
   - IMP002: Python Implementation
@@ -121,10 +121,10 @@ id: NOT123
 type: ref-impl
 specs:
   - id: XYZ789
-    path: /docs/specs/features/authentication.md
+    path: /specs/features/authentication.md
 impl:
   id: IMP002
-  path: /docs/impls/python.md
+  path: /impls/python.md
 commits:
   - sha: a1b2c3d4e5f6789012345678901234567890abcd
     message: Add initial authentication scaffolding
@@ -156,7 +156,7 @@ should output:
 ```
 ID: NOT123
 Type: Reference Implementation
-File Path: /docs/impl-history/python/features/initial-auth.md
+File Path: docs/impl-history/python/features/initial-auth.md
 Specifications Implemented:
   - XYZ789: Authentication Feature
 Implementation:

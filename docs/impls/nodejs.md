@@ -78,6 +78,8 @@ All TypeScript source files must be in the `src/` directory to maintain proper t
   - **spec record**: Record commit hashes and messages in spec-history file frontmatter
 - **feat**: Feature lifecycle management commands
   - **feat start**: Start a new feature with Git worktree, spec file, and workflow state tracking using LLM suggestions
+- **redirect**: Configure custom docs directory
+  - **redirect <directory>**: Set custom base directory for ZAMM's docs directory discovery
 
 ## ZAMM Workflow Tracking
 
@@ -85,7 +87,7 @@ The implementation includes workflow lifecycle tracking through `.zamm/` directo
 
 ### Base Directory (Git Repository Root)
 
-- **`.zamm/base-state.json`**: Tracks all active worktrees, their branches, paths, and current states
+- **`.zamm/base-state.json`**: Tracks all active worktrees, their branches, paths, current states, and optional redirect configuration for custom docs directory
 - **`.zamm/.gitignore`**: Ignores all `.zamm/` contents from Git tracking
 
 ### Worktree Directories
@@ -157,6 +159,61 @@ npx tsx src/scripts/record-api-calls.ts
 ```
 
 This script records actual API responses for the feat command test scenarios and saves them as sanitized nock recordings in `src/__tests__/nock-recordings/feat-recordings.json`. The recorded responses are then used by tests to ensure deterministic behavior without making real API calls during test runs.
+
+### Critical Testing Patterns for macOS Compatibility
+
+#### Async/Await in Test Functions
+
+ALL test functions in command test suites MUST use async/await pattern to prevent Jest worker crashes:
+
+```typescript
+// CORRECT - async test function with await
+it('should process file', async () => {
+  await someAsyncCommand(filePath);
+  // assertions here
+});
+
+// INCORRECT - sync test function
+it('should process file', () => {
+  someAsyncCommand(filePath); // This will cause Jest worker crashes
+  // assertions here
+});
+```
+
+#### Working Directory Management
+
+All command tests MUST change to the temp directory to ensure proper path resolution:
+
+```typescript
+beforeEach(() => {
+  originalCwd = process.cwd();
+  testEnv = setupTestEnvironment('src/__tests__/fixtures/command');
+  process.chdir(testEnv.tempDir); // CRITICAL for proper path calculations
+});
+
+afterEach(() => {
+  process.chdir(originalCwd);
+  cleanupTestEnvironment(testEnv);
+});
+```
+
+#### macOS Symlink Resolution
+
+On macOS, `/var` is symlinked to `/private/var` which breaks path calculations. The core `file-resolver.ts` handles this with `fs.realpathSync()`, but tests must account for this:
+
+- NEVER use `expect().toContain()` with partial paths in test assertions
+- Use full object matching with `toEqual()` for file info comparisons
+- When debugging path issues, log both `process.cwd()` and actual file paths to verify symlink resolution
+
+#### Jest Worker Crash Prevention
+
+Jest workers crash when:
+
+- Async functions are called without `await` in test functions
+- Test functions are not declared as `async` but call async code
+- Working directory is not properly managed in temp directory tests
+
+These crashes manifest as "Cannot read properties of undefined" errors and are difficult to debug.
 
 ## Known Issues
 

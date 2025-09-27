@@ -9,3 +9,5 @@ commits:
 # Add a `redirect <dir>` command to use a custom base directory
 
 Add a `redirect <dir>` command that allows zamm to use another directory instead of `docs/` as the base of operations. The specified redirect directory should be stored in `.zamm/base-state.json` . All ZAMM operations should continue exactly the same as if the data were still in `docs/`
+
+Because of this, all paths displayed inside each file (as produced by `zamm organize`) should now be relative to the base docs directory, and all paths displayed to the user by the info command should be relative to the current working directory.

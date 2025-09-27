@@ -16,7 +16,7 @@ The `info` command displays structured information about a given file. The file 
   - `ref-impl` → "Reference Implementation"
   - `test` → "Test"
   - `spec` → "Specification"
-- **File Path**: The absolute path to the file, relative to the project root
+- **File Path**: The path to the file, relative to the current working directory
 
 ## Additional information for project files:
 
