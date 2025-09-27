@@ -6,4 +6,13 @@
 4. **Development Documentation**: Update `docs/impls/` with concise _implementation-specific_ development guidance for future agents (e.g. changes to project structure, dev commands, or anything else of note to future LLM agents working on this specific project). You should **never** duplicate feature documentation in this step -- that information belongs in the specs in `docs/`.
 5. **Spec Updates**: Update the main spec (NOT spec-history) with learned requirements that apply to all implementations. Keep spec-history files concise as changelog entries. Write specs as present-tense directives for future implementers.
 6. **Documentation Commit**: Make a commit with all the documentation updates. This commit does not need to be recorded in any spec files.
-7. **Collaboration Improvements**: Update `.claude/commands/implement-spec.md` with improvements to future collaboration with the user, based on what happened in this interaction.
+
+## Critical Documentation Patterns
+
+When your conversational context has been compacted, be extra wary of the following things:
+
+- **Don't make assumptions about command patterns** - verify actual implementation syntax rather than assuming subcommand structures exist
+- **Check what actually changed** - use `git diff` to understand real implementation impact on specs rather than guessing what changed
+- **Be systematic about spec updates** - check ALL related specs when implementation changes affect output formats or behavior patterns
+- **Verify field names and formats** - don't assume spec field names match what was actually implemented; grep the codebase to confirm
+- **Test the actual output** - run non-destructive commands to see current behavior rather than assuming what the output format should be
