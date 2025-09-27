@@ -287,9 +287,9 @@ describe('redirect command', () => {
       const { getInfoByIdOrPath } = await import('../../core/commands/info');
 
       const info = await getInfoByIdOrPath('TEST123');
-      expect(info).toContain('ID: TEST123');
-      expect(info).toContain('Type: Specification');
-      expect(info).toContain('test-spec.md'); // Just verify the filename is present
+      expect(info).toBe(
+        'ID: TEST123\nType: Specification\nFile Path: custom-docs/test-spec.md'
+      );
     });
 
     it('should verify base-state.json contains correct structure', async () => {

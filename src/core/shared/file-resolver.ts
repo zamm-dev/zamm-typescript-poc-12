@@ -101,7 +101,11 @@ export async function getFileInfo(filePath: string): Promise<FileInfo> {
   const docsRelativePath = path.relative(resolvedDocsDir, resolvedAbsolutePath);
 
   // Path relative to current directory for user display
-  const currentDirRelativePath = path.relative(process.cwd(), absolutePath);
+  const resolvedCwd = fs.realpathSync(process.cwd());
+  const currentDirRelativePath = path.relative(
+    resolvedCwd,
+    resolvedAbsolutePath
+  );
 
   return {
     id: frontmatter.id,

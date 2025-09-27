@@ -66,9 +66,7 @@ describe('ZAMM CLI Info Command', () => {
         id: 'XYZ789',
         type: 'spec',
         filePath: '/specs/features/authentication.md',
-        displayPath: expect.stringMatching(
-          /docs\/specs\/features\/authentication\.md$/
-        ) as string,
+        displayPath: 'docs/specs/features/authentication.md',
         absolutePath: filePath,
         gitRoot: testEnv.tempDir,
       });
