@@ -9,3 +9,5 @@ $ARGUMENTS
 3. Test that the code works
 4. Update `docs/impls/` as appropriate with **concise** updates to implementation-specific development documentation or guidelines so that future LLM agents working on this project will respect the changes made in this refactor.
 5. Commit
+
+Keep in mind @.claude/software-dev-guidelines.md
