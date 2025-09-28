@@ -54,6 +54,8 @@ src/
 │   └── record-api-calls.ts # Script to record Anthropic API responses for testing
 ├── zamm.ts                 # Main CLI entry point with Commander.js
 └── index.ts                # Library exports
+dev/                        # Development workflow scripts
+└── end-worktree.sh         # Script to wrap up work in Git worktrees
 ```
 
 All TypeScript source files must be in the `src/` directory to maintain proper type checking. Place scripts and utilities in `src/scripts/` rather than bypassing TypeScript compilation. Build artifacts (`.js`, `.d.ts`, `.map` files) are generated in `dist/` and should not be modified directly.
