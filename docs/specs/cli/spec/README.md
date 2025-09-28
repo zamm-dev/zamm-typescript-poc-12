@@ -12,10 +12,11 @@ The `spec` command provides subcommands for managing specification records in th
 The `spec changelog <filepath>` command creates a new spec file at the specified path. If the path does not start with `spec-history/`, it will be automatically prepended to ensure the file is created in the correct directory.
 
 The command should:
+
 - Create a new markdown file with proper YAML frontmatter including an auto-generated ID and `type: spec`
 - If the filepath doesn't start with `spec-history/`, prepend `spec-history/` to the path
 - Ensure the target directory exists, creating it if necessary
-- Initialize the file with a basic template structure
+- Initialize the file with nothing more than basic frontmatter and exactly _two_ newlines after the frontmatter. This allows for easy programmatic appends to this file.
 
 ## `spec record`
 

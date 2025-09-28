@@ -12,6 +12,9 @@ If files are being modified, then the assertion should be an exact match against
 > [!NOTE]
 > Avoid replacing strings at runtime for test setup files or for expected output. We want to be sure that we're getting exactly what we asked for. If you find yourself wishing to modify an existing file, either create another copy of that file or put before- and after-versions of that file in `before/` and `after/` folders.
 
+> [!NOTE]
+> Make sure that any code formatting tools you use do not auto-format the test resources on commit. We need to be able to match them against exact program output.
+
 ## Directories
 
 If the file comes with a specific path, then replicate that path in the test resource folder so that the entire folder can simply be copied over into the temp test directory.

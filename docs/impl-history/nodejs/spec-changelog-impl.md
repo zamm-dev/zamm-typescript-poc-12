@@ -8,6 +8,10 @@ impl:
   id: IEU463
   path: /impls/nodejs.md
 commits:
+  - sha: 57a3646c1c5a7aafee0d6a3231608574869d8547
+    message: Exclude test fixtures from Prettier formatting
+  - sha: 61b354479410f895dfe01b097b0afd76c1f68d51
+    message: Fix serializeFrontmatter to handle empty bodies correctly
   - sha: 21b15da9e6f84dd6b760bb9861b67f9e85567b58
     message: Implement spec changelog command
 ---
