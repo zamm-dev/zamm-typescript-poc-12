@@ -33,6 +33,11 @@ export function serializeFrontmatter(
     })
     .trim();
 
+  // Handle empty body case - only add two newlines after frontmatter
+  if (body.trim() === '') {
+    return `---\n${yamlContent}\n---\n\n`;
+  }
+
   return `---\n${yamlContent}\n---\n\n${body}\n`;
 }
 
