@@ -53,8 +53,11 @@ export interface WorktreeInfo {
 }
 
 export interface BaseState {
-  redirectDirectory?: string;
   worktrees: Record<string, WorktreeInfo>;
+}
+
+export interface RedirectConfig {
+  directory: string;
 }
 
 export interface CurrentWorkflowState {

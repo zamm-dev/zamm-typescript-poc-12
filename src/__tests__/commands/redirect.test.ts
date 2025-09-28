@@ -26,7 +26,7 @@ describe('redirect command', () => {
   });
 
   describe('setRedirect', () => {
-    it('should set redirect directory and create .zamm/base-state.json', async () => {
+    it('should set redirect directory and create .zamm/redirect.json', async () => {
       // Set up test fixture
       copyDirectoryFromFixture(testEnv, 'redirect/before');
 
@@ -39,21 +39,17 @@ describe('redirect command', () => {
 
       await setRedirect(options);
 
-      // Check that base-state.json was created
-      const baseStatePath = path.join(
-        testEnv.tempDir,
-        '.zamm',
-        'base-state.json'
-      );
-      expect(fs.existsSync(baseStatePath)).toBe(true);
+      // Check that redirect.json was created
+      const redirectPath = path.join(testEnv.tempDir, '.zamm', 'redirect.json');
+      expect(fs.existsSync(redirectPath)).toBe(true);
 
       // Check that redirect directory is stored correctly
-      const baseState = JSON.parse(fs.readFileSync(baseStatePath, 'utf-8')) as {
-        redirectDirectory: string;
-        worktrees: Record<string, unknown>;
+      const redirectConfig = JSON.parse(
+        fs.readFileSync(redirectPath, 'utf-8')
+      ) as {
+        directory: string;
       };
-      expect(baseState.redirectDirectory).toBe(path.resolve(customDocsDir));
-      expect(baseState.worktrees).toEqual({});
+      expect(redirectConfig.directory).toBe(path.resolve(customDocsDir));
     });
 
     it('should resolve relative paths to absolute paths', async () => {
@@ -67,17 +63,15 @@ describe('redirect command', () => {
 
       await setRedirect(options);
 
-      const baseStatePath = path.join(
-        testEnv.tempDir,
-        '.zamm',
-        'base-state.json'
-      );
-      const baseState = JSON.parse(fs.readFileSync(baseStatePath, 'utf-8')) as {
-        redirectDirectory: string;
+      const redirectPath = path.join(testEnv.tempDir, '.zamm', 'redirect.json');
+      const redirectConfig = JSON.parse(
+        fs.readFileSync(redirectPath, 'utf-8')
+      ) as {
+        directory: string;
       };
 
       // Use realpathSync to normalize both paths for comparison
-      expect(fs.realpathSync(baseState.redirectDirectory)).toBe(
+      expect(fs.realpathSync(redirectConfig.directory)).toBe(
         fs.realpathSync(path.resolve(customDocsDir))
       );
     });
@@ -141,7 +135,7 @@ describe('redirect command', () => {
       }
     });
 
-    it('should update existing base-state.json with redirect directory', async () => {
+    it('should create redirect.json independently of existing base-state.json', async () => {
       // First create initial base state with worktrees
       await BaseWorkflowService.initialize(testEnv.tempDir);
 
@@ -163,19 +157,29 @@ describe('redirect command', () => {
 
       await setRedirect(options);
 
+      // Check that redirect.json was created
+      const redirectPath = path.join(testEnv.tempDir, '.zamm', 'redirect.json');
+      const redirectConfig = JSON.parse(
+        fs.readFileSync(redirectPath, 'utf-8')
+      ) as {
+        directory: string;
+      };
+
+      expect(redirectConfig.directory).toBe(path.resolve(customDocsDir));
+
+      // Verify base-state.json is unchanged and still has worktrees
       const baseStatePath = path.join(
         testEnv.tempDir,
         '.zamm',
         'base-state.json'
       );
       const baseState = JSON.parse(fs.readFileSync(baseStatePath, 'utf-8')) as {
-        redirectDirectory: string;
         worktrees: Record<string, unknown>;
       };
 
-      expect(baseState.redirectDirectory).toBe(path.resolve(customDocsDir));
-      // Should preserve existing worktrees
+      // Should preserve existing worktrees and not have redirectDirectory
       expect(baseState.worktrees).toHaveProperty('feature-branch');
+      expect(baseState).not.toHaveProperty('redirectDirectory');
     });
   });
 
@@ -292,7 +296,7 @@ describe('redirect command', () => {
       );
     });
 
-    it('should verify base-state.json contains correct structure', async () => {
+    it('should verify redirect.json contains correct structure', async () => {
       // Set up test fixture
       copyDirectoryFromFixture(testEnv, 'redirect/before');
 
@@ -304,22 +308,17 @@ describe('redirect command', () => {
       // Set redirect
       await setRedirect({ directory: customDocsDir });
 
-      // Verify the base-state.json structure programmatically
-      const baseStatePath = path.join(
-        testEnv.tempDir,
-        '.zamm',
-        'base-state.json'
-      );
-      expect(fs.existsSync(baseStatePath)).toBe(true);
+      // Verify the redirect.json structure programmatically
+      const redirectPath = path.join(testEnv.tempDir, '.zamm', 'redirect.json');
+      expect(fs.existsSync(redirectPath)).toBe(true);
 
-      const baseState = JSON.parse(fs.readFileSync(baseStatePath, 'utf-8')) as {
-        redirectDirectory: string;
-        worktrees: Record<string, unknown>;
+      const redirectConfig = JSON.parse(
+        fs.readFileSync(redirectPath, 'utf-8')
+      ) as {
+        directory: string;
       };
-      expect(baseState).toHaveProperty('redirectDirectory');
-      expect(baseState).toHaveProperty('worktrees');
-      expect(baseState.redirectDirectory).toBe(path.resolve(customDocsDir));
-      expect(baseState.worktrees).toEqual({});
+      expect(redirectConfig).toHaveProperty('directory');
+      expect(redirectConfig.directory).toBe(path.resolve(customDocsDir));
     });
   });
 });

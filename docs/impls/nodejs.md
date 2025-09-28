@@ -87,7 +87,8 @@ The implementation includes workflow lifecycle tracking through `.zamm/` directo
 
 ### Base Directory (Git Repository Root)
 
-- **`.zamm/base-state.json`**: Tracks all active worktrees, their branches, paths, current states, and optional redirect configuration for custom docs directory
+- **`.zamm/base-state.json`**: Tracks all active worktrees, their branches, paths, and current states
+- **`.zamm/redirect.json`**: Stores custom docs directory configuration when redirect command is used
 - **`.zamm/.gitignore`**: Ignores all `.zamm/` contents from Git tracking
 
 ### Worktree Directories
@@ -99,6 +100,7 @@ The implementation includes workflow lifecycle tracking through `.zamm/` directo
 
 - **BaseWorkflowService**: Manages base directory workflow state
 - **WorktreeWorkflowService**: Manages individual worktree workflow state
+- **RedirectService**: Manages custom docs directory configuration via `.zamm/redirect.json`
 
 ## Development
 

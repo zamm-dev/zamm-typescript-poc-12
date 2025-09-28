@@ -1,5 +1,5 @@
 import { findGitRoot } from '../shared/file-utils';
-import { BaseWorkflowService } from '../shared/workflow-service';
+import { RedirectService } from '../shared/redirect-service';
 
 export interface RedirectOptions {
   directory: string;
@@ -11,5 +11,5 @@ export async function setRedirect(options: RedirectOptions): Promise<void> {
     throw new Error('Not in a git repository');
   }
 
-  await BaseWorkflowService.setRedirectDirectory(gitRoot, options.directory);
+  await RedirectService.setRedirectDirectory(gitRoot, options.directory);
 }
