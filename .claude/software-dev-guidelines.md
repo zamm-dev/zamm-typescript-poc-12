@@ -39,7 +39,7 @@
 - Don't mention removing code that you added during the same commit - only describe changes to the existing codebase.
 - **Commit regularly** but don't include development environment files (`.claude/` changes)
 - **Make sure to actually commit first** before recording the implementation commit - don't be distracted by user guidance on the proper implementation steps and forget to commit
-- **ALWAYS run `git add -A` before committing** - forgetting to stage changes is a recurring issue
+- **ALWAYS run `git add -A` before committing** - forgetting to stage changes is a recurring issue. Run this command immediately before every `git commit`, **especially after making user-requested changes during implementation**
 - **Clean up ALL debugging files and code before committing** - this includes temporary files, console.log statements, commented code, and unused imports
 
 ## Common Patterns to Avoid
