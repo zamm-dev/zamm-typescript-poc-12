@@ -7,3 +7,5 @@ coverage
 *.min.js
 *.min.css
 package-lock.json
+# Test fixtures should not be reformatted as they need exact content matching
+src/__tests__/fixtures/**
