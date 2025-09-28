@@ -5,7 +5,7 @@ type: spec
 
 # `redirect`
 
-The `redirect <dir>` command allows ZAMM to use another directory instead of `docs/` as the base of operations. The specified redirect directory should be stored in `.zamm/base-state.json`. All ZAMM operations should continue exactly the same as if the data were still in `docs/`.
+The `redirect <dir>` command allows ZAMM to use another directory instead of `docs/` as the base of operations. The specified redirect directory should be stored in `.zamm/redirect.json`. All ZAMM operations should continue exactly the same as if the data were still in `docs/`.
 
 ## Command Behavior
 
@@ -13,17 +13,16 @@ When `zamm redirect <dir>` is executed:
 
 1. **Validate directory**: Ensure the specified directory exists and is accessible
 2. **Resolve path**: Convert relative paths to absolute paths for consistent storage
-3. **Store redirect**: Save the redirect directory path in `.zamm/base-state.json`
+3. **Store redirect**: Save the redirect directory path in `.zamm/redirect.json`
 4. **Update operations**: All subsequent ZAMM operations should use the specified directory as the base instead of `docs/`
 
 ## Storage Format
 
-The redirect directory should be stored in `.zamm/base-state.json` with a new field:
+The redirect directory should be stored in `.zamm/redirect.json` as a separate configuration file:
 
 ```json
 {
-  "redirectDirectory": "/path/to/custom/directory",
-  "worktrees": [...]
+  "directory": "/path/to/custom/directory"
 }
 ```
 
@@ -41,7 +40,7 @@ The redirect directory should be stored in `.zamm/base-state.json` with a new fi
 - If not executed within a git repository, show an error message and exit
 - If the specified directory does not exist, show an error message and exit
 - If the directory is not accessible due to permissions, show an appropriate error message
-- If `.zamm/base-state.json` cannot be written, show an error about the inability to save the configuration
+- If `.zamm/redirect.json` cannot be written, show an error about the inability to save the configuration
 
 ## Integration with Existing Commands
 
