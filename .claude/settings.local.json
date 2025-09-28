@@ -27,7 +27,11 @@
       "Bash(pnpm exec playwright test:*)",
       "WebSearch",
       "Bash(pnpm exec tsc:*)",
-      "Bash(git reset:*)"
+      "Bash(git reset:*)",
+      "Bash(mkdir:*)",
+      "Bash(zamm impl create:*)",
+      "Bash(zamm impl record:*)",
+      "Bash(git restore:*)"
     ],
     "deny": [],
     "ask": []
