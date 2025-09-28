@@ -3,10 +3,10 @@ id: MMA086
 type: ref-impl
 specs:
   - id: FYR697
-    path: /docs/specs/cli/README.md
+    path: /specs/cli/README.md
 impl:
   id: IEU463
-  path: /docs/impls/nodejs.md
+  path: /impls/nodejs.md
 commits:
   - sha: 0de40a8ebeedca17adc4b3688b23e4c8b771adb4
     message: Implement new implement command

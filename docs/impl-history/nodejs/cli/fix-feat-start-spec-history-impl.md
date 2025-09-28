@@ -3,10 +3,10 @@ id: RAN494
 type: ref-impl
 specs:
   - id: RTD017
-    path: /docs/spec-history/cli/fix-feat-start-spec-history.md
+    path: /spec-history/cli/fix-feat-start-spec-history.md
 impl:
   id: IEU463
-  path: /docs/impls/nodejs.md
+  path: /impls/nodejs.md
 commits:
   - sha: 865ca65cadbbadaaec13c1ed92d3c1901e6c95fe
     message: Fix feat start spec history file creation in worktree

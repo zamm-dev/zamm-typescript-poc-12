@@ -3,10 +3,10 @@ id: ZIV767
 type: ref-impl
 specs:
   - id: LQO792
-    path: /docs/spec-history/cli/organize-update-metadata.md
+    path: /spec-history/cli/organize-update-metadata.md
 impl:
   id: IEU463
-  path: /docs/impls/nodejs.md
+  path: /impls/nodejs.md
 commits:
   - sha: 88aee279edc05a76a21da82d2581fd6b4ba839f1
     message: Implement organize command metadata updates

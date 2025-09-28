@@ -3,10 +3,10 @@ id: ZWB094
 type: ref-impl
 specs:
   - id: NXA068
-    path: /docs/spec-history/cli/info-title-and-commits.md
+    path: /spec-history/cli/info-title-and-commits.md
 impl:
   id: IEU463
-  path: /docs/impls/nodejs.md
+  path: /impls/nodejs.md
 commits:
   - sha: 62b33e0c567441de44c9ef6f4a4cb71b9b01620b
     message: Update info command to show titles and commits

@@ -3,12 +3,12 @@ id: USA133
 type: ref-impl
 specs:
   - id: FYR697
-    path: /docs/specs/cli/README.md
+    path: /specs/cli/README.md
   - id: MLM844
-    path: /docs/specs/cli/organize/tests/single-file.md
+    path: /specs/cli/organize/tests/single-file.md
 impl:
   id: IEU463
-  path: /docs/impls/nodejs.md
+  path: /impls/nodejs.md
 commits:
   - sha: 9b27159ce9b1f068526f413f669bf181c8bb9015
     message: Implement CLI organize command with YAML frontmatter generation

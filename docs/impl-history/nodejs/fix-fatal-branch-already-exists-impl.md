@@ -3,10 +3,10 @@ id: IML545
 type: ref-impl
 specs:
   - id: SJC776
-    path: /docs/spec-history/fix-fatal-branch-already-exists-in-feat-start.md
+    path: /spec-history/fix-fatal-branch-already-exists-in-feat-start.md
 impl:
   id: IEU463
-  path: /docs/impls/nodejs.md
+  path: /impls/nodejs.md
 commits:
   - sha: 4bc6b623ebb8ad0297853dfb1eb1697573768be7
     message: Implement proactive conflict checking in feat start

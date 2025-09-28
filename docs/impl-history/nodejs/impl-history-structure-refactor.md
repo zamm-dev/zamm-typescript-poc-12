@@ -3,10 +3,10 @@ id: SST469
 type: ref-impl
 specs:
   - id: JDK025
-    path: /docs/spec-history/top-level-impl-history.md
+    path: /spec-history/top-level-impl-history.md
 impl:
   id: IEU463
-  path: /docs/impls/nodejs.md
+  path: /impls/nodejs.md
 commits:
   - sha: 611b78ce687c957b1b0a0e85e9f56aaebbce76eb
     message: Update implement command for new directory structure

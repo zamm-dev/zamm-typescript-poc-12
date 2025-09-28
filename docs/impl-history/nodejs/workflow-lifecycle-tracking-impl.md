@@ -3,10 +3,10 @@ id: OCD501
 type: ref-impl
 specs:
   - id: GQB162
-    path: /docs/spec-history/feat-state-tracking.md
+    path: /spec-history/feat-state-tracking.md
 impl:
   id: IEU463
-  path: /docs/impls/nodejs.md
+  path: /impls/nodejs.md
 commits:
   - sha: 9991bcf61bf9dce9a933885b82f4162574dd7e89
     message: Implement ZAMM workflow lifecycle tracking with separated services

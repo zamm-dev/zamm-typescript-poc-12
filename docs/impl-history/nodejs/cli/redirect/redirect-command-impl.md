@@ -3,7 +3,7 @@ id: GDO015
 type: ref-impl
 specs:
   - id: GBG455
-    path: /specs/cli/redirect/README.md
+    path: /spec-history/add-redirect-command.md
 impl:
   id: IEU463
   path: /impls/nodejs.md

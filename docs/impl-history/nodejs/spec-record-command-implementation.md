@@ -3,10 +3,10 @@ id: RVE111
 type: ref-impl
 specs:
   - id: FKK364
-    path: /docs/spec-history/feature-spec-record-command.md
+    path: /spec-history/feature-spec-record-command.md
 impl:
   id: IEU463
-  path: /docs/impls/nodejs.md
+  path: /impls/nodejs.md
 commits:
   - sha: 5692c3ad21e46795296c975511662b43099ced2b
     message: Implement spec record command for tracking spec-history commits

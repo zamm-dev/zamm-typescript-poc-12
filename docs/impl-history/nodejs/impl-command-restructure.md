@@ -3,10 +3,10 @@ id: LJS789
 type: ref-impl
 specs:
   - id: YSI785
-    path: /docs/spec-history/impl-record-commits.md
+    path: /spec-history/impl-record-commits.md
 impl:
   id: IEU463
-  path: /docs/impls/nodejs.md
+  path: /impls/nodejs.md
 commits:
   - sha: 7e0788b6f5fde090d89c8cddcba9d922b5785c2d
     message: Fix test failures by adding trailing newline to serializeFrontmatter

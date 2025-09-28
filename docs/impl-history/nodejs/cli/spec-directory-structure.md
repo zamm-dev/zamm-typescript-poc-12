@@ -3,12 +3,12 @@ id: TTZ448
 type: impl-history
 specs:
   - id: SOB239
-    path: /docs/specs/cli/info/tests.md
+    path: /specs/cli/info/tests.md
   - id: MLM844
-    path: /docs/specs/cli/organize/tests/single-file.md
+    path: /specs/cli/organize/tests/single-file.md
 impl:
   id: IEU463
-  path: /docs/impls/nodejs.md
+  path: /impls/nodejs.md
 commits:
   - sha: 5fc5b2b3959f7f4141b8b4d4e6574508337d2b49
     message: Implement spec directory structure change

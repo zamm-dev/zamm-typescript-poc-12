@@ -3,10 +3,10 @@ id: FTY087
 type: ref-impl
 specs:
   - id: TYH425
-    path: /docs/spec-history/cli/split-up-file.md
+    path: /spec-history/cli/split-up-file.md
 impl:
   id: IEU463
-  path: /docs/impls/nodejs.md
+  path: /impls/nodejs.md
 commits:
   - sha: 9f7f818ad3f6451b9b783d3647f0368194222f8c
     message: Update split command to support multiple files and match CLI structure

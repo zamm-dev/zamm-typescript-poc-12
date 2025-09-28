@@ -3,10 +3,10 @@ id: BEX429
 type: ref-impl
 specs:
   - id: HPF761
-    path: /docs/specs/project-setup.md
+    path: /specs/project-setup.md
 impl:
   id: IEU463
-  path: /docs/impls/nodejs.md
+  path: /impls/nodejs.md
 references:
   - id: LVH754
     path: nodejs-project-init.md

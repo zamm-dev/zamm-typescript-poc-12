@@ -3,10 +3,10 @@ id: NVO753
 type: ref-impl
 specs:
   - id: ZWS823
-    path: /docs/spec-history/cli/impl-command-type-check.md
+    path: /spec-history/cli/impl-command-type-check.md
 impl:
   id: IEU463
-  path: /docs/impls/nodejs.md
+  path: /impls/nodejs.md
 commits:
   - sha: 70609a8aff9583c96a6d5a8801d627445d1abc52
     message: Implement type validation for impl record command

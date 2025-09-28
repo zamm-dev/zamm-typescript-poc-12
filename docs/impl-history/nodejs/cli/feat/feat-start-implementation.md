@@ -3,12 +3,12 @@ id: KRI413
 type: ref-impl
 specs:
   - id: IJZ668
-    path: /docs/specs/cli/feat/README.md
+    path: /specs/cli/feat/README.md
   - id: DRU942
-    path: /docs/specs/cli/feat/tests.md
+    path: /specs/cli/feat/tests.md
 impl:
   id: IEU463
-  path: /docs/impls/nodejs.md
+  path: /impls/nodejs.md
 commits:
   - sha: 4b5654dd34248c8c16c1febb1b055f6b3f0a5f1b
     message: Improve feat command tests with consolidation and exact matching
