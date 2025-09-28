@@ -7,3 +7,8 @@ You are in a fresh Git worktree directory. You are here to update the spec with 
 3. Commit only the spec changes in docs/specs/ - do not commit any files in docs/spec-history/ or other directories in this step.
 4. Run `zamm spec record spec-history/<file-path> --last-n-commits 1` to record the last commit you just made to the spec. The file path should be to the changelog file in `spec-history/`
 5. Set up this worktree according to the instructions in @docs/impls/nodejs.md so that the next implementation agent can come in and start work immediately.
+
+## Important Notes
+
+- Avoid running linting, type-checking, or verification commands - committed changes should already conform to spec
+- `zamm` is already in `PATH` - there is no need to build it first before using it
