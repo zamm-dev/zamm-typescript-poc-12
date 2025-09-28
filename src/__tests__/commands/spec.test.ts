@@ -2,6 +2,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 import {
   recordSpecCommits,
+  createSpecChangelog,
   setIdProvider,
   resetIdProvider,
   IdProvider,
@@ -177,6 +178,98 @@ describe('ZAMM CLI Spec Command', () => {
       await expect(recordSpecCommits('PRJ001', 2)).rejects.toThrow(
         'Error: Spec commits have to be added to spec files. The file you entered, Proj PRJ001 at docs/README.md, is a project file.'
       );
+    });
+  });
+
+  describe('createSpecChangelog', () => {
+    beforeEach(() => {
+      // Create basic docs directory structure for changelog tests
+      const docsDir = path.join(testEnv.tempDir, 'docs');
+      if (!fs.existsSync(docsDir)) {
+        fs.mkdirSync(docsDir, { recursive: true });
+      }
+    });
+
+    it('should create a new spec changelog file with absolute path', async () => {
+      const filepath = 'spec-history/new-feature.md';
+      const createdPath = await createSpecChangelog(filepath);
+
+      expect(createdPath).toContain('spec-history/new-feature.md');
+      expectFileMatches(
+        testEnv,
+        'docs/spec-history/new-feature.md',
+        'changelog-expected'
+      );
+    });
+
+    it('should create a new spec changelog file with relative path', async () => {
+      const filepath = 'new-feature.md';
+      const createdPath = await createSpecChangelog(filepath);
+
+      expect(createdPath).toContain('spec-history/new-feature.md');
+      expectFileMatches(
+        testEnv,
+        'docs/spec-history/new-feature.md',
+        'changelog-expected'
+      );
+    });
+
+    it('should create nested directories when they do not exist', async () => {
+      const filepath = 'nested/deep-feature.md';
+      const createdPath = await createSpecChangelog(filepath);
+
+      expect(createdPath).toContain('spec-history/nested/deep-feature.md');
+      expectFileMatches(
+        testEnv,
+        'docs/spec-history/nested/deep-feature.md',
+        'changelog-expected'
+      );
+    });
+
+    it('should add .md extension if not present', async () => {
+      const filepath = 'new-feature';
+      const createdPath = await createSpecChangelog(filepath);
+
+      expect(createdPath).toContain('spec-history/new-feature.md');
+      expectFileMatches(
+        testEnv,
+        'docs/spec-history/new-feature.md',
+        'changelog-expected'
+      );
+    });
+
+    it('should error when file already exists', async () => {
+      // Copy an existing spec file
+      createTestFile(
+        'docs/spec-history/existing-spec.md',
+        'changelog-existing'
+      );
+
+      await expect(createSpecChangelog('existing-spec.md')).rejects.toThrow(
+        'File already exists: spec-history/existing-spec.md'
+      );
+    });
+
+    it('should error when not in git repository', async () => {
+      // Create a temporary non-git directory
+      const originalProjectCwd = testEnv.originalCwd;
+      const nonGitEnv = setupTestEnvironment('src/__tests__/fixtures/spec');
+      nonGitEnv.originalCwd = originalProjectCwd;
+      try {
+        // Remove .git to simulate non-git environment
+        const gitDir = path.join(nonGitEnv.tempDir, '.git');
+        if (fs.existsSync(gitDir)) {
+          fs.rmSync(gitDir, { recursive: true, force: true });
+        }
+
+        process.chdir(nonGitEnv.tempDir);
+        await expect(createSpecChangelog('new-feature.md')).rejects.toThrow(
+          'Not in a git repository'
+        );
+      } finally {
+        cleanupTestEnvironment(nonGitEnv);
+        process.chdir(testEnv.tempDir);
+      }
     });
   });
 });

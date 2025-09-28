@@ -1,6 +1,11 @@
+import * as fs from 'fs';
+import * as path from 'path';
 import { FileInfo } from '../shared/types';
 import { getFileTypeLabel, getFileTypeDescription } from '../shared/file-types';
 import { recordCommitsToFile } from '../shared/commit-recorder';
+import { getDocsDirectory } from '../shared/file-utils';
+import { getIdProvider } from '../shared/id-provider';
+import { serializeFrontmatter } from '../shared/frontmatter';
 
 export async function recordSpecCommits(
   idOrPath: string,
@@ -25,4 +30,53 @@ export async function recordSpecCommits(
       }
     },
   });
+}
+
+export async function createSpecChangelog(filepath: string): Promise<string> {
+  // Normalize the filepath to ensure it starts with spec-history/
+  let normalizedPath = filepath;
+  if (!normalizedPath.startsWith('spec-history/')) {
+    normalizedPath = `spec-history/${normalizedPath}`;
+  }
+
+  // Ensure the file has .md extension
+  if (!normalizedPath.endsWith('.md')) {
+    normalizedPath += '.md';
+  }
+
+  // Get the docs directory and construct the full file path
+  const docsDir = await getDocsDirectory();
+  const fullFilePath = path.join(docsDir, normalizedPath);
+
+  // Check if file already exists
+  if (fs.existsSync(fullFilePath)) {
+    throw new Error(`File already exists: ${normalizedPath}`);
+  }
+
+  // Ensure the target directory exists
+  const dirPath = path.dirname(fullFilePath);
+  if (!fs.existsSync(dirPath)) {
+    fs.mkdirSync(dirPath, { recursive: true });
+  }
+
+  // Generate a new ID for the spec
+  const idProvider = getIdProvider();
+  const id = idProvider.generateId();
+
+  // Create frontmatter
+  const frontmatter = {
+    id,
+    type: 'spec' as const,
+  };
+
+  // Create empty body
+  const body = '';
+
+  // Serialize the complete file content
+  const fileContent = serializeFrontmatter(frontmatter, body);
+
+  // Write the file
+  fs.writeFileSync(fullFilePath, fileContent, 'utf8');
+
+  return fullFilePath;
 }

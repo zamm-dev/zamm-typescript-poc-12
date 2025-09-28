@@ -12,6 +12,7 @@ import {
   generateImplementationNote,
   recordCommits,
   recordSpecCommits,
+  createSpecChangelog,
   ImplementOptions,
   splitFile,
   SplitOptions,
@@ -168,6 +169,19 @@ async function recordSpecCommitsWithErrorHandling(
   }
 }
 
+async function createSpecChangelogWithErrorHandling(
+  filepath: string
+): Promise<void> {
+  try {
+    const createdFilePath = await createSpecChangelog(filepath);
+    console.log(chalk.green(`✓ Created spec changelog: ${createdFilePath}`));
+  } catch (error) {
+    const errorMessage = error instanceof Error ? error.message : String(error);
+    console.error(chalk.red(`Error: ${errorMessage}`));
+    process.exit(1);
+  }
+}
+
 const implCommand = program
   .command('impl')
   .alias('i')
@@ -240,6 +254,15 @@ specCommand
   )
   .argument('<id-or-path>', 'spec ID or file path to update')
   .action(recordSpecCommitsWithErrorHandling);
+
+specCommand
+  .command('changelog')
+  .description('Create a new spec changelog file')
+  .argument(
+    '<filepath>',
+    'file path for the new spec (spec-history/ will be prepended if not present)'
+  )
+  .action(createSpecChangelogWithErrorHandling);
 
 async function redirectWithErrorHandling(directory: string): Promise<void> {
   try {
