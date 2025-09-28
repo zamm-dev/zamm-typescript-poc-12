@@ -7,6 +7,16 @@ type: spec
 
 The `spec` command provides subcommands for managing specification records in the spec-history directory.
 
+## `spec changelog <filepath>`
+
+The `spec changelog <filepath>` command creates a new spec file at the specified path. If the path does not start with `spec-history/`, it will be automatically prepended to ensure the file is created in the correct directory.
+
+The command should:
+- Create a new markdown file with proper YAML frontmatter including an auto-generated ID and `type: spec`
+- If the filepath doesn't start with `spec-history/`, prepend `spec-history/` to the path
+- Ensure the target directory exists, creating it if necessary
+- Initialize the file with a basic template structure
+
 ## `spec record`
 
 When given the `--last-n-commits <N>` parameter and a positional argument for the spec ID or file path, `spec record` should add the commit hashes from the last N commits to the specified file's frontmatter under a `commits` field. The commits should be recorded as an array of objects with `sha` and `message` properties.
