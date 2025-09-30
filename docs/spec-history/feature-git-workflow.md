@@ -2,6 +2,8 @@
 id: RQY572
 type: spec
 commits:
+  - sha: b3195716c6d268416cdcd9d64b4611b4056d08b6
+    message: Clarify new philosophy behind development workflow scripting
   - sha: 3dbe0f98873cadd13257be65c4b29032a46994d0
     message: Update feat command spec to use Bash script for git worktree branching
 ---
