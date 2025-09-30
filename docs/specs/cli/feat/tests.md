@@ -8,22 +8,33 @@ type: test
 These tests should be run inside a temp test directory with proper Git repository setup and isolated environments to prevent conflicts.
 
 > [!NOTE]
-> See [Spec MTW997](/docs/specs/test-file-resources.md) on testing with test resource files.
+> See [Spec MTW997](/docs/test-file-resources.md) on testing with test resource files.
 
-> [!NOTE]
-> The exact API calls to Anthropic should be recorded and replayed for tests, with API keys filtered out. API-keys are of the format `sk-*`, where `*` represents an unbroken string of alphanumeric characters, hyphens, and underscores. Make sure to do a general regex string replace of all instances of this before writing out to disk, not just in specific areas like request headers.
+## Feature Start
 
-## Feature Start Without API Key
+### Base case
 
-Given a Git repository with no `ANTHROPIC_API_KEY` environment variable set, then the command:
+Given a Git repository, then the command:
 
 ```bash
 zamm feat start Add user authentication
 ```
 
-should fail with error message: `ANTHROPIC_API_KEY environment variable is required`
+should
 
-## Feature Start Success
+- Ensure that a dummy script gets successfully executed
+- Check that the file `.zamm/current-workflow-state.json` looks exactly like:
+
+  ```json
+  {
+    "state": "INITIAL"
+  }
+  ```
+
+### End-to-end test
+
+> [!NOTE]
+> This test requires a system with the `ANTHROPIC_API_KEY` environment variable set, and should therefore be skipped by default.
 
 Given a Git repository and `ANTHROPIC_API_KEY` environment variable set, then the command:
 
@@ -33,17 +44,30 @@ zamm feat start Add user authentication
 
 should:
 
-- Create a Git worktree in sibling directory `../user-authentication/`
-- Create a new Git branch `zamm/user-authentication`
-- Create a spec file `docs/spec-history/user-authentication.md` with:
+- Create a Git worktree in a sibling directory
+- Create the file `../<worktree-dir>/.zamm/current-workflow-state.json` with the exact contents:
 
-```md
----
-id: TST123
-type: spec
----
+  ```json
+  {
+    "state": "INITIAL"
+  }
+  ```
 
-# Add User Authentication
+- Create a new Git branch starting with `zamm/`
+- Create a new spec file under `docs/spec-history/` that looks like:
 
-Add user authentication
-```
+  ```md
+  ---
+  id: TST123
+  type: spec
+  ---
+
+  # Adding User Authentication
+
+  Add user authentication
+  ```
+
+  Read it back in to ensure that:
+  - The frontmatter is an exact match (you can use the test ID provider to clamp ID randomness)
+  - The body is an exact match
+  - The title is non-empty (it is unclear what exact title the LLM will actually generate)
