@@ -5,7 +5,12 @@ type: spec
 
 # Development Scripts
 
-Development scripts are meant to help with the ZAMM development workflow lifecycle. They assume that the project is set up with a `base/` folder that hosts the main branch, along with sibling folders for each worktree branch currently being worked on. For example:
+This is a specification for development scripts that are specific to this project. They assume a development workflow based on Git worktrees, where:
+
+- The project is set up with a `base/` folder that hosts the main branch
+- Each worktree branch currently being worked on exists on a sibling branch. These get cleaned up as each feature is finished.
+
+For example:
 
 ```
 project-meta-folder/
@@ -14,7 +19,7 @@ project-meta-folder/
 └── another-feat/           # zamm/another-feat branch worktree
 ```
 
-They should be stored in the `dev/` folder of the Git root. That is, `base/dev/` will contain the most up-to-date canonical version of these scripts, and `base/some-feat/dev` may contain the same or updated versions of these scripts specifically for that feature.
+The development scripts should be stored in the `dev/` folder of the Git root. That is, `base/dev/` will contain the most up-to-date canonical version of these scripts, and `base/some-feat/dev` may contain the same or updated versions of these scripts specifically for that feature.
 
 > [!NOTE]
 > The regular agents working _inside_ of one of these base or worktree directories should not care at all about the project's meta structure. For all they care, their copy of the codebase should be the only one that exists.
