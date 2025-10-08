@@ -29,7 +29,7 @@ The development scripts should be stored in the `dev/` folder of the Git root. T
 The `dev/start-worktree.sh` script provides a standardized way to start work in a new Git worktree. It assumes that we are currently located in the base branch, and performs the following steps:
 
 1. Take in a single input string containing a description of the feature to be worked on
-2. Pass the single input string to a cheap Anthropic LLM (such as `claude-3-haiku-20240307`) for a new branch name suggestion
+2. Pass the single input string to an LLM (via a tool such as `aichat`) for a new branch name suggestion
 3. Create a new [Git worktree](https://git-scm.com/docs/git-worktree) with this name in a sibling directory:
 
    ```bash
@@ -40,13 +40,12 @@ The `dev/start-worktree.sh` script provides a standardized way to start work in 
 
    Convert any slashes to hyphens when generating the sibling directory path. We don't want arbitrarily deep worktree directories. Make sure that the sibling directory path is not prefixed with `zamm-`: if the LLM suggests `some-feat-name` as a branch name, the Git branch should be `zamm/some-feat-branch` but the sibling directory should be `../some-feat-name/`
 
-   **Conflict Resolution**: Proactively check that the proposed directory and Git branch don't exist before attempting creation. If conflicts exist, ask the LLM for an alternative name suggestion and retry. Allow up to 3 attempts before failing with an appropriate error message.
-
 4. Create a new Spec file in `docs/spec-history/<sibling-directory-path>.md` with the same name as the sibling directory path, except with a Markdown file extension. Use the `zamm spec changelog` command to do this.
 5. Append to the file:
    - An H1 Markdown title. Ask the LLM to come up with this as well
    - The original command input string, serving as the body for this specification file
-6. Show the user a message telling them to run the command
+6. Echo a line of the form `ZAMM_INIT_DIR_OVERRIDE=<worktree-path>` so that downstream tooling knows to initialize the `.zamm/` workflow directory in the worktree instead of the base directory.
+7. Show the user a message telling them to run the command
 
    ```bash
    cd ../<new-worktree-dir> && claude "/change-spec"

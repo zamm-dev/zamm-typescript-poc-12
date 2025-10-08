@@ -107,16 +107,19 @@ export class RealAnthropicService implements AnthropicService {
   }
 }
 
-let globalAnthropicService: AnthropicService = new RealAnthropicService();
+let globalAnthropicService: AnthropicService | null = null;
 
 export function setAnthropicService(service: AnthropicService): void {
   globalAnthropicService = service;
 }
 
 export function resetAnthropicService(): void {
-  globalAnthropicService = new RealAnthropicService();
+  globalAnthropicService = null;
 }
 
 export function getAnthropicService(): AnthropicService {
+  if (!globalAnthropicService) {
+    globalAnthropicService = new RealAnthropicService();
+  }
   return globalAnthropicService;
 }

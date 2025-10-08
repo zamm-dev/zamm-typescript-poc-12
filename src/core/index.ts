@@ -4,10 +4,7 @@ export * from './shared/file-utils';
 export * from './shared/frontmatter';
 export * from './shared/file-resolver';
 export * from './shared/git-utils';
-export {
-  BaseWorkflowService,
-  WorktreeWorkflowService,
-} from './shared/workflow-service';
+export { WorkflowStateService } from './shared/workflow-service';
 export { RedirectService } from './shared/redirect-service';
 export * from './shared/file-types';
 export * from './shared/commit-recorder';

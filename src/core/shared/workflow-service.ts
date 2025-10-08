@@ -1,11 +1,6 @@
 import * as fs from 'fs';
 import * as path from 'path';
-import {
-  BaseState,
-  CurrentWorkflowState,
-  WorkflowState,
-  WorktreeInfo,
-} from './types.js';
+import { CurrentWorkflowState, WorkflowState } from './types.js';
 
 abstract class WorkflowService {
   protected static readonly ZAMM_DIR = '.zamm';
@@ -27,118 +22,16 @@ abstract class WorkflowService {
   }
 }
 
-export class BaseWorkflowService extends WorkflowService {
-  private static readonly BASE_STATE_FILE = 'base-state.json';
-
-  static async initialize(gitRoot: string): Promise<void> {
-    await this.ensureZammDirectory(gitRoot);
-
-    // Initialize base-state.json if it doesn't exist
-    const baseStatePath = path.join(
-      gitRoot,
-      this.ZAMM_DIR,
-      this.BASE_STATE_FILE
-    );
-    if (!fs.existsSync(baseStatePath)) {
-      const initialState: BaseState = { worktrees: {} };
-      await fs.promises.writeFile(
-        baseStatePath,
-        JSON.stringify(initialState, null, 2) + '\n'
-      );
-    }
-  }
-
-  static async addWorktree(
-    gitRoot: string,
-    branch: string,
-    worktreePath: string
-  ): Promise<void> {
-    const baseStatePath = path.join(
-      gitRoot,
-      this.ZAMM_DIR,
-      this.BASE_STATE_FILE
-    );
-
-    let baseState: BaseState;
-    try {
-      const content = await fs.promises.readFile(baseStatePath, 'utf-8');
-      baseState = JSON.parse(content) as BaseState;
-    } catch (error) {
-      throw new Error(
-        `Failed to read base state: ${error instanceof Error ? error.message : String(error)}`
-      );
-    }
-
-    const worktreeInfo: WorktreeInfo = {
-      branch,
-      path: fs.realpathSync(worktreePath), // Resolve symlinks for consistent paths
-      state: 'INITIAL',
-    };
-
-    baseState.worktrees[branch] = worktreeInfo;
-
-    await fs.promises.writeFile(
-      baseStatePath,
-      JSON.stringify(baseState, null, 2) + '\n'
-    );
-  }
-
-  static async updateWorktreeState(
-    gitRoot: string,
-    branch: string,
-    newState: WorkflowState
-  ): Promise<void> {
-    const baseStatePath = path.join(
-      gitRoot,
-      this.ZAMM_DIR,
-      this.BASE_STATE_FILE
-    );
-
-    let baseState: BaseState;
-    try {
-      const content = await fs.promises.readFile(baseStatePath, 'utf-8');
-      baseState = JSON.parse(content) as BaseState;
-    } catch (error) {
-      throw new Error(
-        `Failed to read base state: ${error instanceof Error ? error.message : String(error)}`
-      );
-    }
-
-    if (baseState.worktrees[branch]) {
-      baseState.worktrees[branch].state = newState;
-      await fs.promises.writeFile(
-        baseStatePath,
-        JSON.stringify(baseState, null, 2)
-      );
-    }
-  }
-
-  static async getBaseState(gitRoot: string): Promise<BaseState | null> {
-    const baseStatePath = path.join(
-      gitRoot,
-      this.ZAMM_DIR,
-      this.BASE_STATE_FILE
-    );
-
-    try {
-      const content = await fs.promises.readFile(baseStatePath, 'utf-8');
-      return JSON.parse(content) as BaseState;
-    } catch {
-      return null;
-    }
-  }
-}
-
-export class WorktreeWorkflowService extends WorkflowService {
+export class WorkflowStateService extends WorkflowService {
   private static readonly CURRENT_WORKFLOW_STATE_FILE =
     'current-workflow-state.json';
 
-  static async initialize(worktreePath: string): Promise<void> {
-    await this.ensureZammDirectory(worktreePath);
+  static async initialize(directoryPath: string): Promise<void> {
+    await this.ensureZammDirectory(directoryPath);
 
-    // Initialize current-workflow-state.json
+    // Initialize or reset current-workflow-state.json to INITIAL state
     const currentStatePath = path.join(
-      worktreePath,
+      directoryPath,
       this.ZAMM_DIR,
       this.CURRENT_WORKFLOW_STATE_FILE
     );
@@ -150,11 +43,11 @@ export class WorktreeWorkflowService extends WorkflowService {
   }
 
   static async updateState(
-    worktreePath: string,
+    directoryPath: string,
     newState: WorkflowState
   ): Promise<void> {
     const currentStatePath = path.join(
-      worktreePath,
+      directoryPath,
       this.ZAMM_DIR,
       this.CURRENT_WORKFLOW_STATE_FILE
     );
@@ -167,10 +60,10 @@ export class WorktreeWorkflowService extends WorkflowService {
   }
 
   static async getCurrentState(
-    worktreePath: string
+    directoryPath: string
   ): Promise<CurrentWorkflowState | null> {
     const currentStatePath = path.join(
-      worktreePath,
+      directoryPath,
       this.ZAMM_DIR,
       this.CURRENT_WORKFLOW_STATE_FILE
     );

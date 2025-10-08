@@ -1,154 +1,85 @@
-import { execSync } from 'child_process';
+import { spawn } from 'child_process';
 import * as path from 'path';
 import * as fs from 'fs';
-import { getIdProvider } from '../shared/id-provider';
 import { findGitRoot } from '../shared/file-utils';
-import { getAnthropicService } from '../shared/anthropic-service';
-import { branchExists } from '../shared/git-utils';
-import {
-  BaseWorkflowService,
-  WorktreeWorkflowService,
-} from '../shared/workflow-service';
+import { WorkflowStateService } from '../shared/workflow-service';
 
 export interface FeatStartOptions {
   description: string;
 }
 
-function processBranchName(
-  rawBranchName: string,
-  gitRoot: string
-): {
-  branchName: string;
-  siblingDirName: string;
-  siblingPath: string;
-} {
-  // Sanitize branch name: replace spaces with hyphens, remove invalid characters
-  let branchName = rawBranchName
-    .toLowerCase()
-    .replace(/\s+/g, '-')
-    .replace(/[^a-z0-9\-/]/g, '');
-
-  // Prepend zamm/ if not already present
-  if (!branchName.startsWith('zamm/')) {
-    branchName = `zamm/${branchName}`;
+function resolveScriptPath(gitRoot: string): string {
+  const override = process.env.ZAMM_FEAT_START_SCRIPT;
+  if (override && override.trim().length > 0) {
+    return path.isAbsolute(override) ? override : path.join(gitRoot, override);
   }
 
-  // Create sibling directory name by removing zamm/ and converting slashes to hyphens
-  const siblingDirName = branchName.replace(/^zamm\//, '').replace(/\//g, '-');
-  const siblingPath = path.join(path.dirname(gitRoot), siblingDirName);
+  return path.join(gitRoot, 'dev', 'start-worktree.sh');
+}
 
-  return {
-    branchName,
-    siblingDirName,
-    siblingPath,
-  };
+async function runFeatScript(
+  gitRoot: string,
+  description: string
+): Promise<string | null> {
+  const scriptPath = resolveScriptPath(gitRoot);
+
+  if (!fs.existsSync(scriptPath)) {
+    throw new Error(
+      `Missing feature start script at ${path.relative(gitRoot, scriptPath)}`
+    );
+  }
+
+  return await new Promise<string | null>((resolve, reject) => {
+    const child = spawn(scriptPath, [description], {
+      cwd: gitRoot,
+      stdio: ['inherit', 'pipe', 'inherit'],
+    });
+
+    let stdoutContent = '';
+
+    child.stdout?.on('data', (data: Buffer) => {
+      process.stdout.write(data);
+      stdoutContent += data.toString();
+    });
+
+    child.on('error', error => {
+      reject(error);
+    });
+
+    child.on('close', code => {
+      const overrideMatch = stdoutContent.match(
+        /^\s*ZAMM_INIT_DIR_OVERRIDE=(.+)$/m
+      );
+      const override =
+        overrideMatch && typeof overrideMatch[1] === 'string'
+          ? overrideMatch[1].trim()
+          : null;
+      if (code === 0) {
+        resolve(override);
+      } else {
+        reject(
+          new Error(
+            `${path.relative(gitRoot, scriptPath)} exited with code ${code}`
+          )
+        );
+      }
+    });
+  });
 }
 
 export async function featStart(options: FeatStartOptions): Promise<void> {
-  // Get Anthropic service from global singleton
-  const anthropicService = getAnthropicService();
-
-  // Find git root
   const gitRoot = findGitRoot(process.cwd());
   if (!gitRoot) {
     throw new Error('Not in a git repository');
   }
 
-  // 1. Initialize .zamm/ structure in the base directory if it hasn't already been
-  await BaseWorkflowService.initialize(gitRoot);
+  const override = await runFeatScript(gitRoot, options.description);
 
-  // Get branch name suggestion from Anthropic
-  let rawBranchName = await anthropicService.suggestBranchName(
-    options.description
-  );
-  let { branchName, siblingDirName, siblingPath } = processBranchName(
-    rawBranchName,
-    gitRoot
-  );
+  const workflowRoot = override
+    ? path.isAbsolute(override)
+      ? override
+      : path.resolve(gitRoot, override)
+    : gitRoot;
 
-  // Check for conflicts proactively and retry with new name if needed
-  let retryCount = 0;
-  const maxRetries = 3;
-
-  while (retryCount < maxRetries) {
-    // Check if branch already exists
-    const branchAlreadyExists = branchExists(branchName, gitRoot);
-    // Check if directory already exists
-    const directoryAlreadyExists = fs.existsSync(siblingPath);
-
-    if (branchAlreadyExists || directoryAlreadyExists) {
-      retryCount++;
-
-      if (retryCount >= maxRetries) {
-        const conflicts = [];
-        if (branchAlreadyExists) conflicts.push(`branch '${branchName}'`);
-        if (directoryAlreadyExists)
-          conflicts.push(`directory '${siblingPath}'`);
-
-        throw new Error(
-          `Failed to create unique branch/directory after ${maxRetries} attempts: ${conflicts.join(' and ')} already exist`
-        );
-      }
-
-      // Ask Claude for a new branch name
-      rawBranchName = await anthropicService.suggestAlternativeBranchName(
-        options.description,
-        rawBranchName
-      );
-      ({ branchName, siblingDirName, siblingPath } = processBranchName(
-        rawBranchName,
-        gitRoot
-      ));
-    } else {
-      // No conflicts, create the worktree
-      execSync(`git worktree add "${siblingPath}" -b "${branchName}"`, {
-        cwd: gitRoot,
-        stdio: 'inherit',
-      });
-      break; // Success, exit the loop
-    }
-  }
-
-  // Get spec title from Anthropic
-  const specTitle = await anthropicService.suggestSpecTitle(
-    options.description
-  );
-
-  // Create spec file in docs/spec-history/ of the worktree
-  const specFilePath = path.join(
-    siblingPath,
-    'docs',
-    'spec-history',
-    `${siblingDirName}.md`
-  );
-
-  // Ensure the spec-history directory exists
-  const specHistoryDir = path.dirname(specFilePath);
-  if (!fs.existsSync(specHistoryDir)) {
-    fs.mkdirSync(specHistoryDir, { recursive: true });
-  }
-
-  // Generate frontmatter
-  const id = getIdProvider().generateId();
-  const frontmatter = `---
-id: ${id}
-type: spec
----
-
-# ${specTitle}
-
-${options.description}
-`;
-
-  fs.writeFileSync(specFilePath, frontmatter);
-
-  // 5. Initialize .zamm/ structure in the fresh worktree directory
-  await WorktreeWorkflowService.initialize(siblingPath);
-
-  // 6. Update .zamm/ in the base directory to track this new worktree directory
-  await BaseWorkflowService.addWorktree(gitRoot, branchName, siblingPath);
-
-  // 7. Show the user a message telling them to run the commands
-  console.log(`\nWorkflow initialized! Next steps:`);
-  console.log(`cd ../${siblingDirName} && claude "/change-spec"`);
+  await WorkflowStateService.initialize(workflowRoot);
 }

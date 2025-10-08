@@ -1,208 +1,110 @@
 import * as fs from 'fs';
 import * as path from 'path';
-import * as os from 'os';
-import { execSync } from 'child_process';
-import {
-  featStart,
-  FeatStartOptions,
-  setIdProvider,
-  resetIdProvider,
-  IdProvider,
-} from '../../core/index';
+import { featStart, FeatStartOptions } from '../../core/index';
 import {
   TestEnvironment,
+  setupTestEnvironment,
   cleanupTestEnvironment,
   expectFileMatches,
+  copyTestFile,
 } from '../shared/test-utils';
-import {
-  AnthropicService,
-  setAnthropicService,
-  resetAnthropicService,
-} from '../../core/shared/anthropic-service';
-
-class TestIdProvider implements IdProvider {
-  generateId(): string {
-    return 'TST123';
-  }
-}
 
 describe('ZAMM CLI Feat Command', () => {
   let testEnv: TestEnvironment;
-  let testBaseDir: string;
-  let mockAnthropicService: jest.Mocked<AnthropicService>;
-
-  beforeAll(() => {
-    // Create a base directory for all feat tests
-    testBaseDir = fs.mkdtempSync(path.join(os.tmpdir(), 'zamm-feat-tests-'));
-  });
-
-  afterAll(() => {
-    // Clean up the entire test directory
-    fs.rmSync(testBaseDir, { recursive: true, force: true });
-  });
+  let originalCwd: string;
+  let originalScriptEnv: string | undefined;
 
   beforeEach(() => {
-    // Clean up any leftover directories from previous tests
-    const entries = fs.readdirSync(testBaseDir);
-    for (const entry of entries) {
-      const fullPath = path.join(testBaseDir, entry);
-      fs.rmSync(fullPath, { recursive: true, force: true });
-    }
-
-    // Set up test environment within our controlled directory
-    const testSubDir = path.join(testBaseDir, 'repo');
-    fs.mkdirSync(testSubDir, { recursive: true });
-
-    const originalCwd = process.cwd();
-    process.chdir(testSubDir);
-
-    execSync('git init', { stdio: 'pipe' });
-    execSync('git config user.email "test@example.com"', { stdio: 'pipe' });
-    execSync('git config user.name "Test User"', { stdio: 'pipe' });
-
-    // Create initial commit so we can create branches
-    fs.writeFileSync(path.join(testSubDir, 'README.md'), '# Test Repo');
-    execSync('git add README.md', { stdio: 'pipe' });
-    execSync('git commit -m "Initial commit"', { stdio: 'pipe' });
-
-    testEnv = {
-      tempDir: testSubDir,
-      originalCwd,
-      fixtureDir: 'src/__tests__/fixtures/feat',
-    };
-
-    setIdProvider(new TestIdProvider());
-
-    // Create Jest mock for AnthropicService
-    mockAnthropicService = {
-      suggestBranchName: jest.fn().mockResolvedValue('user-authentication'),
-      suggestAlternativeBranchName: jest
-        .fn()
-        .mockResolvedValue('user-authentication-feature'),
-      suggestSpecTitle: jest.fn().mockResolvedValue('Add User Authentication'),
-    };
-
-    setAnthropicService(mockAnthropicService);
+    originalCwd = process.cwd();
+    testEnv = setupTestEnvironment('src/__tests__/fixtures/feat');
+    process.chdir(testEnv.tempDir);
+    originalScriptEnv = process.env.ZAMM_FEAT_START_SCRIPT;
   });
 
   afterEach(() => {
+    process.chdir(originalCwd);
     cleanupTestEnvironment(testEnv);
-    resetIdProvider();
-    resetAnthropicService();
-    jest.clearAllMocks();
+
+    if (originalScriptEnv) {
+      process.env.ZAMM_FEAT_START_SCRIPT = originalScriptEnv;
+    } else {
+      delete process.env.ZAMM_FEAT_START_SCRIPT;
+    }
   });
 
-  describe('featStart', () => {
-    it('should create worktree, branch, and spec file successfully', async () => {
-      const options: FeatStartOptions = {
-        description: 'Add user authentication',
-      };
+  describe('featStart script wrapper', () => {
+    let mockScriptPath: string;
 
-      await featStart(options);
-
-      // Verify worktree directory was created
-      const siblingDirs = fs.readdirSync(path.dirname(testEnv.tempDir));
-      expect(siblingDirs).toContain('user-authentication');
-
-      // Verify branch was created with zamm/ prefix
-      const worktreePath = path.join(
-        path.dirname(testEnv.tempDir),
-        'user-authentication'
-      );
-      const branches = execSync('git branch --show-current', {
-        stdio: 'pipe',
-        cwd: worktreePath,
-        encoding: 'utf-8',
-      }).trim();
-      expect(branches).toBe('zamm/user-authentication');
-
-      // Verify base directory .zamm/.gitignore matches fixture
-      expectFileMatches(testEnv, '.zamm/.gitignore');
-
-      // Verify base state content using expectFileMatches with path replacement
-      expectFileMatches(testEnv, '.zamm/base-state.json', undefined, {
-        [fs.realpathSync(worktreePath)]: '/path/to/worktree',
-      });
-
-      // Create a worktree test environment to verify worktree .zamm files
-      const worktreeTestEnv = {
-        ...testEnv,
-        tempDir: worktreePath,
-      };
-
-      // Verify spec file was created in the worktree with exact expected content
-      expectFileMatches(
-        worktreeTestEnv,
-        'docs/spec-history/user-authentication.md'
-      );
-
-      // Verify worktree .zamm files match fixtures
-      expectFileMatches(worktreeTestEnv, '.zamm/.gitignore', 'worktree');
-      expectFileMatches(
-        worktreeTestEnv,
-        '.zamm/current-workflow-state.json',
-        'worktree'
-      );
-
-      // Verify Anthropic service was called with correct arguments
-      expect(mockAnthropicService.suggestBranchName).toHaveBeenCalledWith(
-        'Add user authentication'
-      );
-      expect(mockAnthropicService.suggestSpecTitle).toHaveBeenCalledWith(
-        'Add user authentication'
-      );
+    beforeEach(() => {
+      mockScriptPath = copyTestFile(testEnv, 'scripts/mock-start-worktree.sh');
+      fs.chmodSync(mockScriptPath, 0o755);
+      process.env.ZAMM_FEAT_START_SCRIPT = mockScriptPath;
     });
 
-    it('should handle branch name conflicts proactively', async () => {
+    afterEach(() => {
+      delete process.env.ZAMM_FEAT_START_SCRIPT;
+    });
+
+    it('initializes workflow state in the repository root when no override is provided', async () => {
       const options: FeatStartOptions = {
         description: 'Add user authentication',
       };
 
-      // First, create a branch that will conflict
-      execSync('git branch zamm/user-authentication', {
-        cwd: testEnv.tempDir,
-        stdio: 'pipe',
-      });
+      await featStart(options);
+
+      const scriptCwd = fs.readFileSync(
+        path.join(testEnv.tempDir, '.feat-script-cwd'),
+        'utf-8'
+      );
+      expect(scriptCwd).toBe(fs.realpathSync(testEnv.tempDir));
+
+      const scriptArg = fs.readFileSync(
+        path.join(testEnv.tempDir, '.feat-script-arg'),
+        'utf-8'
+      );
+      expect(scriptArg).toBe('Add user authentication');
+
+      expectFileMatches(testEnv, '.zamm/.gitignore');
+      expectFileMatches(testEnv, '.zamm/current-workflow-state.json');
+    });
+
+    it('initializes workflow state at the override path when provided', async () => {
+      const worktreeDir = path.join(testEnv.tempDir, 'override-worktree');
+      fs.mkdirSync(worktreeDir, { recursive: true });
+
+      const overrideScriptPath = copyTestFile(
+        testEnv,
+        'scripts/mock-start-worktree-override.sh'
+      );
+      fs.chmodSync(overrideScriptPath, 0o755);
+      process.env.ZAMM_FEAT_START_SCRIPT = overrideScriptPath;
+
+      const options: FeatStartOptions = {
+        description: 'Use override directory',
+      };
 
       await featStart(options);
 
-      // Verify that a different branch name was used (not the original conflicting one)
-      const siblingDirs = fs.readdirSync(path.dirname(testEnv.tempDir));
-      expect(siblingDirs).toContain('user-authentication-feature');
-      expect(siblingDirs).not.toContain('user-authentication');
-
-      // Verify the branch was created with alternative name
-      const worktreePath = path.join(
-        path.dirname(testEnv.tempDir),
-        'user-authentication-feature'
-      );
-      const branches = execSync('git branch --show-current', {
-        stdio: 'pipe',
-        cwd: worktreePath,
-        encoding: 'utf-8',
-      }).trim();
-      expect(branches).toBe('zamm/user-authentication-feature');
-
-      // Verify spec file was created in the alternative worktree
-      const worktreeTestEnv = {
+      const worktreeTestEnv: TestEnvironment = {
         ...testEnv,
-        tempDir: worktreePath,
+        tempDir: worktreeDir,
       };
-      expectFileMatches(
-        worktreeTestEnv,
-        'docs/spec-history/user-authentication-feature.md',
-        'conflict-resolution'
+      expectFileMatches(worktreeTestEnv, '.zamm/.gitignore');
+      expectFileMatches(worktreeTestEnv, '.zamm/current-workflow-state.json');
+    });
+
+    it('throws when the feature start script is missing', async () => {
+      process.env.ZAMM_FEAT_START_SCRIPT = path.join(
+        testEnv.tempDir,
+        'does-not-exist.sh'
       );
 
-      // Verify Anthropic service was called with correct arguments
-      expect(mockAnthropicService.suggestBranchName).toHaveBeenCalledWith(
-        'Add user authentication'
-      );
-      expect(
-        mockAnthropicService.suggestAlternativeBranchName
-      ).toHaveBeenCalledWith('Add user authentication', 'user-authentication');
-      expect(mockAnthropicService.suggestSpecTitle).toHaveBeenCalledWith(
-        'Add user authentication'
+      const options: FeatStartOptions = {
+        description: 'Missing script scenario',
+      };
+
+      await expect(featStart(options)).rejects.toThrow(
+        'Missing feature start script'
       );
     });
   });

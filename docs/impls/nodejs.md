@@ -48,7 +48,7 @@ src/
 │   │   ├── file-types.ts     # File type utilities for consistent error messages
 │   │   ├── commit-recorder.ts # Shared commit recording logic for impl/spec commands
 │   │   ├── anthropic-service.ts # Anthropic LLM API integration
-│   │   └── workflow-service.ts  # ZAMM workflow lifecycle tracking services
+│   │   └── workflow-service.ts  # `.zamm/` workflow lifecycle tracking services
 │   └── index.ts            # Core module exports
 ├── scripts/                # Development and maintenance scripts
 │   └── record-api-calls.ts # Script to record Anthropic API responses for testing
@@ -85,23 +85,15 @@ All TypeScript source files must be in the `src/` directory to maintain proper t
 
 ## ZAMM Workflow Tracking
 
-The implementation includes workflow lifecycle tracking through `.zamm/` directories:
+The implementation tracks the feature workflow lifecycle through a `.zamm/` directory at the git repository root:
 
-### Base Directory (Git Repository Root)
-
-- **`.zamm/base-state.json`**: Tracks all active worktrees, their branches, paths, and current states
-- **`.zamm/redirect.json`**: Stores custom docs directory configuration when redirect command is used
 - **`.zamm/.gitignore`**: Ignores all `.zamm/` contents from Git tracking
-
-### Worktree Directories
-
-- **`.zamm/current-workflow-state.json`**: Tracks the current workflow state (`INITIAL`, `SPEC-UPDATED`, `SPEC-IMPLEMENTED`, `COMPLETED`)
-- **`.zamm/.gitignore`**: Ignores all `.zamm/` contents from Git tracking
+- **`.zamm/current-workflow-state.json`**: Records the current workflow state (`INITIAL`, `SPEC-UPDATED`, `SPEC-IMPLEMENTED`, `COMPLETED`)
+- **`.zamm/redirect.json`**: Stores custom docs directory configuration when the redirect command is used
 
 ### Workflow Services
 
-- **BaseWorkflowService**: Manages base directory workflow state
-- **WorktreeWorkflowService**: Manages individual worktree workflow state
+- **WorkflowStateService**: Manages `.zamm/current-workflow-state.json`
 - **RedirectService**: Manages custom docs directory configuration via `.zamm/redirect.json`
 
 ## Development

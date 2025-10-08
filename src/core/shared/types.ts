@@ -46,16 +46,6 @@ export type WorkflowState =
   | 'SPEC-IMPLEMENTED'
   | 'COMPLETED';
 
-export interface WorktreeInfo {
-  branch: string;
-  path: string;
-  state: WorkflowState;
-}
-
-export interface BaseState {
-  worktrees: Record<string, WorktreeInfo>;
-}
-
 export interface RedirectConfig {
   directory: string;
 }

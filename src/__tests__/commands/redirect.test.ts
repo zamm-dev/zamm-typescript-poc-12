@@ -1,7 +1,6 @@
 import * as fs from 'fs';
 import * as path from 'path';
 import { setRedirect, RedirectOptions } from '../../core/commands/redirect';
-import { BaseWorkflowService } from '../../core/shared/workflow-service';
 import { getDocsDirectory } from '../../core/shared/file-utils';
 import {
   copyDirectoryFromFixture,
@@ -135,17 +134,13 @@ describe('redirect command', () => {
       }
     });
 
-    it('should create redirect.json independently of existing base-state.json', async () => {
-      // First create initial base state with worktrees
-      await BaseWorkflowService.initialize(testEnv.tempDir);
-
-      // Create a real worktree path for the test
-      const worktreePath = path.join(testEnv.tempDir, 'feature-worktree');
-      fs.mkdirSync(worktreePath, { recursive: true });
-      await BaseWorkflowService.addWorktree(
-        testEnv.tempDir,
-        'feature-branch',
-        worktreePath
+    it('should preserve existing workflow state when setting redirect directory', async () => {
+      const zammDir = path.join(testEnv.tempDir, '.zamm');
+      fs.mkdirSync(zammDir, { recursive: true });
+      const statePath = path.join(zammDir, 'current-workflow-state.json');
+      fs.writeFileSync(
+        statePath,
+        JSON.stringify({ state: 'SPEC-UPDATED' }, null, 2) + '\n'
       );
 
       const customDocsDir = path.join(testEnv.tempDir, 'custom-docs');
@@ -157,7 +152,6 @@ describe('redirect command', () => {
 
       await setRedirect(options);
 
-      // Check that redirect.json was created
       const redirectPath = path.join(testEnv.tempDir, '.zamm', 'redirect.json');
       const redirectConfig = JSON.parse(
         fs.readFileSync(redirectPath, 'utf-8')
@@ -167,19 +161,10 @@ describe('redirect command', () => {
 
       expect(redirectConfig.directory).toBe(path.resolve(customDocsDir));
 
-      // Verify base-state.json is unchanged and still has worktrees
-      const baseStatePath = path.join(
-        testEnv.tempDir,
-        '.zamm',
-        'base-state.json'
-      );
-      const baseState = JSON.parse(fs.readFileSync(baseStatePath, 'utf-8')) as {
-        worktrees: Record<string, unknown>;
+      const workflowState = JSON.parse(fs.readFileSync(statePath, 'utf-8')) as {
+        state: string;
       };
-
-      // Should preserve existing worktrees and not have redirectDirectory
-      expect(baseState.worktrees).toHaveProperty('feature-branch');
-      expect(baseState).not.toHaveProperty('redirectDirectory');
+      expect(workflowState.state).toBe('SPEC-UPDATED');
     });
   });
 
