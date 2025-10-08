@@ -32,7 +32,7 @@ async function runFeatScript(
   return await new Promise<string | null>((resolve, reject) => {
     const child = spawn(scriptPath, [description], {
       cwd: gitRoot,
-      stdio: ['inherit', 'pipe', 'inherit'],
+      stdio: ['ignore', 'pipe', 'pipe'],
       env: process.env as Record<string, string>,
     });
 
@@ -41,6 +41,10 @@ async function runFeatScript(
     child.stdout?.on('data', (data: Buffer) => {
       process.stdout.write(data);
       stdoutContent += data.toString();
+    });
+
+    child.stderr?.on('data', (data: Buffer) => {
+      process.stderr.write(data);
     });
 
     child.on('error', error => {
