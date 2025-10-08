@@ -54,20 +54,10 @@ should:
   ```
 
 - Create a new Git branch starting with `zamm/`
-- Create a new spec file under `docs/spec-history/` that looks like:
-
-  ```md
-  ---
-  id: TST123
-  type: spec
-  ---
-
-  # Adding User Authentication
-
-  Add user authentication
-  ```
+- Create a new spec file under `docs/spec-history/`
 
   Read it back in to ensure that:
-  - The frontmatter is an exact match (you can use the test ID provider to clamp ID randomness)
-  - The body is an exact match
+  - The frontmatter `id` field matches the format `[A-Z]{3}\d{3}` (e.g., `ABC123`)
+  - The frontmatter `type` field is exactly `spec`
+  - The body contains the feature description "Add user authentication"
   - The title is non-empty (it is unclear what exact title the LLM will actually generate)

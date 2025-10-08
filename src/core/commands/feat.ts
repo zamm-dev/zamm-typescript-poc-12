@@ -33,6 +33,7 @@ async function runFeatScript(
     const child = spawn(scriptPath, [description], {
       cwd: gitRoot,
       stdio: ['inherit', 'pipe', 'inherit'],
+      env: process.env as Record<string, string>,
     });
 
     let stdoutContent = '';
