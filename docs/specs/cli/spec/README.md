@@ -23,15 +23,48 @@ The command should:
 - If the filepath doesn't start with `spec-history/`, prepend `spec-history/` to the path
 - Ensure the target directory exists, creating it if necessary
 
-If no `--description` or `--title` is provided:
-- Initialize the file with nothing more than basic frontmatter and exactly _two_ newlines after the frontmatter. This allows for easy programmatic appends to this file.
+#### If no `--description` or `--title` is provided:
 
-If both `--description` and `--title` are provided:
-- Use the provided title as the heading (H1) and the description as the body content
+Initialize the file with nothing more than basic frontmatter and exactly _two_ newlines after the frontmatter. This allows for easy programmatic appends to this file.
 
-If `--description` is provided but not `--title`:
-- Auto-generate a title from the description
-- Follow the case where both are defined
+For example:
+
+```md
+---
+id: ABC123
+type: spec
+---
+
+
+```
+
+#### If both `--description` and `--title` are provided:
+
+Use the provided title as the heading (H1) and the description as the body content
+
+For example, running:
+
+```bash
+zamm spec changelog new-feature --title "Add User Authentication" --description "Implement JWT-based authentication for API endpoints."
+```
+
+should produce:
+
+```md
+---
+id: ABC123
+type: spec
+---
+
+# Add User Authentication
+
+Implement JWT-based authentication for API endpoints.
+```
+
+#### If `--description` is provided but not `--title`:
+
+1. Auto-generate a title from the description using the Anthropic service
+2. Follow the same format as when both are defined
 
 ## `spec record`
 
