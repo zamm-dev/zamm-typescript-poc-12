@@ -6,6 +6,7 @@ import { recordCommitsToFile } from '../shared/commit-recorder';
 import { getDocsDirectory } from '../shared/file-utils';
 import { getIdProvider } from '../shared/id-provider';
 import { serializeFrontmatter } from '../shared/frontmatter';
+import { getAnthropicService } from '../shared/anthropic-service';
 
 export async function recordSpecCommits(
   idOrPath: string,
@@ -32,7 +33,21 @@ export async function recordSpecCommits(
   });
 }
 
-export async function createSpecChangelog(filepath: string): Promise<string> {
+export interface CreateSpecChangelogOptions {
+  filepath: string;
+  description?: string;
+  title?: string;
+}
+
+export async function createSpecChangelog(
+  options: CreateSpecChangelogOptions | string
+): Promise<string> {
+  // Handle both old string API and new options API
+  const filepath = typeof options === 'string' ? options : options.filepath;
+  const description =
+    typeof options === 'object' ? options.description : undefined;
+  const title = typeof options === 'object' ? options.title : undefined;
+
   // Normalize the filepath to ensure it starts with spec-history/
   let normalizedPath = filepath;
   if (!normalizedPath.startsWith('spec-history/')) {
@@ -69,8 +84,26 @@ export async function createSpecChangelog(filepath: string): Promise<string> {
     type: 'spec' as const,
   };
 
-  // Create empty body
-  const body = '';
+  // Create body based on provided options
+  let body = '';
+
+  if (description || title) {
+    let actualTitle = title;
+
+    // If description is provided but not title, auto-generate the title
+    if (description && !title) {
+      const anthropicService = getAnthropicService();
+      actualTitle = await anthropicService.suggestSpecTitle(description);
+    }
+
+    // Build the body with title and description
+    if (actualTitle) {
+      body = `# ${actualTitle}\n\n`;
+    }
+    if (description) {
+      body += description;
+    }
+  }
 
   // Serialize the complete file content
   const fileContent = serializeFrontmatter(frontmatter, body);
