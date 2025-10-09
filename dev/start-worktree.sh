@@ -46,6 +46,9 @@ spec_path="$branch_slug.md"
 zamm spec changelog "$spec_path"
 printf "# $spec_title\n\n$description\n" >> "docs/spec-history/$spec_path"
 
+##### Setup worktree environment
+npm install
+
 ##### Run post-setup steps
 echo "ZAMM_INIT_DIR_OVERRIDE=$worktree_path"
 echo "Workflow initialized! Next steps:"
