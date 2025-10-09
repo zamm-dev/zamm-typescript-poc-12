@@ -1,6 +1,6 @@
 # Documenting Implementation Steps
 
-1. **Documentation Generation**: Run `zamm impl create --spec <new-spec-file> --for docs/impls/nodejs.md`
+1. **Documentation Generation**: Run `zamm impl create --spec <new-spec-file> --for docs/impls/nodejs.md`. If you have no context on what `<new-spec-file>` is, run `git diff main` to find out about the newly added spec file.
 2. **Implementation Documentation**: Update the generated plan file with any surprises, errors, and user guidance encountered during your implementation. The goal of this step is to warn future readers about anything they should take into account when re-implementing this spec.
 3. **Commit Recording**: Run `zamm impl record <ref-impl> --last-n-commits <N>`, where `<N>` is the total number of commits you've made and `<ref-impl>` is the file path or ID of the plan file you just edited.
 4. **Development Documentation**: Update `docs/impls/` with concise _implementation-specific_ development guidance for future agents (e.g. changes to project structure, dev commands, or anything else of note to future LLM agents working on this specific project). You should **never** duplicate feature documentation in this step -- that information belongs in the specs in `docs/`.
