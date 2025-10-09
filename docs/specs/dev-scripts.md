@@ -45,18 +45,15 @@ The `dev/start-worktree.sh` script provides a standardized way to start work in 
    - An H1 Markdown title. Ask the LLM to come up with this as well
    - The original command input string, serving as the body for this specification file
 6. Run `npm install` in the new worktree directory to set up dependencies for the new feature branch.
-7. Trust the new worktree directory in Claude by running:
-
-   ```bash
-   claude trust ../<new-worktree-dir>
-   ```
-
-8. Echo a line of the form `ZAMM_INIT_DIR_OVERRIDE=<worktree-path>` so that downstream tooling knows to initialize the `.zamm/` workflow directory in the worktree instead of the base directory.
-9. Show the user a message telling them to run the command
+7. Echo a line of the form `ZAMM_INIT_DIR_OVERRIDE=<worktree-path>` so that downstream tooling knows to initialize the `.zamm/` workflow directory in the worktree instead of the base directory.
+8. Show the user a message telling them to run the command
 
    ```bash
    cd ../<new-worktree-dir> && claude "/change-spec"
    ```
+
+> [!NOTE]
+> Automatically trusting the new worktree directory in Claude Code is currently not possible from a bash script. The ideal workflow would be to run `claude` from the parent directory (which contains both the base repo and all sibling worktrees) and have Claude prompt the user to trust that parent directory. However, this requires manual user interaction and cannot be automated at this time.
 
 > [!IMPORTANT]
 > The script should validate that it **_is_** being run from the main/master branch and should exit with an error if this is not the case. This prevents accidental execution from the wrong directory.
