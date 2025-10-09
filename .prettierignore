@@ -9,3 +9,5 @@ coverage
 package-lock.json
 # Test fixtures should not be reformatted as they need exact content matching
 src/__tests__/fixtures/**
+# Spec examples need trailing newlines in code blocks to show exact file format
+docs/specs/cli/spec/README.md

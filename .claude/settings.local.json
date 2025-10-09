@@ -33,7 +33,8 @@
       "Bash(zamm impl record:*)",
       "Bash(git restore:*)",
       "Bash(cat:*)",
-      "Bash(git merge:*)"
+      "Bash(git merge:*)",
+      "Bash(grep:*)"
     ],
     "deny": [],
     "ask": []

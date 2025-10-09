@@ -6,6 +6,9 @@ import {
   setIdProvider,
   resetIdProvider,
   IdProvider,
+  setAnthropicService,
+  resetAnthropicService,
+  AnthropicService,
 } from '../../core/index';
 import {
   TestEnvironment,
@@ -28,18 +31,32 @@ class TestIdProvider implements IdProvider {
 describe('ZAMM CLI Spec Command', () => {
   let testEnv: TestEnvironment;
   let originalCwd: string;
+  let mockAnthropicService: jest.Mocked<AnthropicService>;
 
   beforeEach(() => {
     originalCwd = process.cwd();
     testEnv = setupTestEnvironment('src/__tests__/fixtures/spec');
     process.chdir(testEnv.tempDir);
     setIdProvider(new TestIdProvider());
+
+    // Create mock Anthropic service
+    mockAnthropicService = {
+      suggestBranchName: jest.fn().mockResolvedValue('test-branch'),
+      suggestAlternativeBranchName: jest
+        .fn()
+        .mockResolvedValue('alternative-branch'),
+      suggestSpecTitle: jest
+        .fn()
+        .mockResolvedValue('Auto-generated Title for Testing'),
+    };
+    setAnthropicService(mockAnthropicService);
   });
 
   afterEach(() => {
     process.chdir(originalCwd);
     cleanupTestEnvironment(testEnv);
     resetIdProvider();
+    resetAnthropicService();
   });
 
   function createTestFile(filePath: string, fixtureSubDir?: string): string {
@@ -270,6 +287,58 @@ describe('ZAMM CLI Spec Command', () => {
         cleanupTestEnvironment(nonGitEnv);
         process.chdir(testEnv.tempDir);
       }
+    });
+
+    it('should create changelog with both title and description', async () => {
+      const filepath = 'new-feature.md';
+      const createdPath = await createSpecChangelog({
+        filepath,
+        title: 'Custom Title',
+        description: 'This is a custom description.',
+      });
+
+      expect(createdPath).toContain('spec-history/new-feature.md');
+      expectFileMatches(
+        testEnv,
+        'docs/spec-history/new-feature.md',
+        'changelog-with-both'
+      );
+      // Should not call Anthropic service when title is provided
+      expect(mockAnthropicService.suggestSpecTitle).not.toHaveBeenCalled();
+    });
+
+    it('should create changelog with description only and auto-generate title', async () => {
+      const filepath = 'new-feature.md';
+      const createdPath = await createSpecChangelog({
+        filepath,
+        description: 'This is a custom description.',
+      });
+
+      expect(createdPath).toContain('spec-history/new-feature.md');
+      expectFileMatches(
+        testEnv,
+        'docs/spec-history/new-feature.md',
+        'changelog-with-description'
+      );
+      // Should call Anthropic service with the description
+      expect(mockAnthropicService.suggestSpecTitle).toHaveBeenCalledWith(
+        'This is a custom description.'
+      );
+      expect(mockAnthropicService.suggestSpecTitle).toHaveBeenCalledTimes(1);
+    });
+
+    it('should support legacy string API for backward compatibility', async () => {
+      const filepath = 'new-feature.md';
+      const createdPath = await createSpecChangelog(filepath);
+
+      expect(createdPath).toContain('spec-history/new-feature.md');
+      expectFileMatches(
+        testEnv,
+        'docs/spec-history/new-feature.md',
+        'changelog-expected'
+      );
+      // Should not call Anthropic service for legacy API
+      expect(mockAnthropicService.suggestSpecTitle).not.toHaveBeenCalled();
     });
   });
 });

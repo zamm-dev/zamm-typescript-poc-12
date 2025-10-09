@@ -8,6 +8,7 @@ export { WorkflowStateService } from './shared/workflow-service';
 export { RedirectService } from './shared/redirect-service';
 export * from './shared/file-types';
 export * from './shared/commit-recorder';
+export * from './shared/anthropic-service';
 export * from './commands/organize';
 export * from './commands/info';
 export * from './commands/implement';

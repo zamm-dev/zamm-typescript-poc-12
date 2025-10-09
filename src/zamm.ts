@@ -14,6 +14,7 @@ import {
   recordSpecCommits,
   createSpecChangelog,
   ImplementOptions,
+  CreateSpecChangelogOptions,
   splitFile,
   SplitOptions,
   featStart,
@@ -170,10 +171,18 @@ async function recordSpecCommitsWithErrorHandling(
 }
 
 async function createSpecChangelogWithErrorHandling(
-  filepath: string
+  filepath: string,
+  options: { description?: string; title?: string }
 ): Promise<void> {
   try {
-    const createdFilePath = await createSpecChangelog(filepath);
+    const createOptions: CreateSpecChangelogOptions = { filepath };
+    if (options.description !== undefined) {
+      createOptions.description = options.description;
+    }
+    if (options.title !== undefined) {
+      createOptions.title = options.title;
+    }
+    const createdFilePath = await createSpecChangelog(createOptions);
     console.log(chalk.green(`✓ Created spec changelog: ${createdFilePath}`));
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : String(error);
@@ -262,6 +271,8 @@ specCommand
     '<filepath>',
     'file path for the new spec (spec-history/ will be prepended if not present)'
   )
+  .option('--description <text>', 'description of the spec change')
+  .option('--title <text>', 'title for the changelog entry')
   .action(createSpecChangelogWithErrorHandling);
 
 async function redirectWithErrorHandling(directory: string): Promise<void> {
