@@ -26,7 +26,13 @@ cd ../base
 
 # Step 2: Use Claude to merge the feature branch into main
 echo "Merging $CURRENT_BRANCH branch into main using Claude..."
-claude "Merge the $CURRENT_BRANCH branch into main"
+claude "Merge the $CURRENT_BRANCH branch into main. Do not use a fast-forward merge."
+
+# Check if the Claude merge succeeded
+if ! git merge-base --is-ancestor "$CURRENT_BRANCH" HEAD; then
+    echo "Error: Claude merge did not complete successfully. Exiting."
+    exit 1
+fi
 
 # Step 3: Remove the worktree directory
 echo "Removing worktree directory ../$(basename "$WORKTREE_DIR")..."
