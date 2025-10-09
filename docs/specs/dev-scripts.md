@@ -44,8 +44,15 @@ The `dev/start-worktree.sh` script provides a standardized way to start work in 
 5. Append to the file:
    - An H1 Markdown title. Ask the LLM to come up with this as well
    - The original command input string, serving as the body for this specification file
-6. Echo a line of the form `ZAMM_INIT_DIR_OVERRIDE=<worktree-path>` so that downstream tooling knows to initialize the `.zamm/` workflow directory in the worktree instead of the base directory.
-7. Show the user a message telling them to run the command
+6. Run `npm install` in the new worktree directory to set up dependencies for the new feature branch.
+7. Trust the new worktree directory in Claude by running:
+
+   ```bash
+   claude trust ../<new-worktree-dir>
+   ```
+
+8. Echo a line of the form `ZAMM_INIT_DIR_OVERRIDE=<worktree-path>` so that downstream tooling knows to initialize the `.zamm/` workflow directory in the worktree instead of the base directory.
+9. Show the user a message telling them to run the command
 
    ```bash
    cd ../<new-worktree-dir> && claude "/change-spec"
