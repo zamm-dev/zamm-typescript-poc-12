@@ -116,7 +116,8 @@ describe('ZAMM CLI Feat Command', () => {
   });
 
   describe('end-to-end test', () => {
-    const testShouldRun = !!process.env.ANTHROPIC_API_KEY;
+    // Only run with explicit opt-in flag, not in CI/hooks
+    const testShouldRun = process.env.RUN_E2E_TESTS === 'true';
 
     (testShouldRun ? it : it.skip)(
       'creates worktree, branch, and spec file with LLM suggestions',

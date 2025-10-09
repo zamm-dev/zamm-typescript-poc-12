@@ -34,7 +34,12 @@ should
 ### End-to-end test
 
 > [!NOTE]
-> This test requires a system with the `ANTHROPIC_API_KEY` environment variable set, and should therefore be skipped by default.
+> This test requires the following prerequisites:
+>
+> 1. `aichat` should be set up (perhaps with an `ANTHROPIC_API_KEY`)
+> 2. `zamm` must be built and available on `PATH`
+>
+> Additionally, the automated version of this test should be opt-in only due to the time it takes to connect to the network, and should be skipped by default in CI/Git hooks.
 
 Given a Git repository and `ANTHROPIC_API_KEY` environment variable set, then the command:
 

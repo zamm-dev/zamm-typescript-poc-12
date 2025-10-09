@@ -66,6 +66,7 @@ All TypeScript source files must be in the `src/` directory to maintain proper t
 - **Lint**: `npm run lint` - Lint code with ESLint
 - **Build**: `npm run build` - Compile TypeScript and create executable at `dist/zamm`
 - **Test**: `npm test` - Run Jest tests
+  - Test everything including workflow scripts: `RUN_E2E_TESTS=true npm test`
 - **Run**: `npm start` - Execute the compiled CLI (`dist/zamm`)
 
 ## CLI Commands
