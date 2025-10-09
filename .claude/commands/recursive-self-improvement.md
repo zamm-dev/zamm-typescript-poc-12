@@ -2,7 +2,9 @@
 
 1. Update the specific file in `.claude/commands/` for the previous command that you were given. Put in advice for future agents to collaborate better with the user, based on the user feedback that's been given to you in this interaction.
 
-For example, if you were just asked to `/implement-spec`, then update `.claude/commands/implement-spec.md` with this advice.
+   For example, if you were just asked to `/implement-spec`, then update `.claude/commands/implement-spec.md` with this advice.
+
+2. Commit the workflow improvement after making the update.
 
 ## Guidelines for Updates
 
