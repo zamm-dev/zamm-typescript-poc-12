@@ -71,6 +71,9 @@ The `dev/end-worktree.sh` script provides a standardized way to wrap up work in 
 
    > [!IMPORTANT]
    > The script must check if the Claude merge command succeeded. If Claude exits without completing the merge (e.g., the user exits Claude prematurely), the script should exit immediately with an error and not proceed with the remaining steps.
+   >
+   > One way to verify merge success is to check if the feature branch is now an ancestor of the current HEAD using `git merge-base --is-ancestor <feature-branch> HEAD`. This will return true if the merge completed successfully.
+
 3. `git worktree remove <dir>`
 
    To continue the previous example, we would now run
