@@ -59,16 +59,18 @@ The `dev/start-worktree.sh` script provides a standardized way to start work in 
 The `dev/end-worktree.sh` script provides a standardized way to wrap up work in an existing Git worktree. It assumes that we are currently located in a feature worktree branch, and performs the following steps:
 
 1. `cd` to the `../base` directory where the main project branch is located
-2. `claude 'Merge the <feat-branch> branch into main'`
+2. `claude 'Merge the <feat-branch> branch into main'. Do not use a fast-forward merge.`
 
    For example, if we were previously in the `some-feat/` folder, then we would now run
 
    ```bash
-   claude 'Merge the zamm/some-feat branch into main`'
+   claude 'Merge the zamm/some-feat branch into main. Do not use a fast-forward merge.'
    ```
 
    Using Claude allows for an interactive merge in case of merge conflicts.
 
+   > [!IMPORTANT]
+   > The script must check if the Claude merge command succeeded. If Claude exits without completing the merge (e.g., the user exits Claude prematurely), the script should exit immediately with an error and not proceed with the remaining steps.
 3. `git worktree remove <dir>`
 
    To continue the previous example, we would now run
