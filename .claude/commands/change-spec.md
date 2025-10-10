@@ -13,3 +13,4 @@ You are in a fresh Git worktree directory. You are here to update the spec with 
 - Avoid running linting, type-checking, or verification commands - committed changes should already conform to spec
 - `zamm` is already in `PATH` - there is no need to build it first before using it
 - When specs reference external tools or CLI commands, verify they actually exist through documentation research before including them in the spec. Don't assume commands exist based on intuitive naming patterns.
+- Before updating specs, thoroughly understand existing behavior by reading related implementation files and documentation. Don't make assumptions about how commands work or what they return.
