@@ -2,9 +2,9 @@
 id: XYZ789
 type: spec
 commits:
-  - sha: 4bd28bec045891fff0ccb1e549d88f17f34d6827
+  - sha: 8dbdc14b102c5c89fd948d4e544649ea16733542
     message: Test commit 2
-  - sha: 37029ec0f2bc27ce51a21c18293d49923706bf9f
+  - sha: 196af48c7f1d73046ea3df11984e348d47a0d604
     message: Test commit 1
   - sha: existing123abc
 ---
