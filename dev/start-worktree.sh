@@ -40,11 +40,9 @@ worktree_path="../$worktree_dir"
 git worktree add "$worktree_path" -b "$branch_name"
 
 ##### Create Spec Changelog File
-spec_title=$(aichat "Create a concise H1 markdown title for a specification about: '${description}'. Respond with just the title text without the # symbol.")
 cd "../$worktree_dir"
 spec_path="$branch_slug.md"
-zamm spec changelog "$spec_path"
-printf "# $spec_title\n\n$description\n" >> "docs/spec-history/$spec_path"
+zamm spec changelog "$spec_path" --description "$description"
 
 ##### Setup worktree environment
 npm install

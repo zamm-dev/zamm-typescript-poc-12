@@ -150,6 +150,18 @@ describe('ZAMM CLI Feat Command', () => {
             path.join(docsDir, 'README.md'),
             '# Documentation\n'
           );
+          fs.writeFileSync(
+            path.join(mainRepoDir, 'package.json'),
+            JSON.stringify(
+              {
+                name: 'test-project',
+                version: '1.0.0',
+                description: 'Test project for E2E testing',
+              },
+              null,
+              2
+            ) + '\n'
+          );
           execSync('git add .', { cwd: mainRepoDir });
           execSync('git commit -m "Initial commit"', { cwd: mainRepoDir });
 
