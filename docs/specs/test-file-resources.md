@@ -32,3 +32,6 @@ When creating git commits in tests, control for all of the following in every co
 - exact same author email (e.g. `test@example.com`)
 - exact same commit timestamp (e.g. `2024-01-01 12:00:00`)
 - exact same timezone (e.g., `+0000`) for the commit timestamp
+
+> [!NOTE]
+> When updating tests with new Git SHAs, simply copy over the mismatched SHAs from the failing tests. There's no need to manually recreate the Git repo state just to grab the SHAs.
