@@ -18,8 +18,8 @@ export function createDeterministicCommits(
     fs.writeFileSync(testFile, `Test commit ${i}`);
     execSync(`git add test${i}.txt`, { cwd });
 
-    // Set commit date for deterministic hashes
-    const commitDate = `2024-01-0${i} 12:00:00`;
+    // Set commit date with explicit timezone for deterministic hashes
+    const commitDate = `2024-01-0${i} 12:00:00 +0000`;
     execSync(
       `GIT_COMMITTER_DATE="${commitDate}" GIT_AUTHOR_DATE="${commitDate}" git commit -m "Test commit ${i}"`,
       { cwd }
