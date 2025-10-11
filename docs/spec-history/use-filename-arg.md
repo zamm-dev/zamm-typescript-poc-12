@@ -10,4 +10,4 @@ commits:
 
 # Implement Spec: Use --filename Argument
 
-Use the new --filename argument in .claude/commands/implement-spec.md instead of having Claude rename the impl file after generation
+Use the new --filename argument in .claude/commands/document-impl.md instead of having Claude rename the impl file after generation
