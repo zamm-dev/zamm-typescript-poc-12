@@ -9,9 +9,9 @@ import { getFileTypeLabel, getFileTypeDescription } from '../shared/file-types';
 import { recordCommitsToFile } from '../shared/commit-recorder';
 
 async function getNewImplementationNotePath(
-  gitRoot: string,
   implInfo: FileInfo,
-  specInfo: FileInfo
+  specInfo: FileInfo,
+  customFilename?: string
 ): Promise<string> {
   // Get implementation file name for directory structure
   const implFileName = path.basename(implInfo.absolutePath, '.md');
@@ -43,7 +43,7 @@ async function getNewImplementationNotePath(
     fs.mkdirSync(implHistoryDir, { recursive: true });
   }
 
-  const newFileName = `new-${specInfo.id}-impl.md`;
+  const newFileName = customFilename || `new-${specInfo.id}-impl.md`;
   const newFilePath = path.join(implHistoryDir, newFileName);
 
   return newFilePath;
@@ -91,9 +91,9 @@ export async function generateImplementationNote(
   };
 
   const newFilePath = await getNewImplementationNotePath(
-    gitRoot,
     implInfo,
-    specInfo
+    specInfo,
+    options.filename
   );
 
   const yamlFrontmatter = yaml

@@ -19,6 +19,7 @@ export interface Implementation {
 export interface ImplementOptions {
   specIdOrPath: string;
   implIdOrPath: string;
+  filename?: string | undefined;
 }
 
 export interface FileReference {
