@@ -40,13 +40,12 @@ The `dev/start-worktree.sh` script provides a standardized way to start work in 
 
    Convert any slashes to hyphens when generating the sibling directory path. We don't want arbitrarily deep worktree directories. Make sure that the sibling directory path is not prefixed with `zamm-`: if the LLM suggests `some-feat-name` as a branch name, the Git branch should be `zamm/some-feat-branch` but the sibling directory should be `../some-feat-name/`
 
-4. Create a new Spec file in `docs/spec-history/<sibling-directory-path>.md` with the same name as the sibling directory path, except with a Markdown file extension. Use the `zamm spec changelog` command to do this.
-5. Append to the file:
-   - An H1 Markdown title. Ask the LLM to come up with this as well
-   - The original command input string, serving as the body for this specification file
-6. Run `npm install` in the new worktree directory to set up dependencies for the new feature branch.
-7. Echo a line of the form `ZAMM_INIT_DIR_OVERRIDE=<worktree-path>` so that downstream tooling knows to initialize the `.zamm/` workflow directory in the worktree instead of the base directory.
-8. Show the user a message telling them to run the command
+4. Create a new Spec file in `docs/spec-history/<sibling-directory-path>.md` with the same name as the sibling directory path, except with a Markdown file extension. Use the `zamm spec changelog <sibling-directory-path> --description "<original-input-string>"` command to do this, as that command will also:
+   - Add proper frontmatter
+   - Auto-generate an appropriate H1 Markdown title
+5. Run `npm install` in the new worktree directory to set up dependencies for the new feature branch.
+6. Echo a line of the form `ZAMM_INIT_DIR_OVERRIDE=<worktree-path>` so that downstream tooling knows to initialize the `.zamm/` workflow directory in the worktree instead of the base directory.
+7. Show the user a message telling them to run the command
 
    ```bash
    cd ../<new-worktree-dir> && claude "/change-spec"
