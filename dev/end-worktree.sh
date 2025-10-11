@@ -44,7 +44,7 @@ git branch -d "$CURRENT_BRANCH"
 
 # Step 5: Run the build command for the NodeJS implementation
 echo "Building the NodeJS project..."
-npm run build
+npm install && npm run build  # install in case of new dependencies
 
 # Step 6: Push to remote
 echo "Pushing to remote..."
