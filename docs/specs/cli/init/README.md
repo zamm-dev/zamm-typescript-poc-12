@@ -56,3 +56,4 @@ For `{{WORKTREE_SETUP_COMMANDS}}` and `{{WORKTREE_BUILD_COMMANDS}}`, follow the 
 ## Packaging Requirements
 
 - The template resources live inside the ZAMM codebase (e.g. `resources/init-scripts/`) and must be embedded in the built CLI so `zamm init scripts` works without depending on repository-relative paths.
+- When copying template resources during the build process, the build tool must include hidden files and directories (files/directories beginning with a dot, such as `.claude`). For example, when using `copyfiles`, the `-a` flag ensures all files including dotfiles are copied correctly.

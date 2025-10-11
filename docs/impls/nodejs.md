@@ -60,6 +60,10 @@ dev/                        # Development workflow scripts
 
 All TypeScript source files must be in the `src/` directory to maintain proper type checking. Place scripts and utilities in `src/scripts/` rather than bypassing TypeScript compilation. Build artifacts (`.js`, `.d.ts`, `.map` files) are generated in `dist/` and should not be modified directly.
 
+### Build Configuration
+
+The build process uses `copyfiles` to copy resource files from `src/resources/` to `dist/resources/`. The `-a` flag is required to ensure hidden files and directories (starting with a dot, like `.claude`) are included in the copy operation.
+
 ## Commands
 
 - **Format**: `npm run format` - Format code with Prettier
