@@ -45,6 +45,7 @@ For `{{WORKTREE_SETUP_COMMANDS}}` and `{{WORKTREE_BUILD_COMMANDS}}`, follow the 
 ## Other Installed Assets
 
 - Every Claude command template shipped with ZAMM (`change-spec.md`, `document-impl.md`, `implement-spec.md`, `recursive-self-improvement.md`, `refactor.md`, `update-docs.md`, and any future commands placed in the template bundle) must be installed. The install routine should iterate over the template directory so new files are picked up automatically without code changes.
+- The `.claude/software-dev-guidelines.md` file must be copied from the template bundle to the target project's `.claude/` directory. This file provides software development best practices and should be installed alongside the command templates.
 
 ## Error Handling
 

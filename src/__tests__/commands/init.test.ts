@@ -59,10 +59,15 @@ describe('init scripts command', () => {
       testEnv.tempDir,
       '.claude/commands/implement-spec.md'
     );
+    const guidelinesPath = path.join(
+      testEnv.tempDir,
+      '.claude/software-dev-guidelines.md'
+    );
 
     expect(fs.existsSync(startScriptPath)).toBe(true);
     expect(fs.existsSync(endScriptPath)).toBe(true);
     expect(fs.existsSync(implementSpecPath)).toBe(true);
+    expect(fs.existsSync(guidelinesPath)).toBe(true);
 
     const startScript = fs.readFileSync(startScriptPath, 'utf8');
     expect(startScript).toContain('##### Setup worktree environment');
@@ -78,6 +83,10 @@ describe('init scripts command', () => {
     const implementCommand = fs.readFileSync(implementSpecPath, 'utf8');
     expect(implementCommand).toContain('@docs/impls/sample-impl.md');
     expect(implementCommand).not.toContain('{{IMPL_PATH}}');
+
+    const guidelines = fs.readFileSync(guidelinesPath, 'utf8');
+    expect(guidelines).toContain('# Software Development Guidelines');
+    expect(guidelines).toContain('## Architecture and Code Quality');
 
     expect(
       mockAnthropicService.generateWorktreeSetupCommands
