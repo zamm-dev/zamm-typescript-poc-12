@@ -121,11 +121,13 @@ program
 async function implementWithErrorHandling(options: {
   spec: string;
   for: string;
+  filename?: string;
 }): Promise<void> {
   try {
     const implementOptions: ImplementOptions = {
       specIdOrPath: options.spec,
       implIdOrPath: options.for,
+      filename: options.filename,
     };
     const newFilePath = await generateImplementationNote(implementOptions);
     console.log(
@@ -203,6 +205,7 @@ implCommand
   )
   .requiredOption('--spec <spec>', 'spec file ID or path')
   .requiredOption('--for <impl>', 'implementation file ID or path')
+  .option('--filename <filename>', 'custom filename for the generated file')
   .action(implementWithErrorHandling);
 
 implCommand

@@ -216,6 +216,31 @@ describe('ZAMM CLI Implement Command', () => {
         'Not in a git repository'
       );
     });
+
+    it('should use custom filename when provided', async () => {
+      createTestFile('docs/specs/features/authentication.md');
+      createTestFile('docs/impls/python.md');
+
+      const options: ImplementOptions = {
+        specIdOrPath: 'XYZ789',
+        implIdOrPath: 'IMP002',
+        filename: 'custom-implementation.md',
+      };
+
+      const resultPath = await generateImplementationNote(options);
+
+      expect(resultPath).toMatch(
+        /docs\/impl-history\/python\/features\/custom-implementation\.md$/
+      );
+      expect(fs.existsSync(resultPath)).toBe(true);
+
+      const content = fs.readFileSync(resultPath, 'utf8');
+      const expectedContent = fs.readFileSync(
+        path.join(__dirname, '../fixtures/implement/custom-implementation.md'),
+        'utf8'
+      );
+      expect(content).toBe(expectedContent);
+    });
   });
 
   describe('recordCommits', () => {
