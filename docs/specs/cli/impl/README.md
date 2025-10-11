@@ -32,8 +32,20 @@ impl:
 TODO: LLM agent, please put implementation plan details here and rename this file as appropriate.
 ```
 
+### Optional `--filename` Argument
+
+The `impl create` command accepts an optional `--filename` argument that allows the user to specify a custom filename for the generated reference implementation file. When provided, this filename will be used instead of the default `new-<spec-id>-impl.md` pattern.
+
+For example, this command:
+
+```bash
+zamm impl create --spec XYZ789 --for IMP002 --filename custom-implementation.md
+```
+
+would generate the reference implementation at `docs/impl-history/python/features/custom-implementation.md` instead.
+
 > [!NOTE]
-> When testing this, you should reuse the test resources defined by [Test Spec SOB239](./tests/info-command.md) instead of creating duplicate test resource files.
+> When testing `impl create`, you should reuse the test resources defined by [Test Spec SOB239](./tests/info-command.md) instead of creating duplicate test resource files.
 
 ## `impl record`
 
