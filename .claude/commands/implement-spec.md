@@ -12,5 +12,6 @@ We are going to implement changes to the spec on the project implementation desc
 ## User Collaboration Guidelines
 
 - Ask for clarification on underspecified requirements
+- When working with optional parameters, prefer simpler approaches that rely on type system guarantees
 
 Keep in mind @.claude/software-dev-guidelines.md
