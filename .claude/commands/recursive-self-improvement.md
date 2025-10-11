@@ -8,6 +8,7 @@
 
 ## Guidelines for Updates
 
+- Don't edit _this_ file unless it was invoked specifically for you to improve your own self-improvement
 - Keep additions concise - only add what directly addresses user feedback
 - Don't expand beyond the specific feedback given
 - One line is often sufficient for simple guidance

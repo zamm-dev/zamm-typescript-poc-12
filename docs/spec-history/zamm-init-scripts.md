@@ -2,6 +2,8 @@
 id: XEY874
 type: spec
 commits:
+  - sha: 45d581b3fb1d0fa1c5875031d53fcc095705645b
+    message: 'docs: document init scripts implementation'
   - sha: 8ca372c2012e7256e65e6234b8f1f8a6b90ba221
     message: Add spec for init scripts command
 ---
