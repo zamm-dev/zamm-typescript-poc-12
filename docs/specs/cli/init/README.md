@@ -30,19 +30,20 @@ All template files shipped with ZAMM must expose explicit substitution markers s
 
 - `.claude/commands/*.md` templates must include a `{{IMPL_PATH}}` token anywhere the ZAMM repo would have referenced `docs/impls/nodejs.md`. During installation, the command must replace every occurrence of `{{IMPL_PATH}}` with the resolved implementation path (e.g. `docs/impls/python.md`). The command must not leave placeholder tokens behind in the generated files.
 - The `dev/start-worktree.sh` template must retain the existing `##### Setup worktree environment` heading followed by a single line containing the literal token `{{WORKTREE_SETUP_COMMANDS}}`. The install command is responsible for replacing that token with implementation-specific setup commands as described below.
+- The `dev/end-worktree.sh` template must contain a single `{{WORKTREE_BUILD_COMMANDS}}` line beneath the "Step 5" heading so the installer can inject implementation-specific build, deploy, and/or verification commands. The install command is responsible for replacing that token with implementation-specific build commands as described below.
 - Any additional dynamic data that might be needed in the future must follow the same `{{TOKEN_NAME}}` convention so it remains obvious that the value is populated at install time.
 
 ## Claude-Assisted Setup Extraction
 
-1. After resolving the target implementation doc, `zamm init scripts` must invoke the same Claude integration used elsewhere in ZAMM to read that doc and extract bash commands that prepare a fresh worktree for development.
-2. The prompt should ask for a newline-separated list of `set -e`-safe shell commands tailored to the instructions found in the implementation doc. The response must exclude prose and only contain commands.
-3. If the Claude response is empty, replace `{{WORKTREE_SETUP_COMMANDS}}` with a single comment line `# No implementation-specific setup required` so the script remains valid.
-4. If commands are returned, insert them verbatim beneath the `##### Setup worktree environment` heading, preserving indentation, and ensure the token is fully removed.
-5. The generated script must remain executable and pass `bash -n` validation.
+For `{{WORKTREE_SETUP_COMMANDS}}` and `{{WORKTREE_BUILD_COMMANDS}}`, follow the following steps:
+
+1. Feed the contents of the target implementation doc (the one located at `{{IMPL_PATH}}`) to Claude and ask Claude to extract bash commands that prepare a freshly cloned repo for development (in the case of `{{WORKTREE_SETUP_COMMANDS}}`) or that updates the main build or deployment artifact (in the case of `{{WORKTREE_BUILD_COMMANDS}}`).
+2. If the Claude response is empty or invalid, replace the token with a single comment line `# No implementation-specific steps required` so the script remains valid.
+3. If commands are returned, insert them verbatim, preserving indentation and ensuring the token is fully removed.
+4. The generated scripts must remain executable and pass `bash -n` validation.
 
 ## Other Installed Assets
 
-- `dev/end-worktree.sh` should be copied from its template unchanged except for removing any placeholder tokens (this file currently has no implementation-specific substitutions).
 - Every Claude command template shipped with ZAMM (`change-spec.md`, `document-impl.md`, `implement-spec.md`, `recursive-self-improvement.md`, `refactor.md`, `update-docs.md`, and any future commands placed in the template bundle) must be installed. The install routine should iterate over the template directory so new files are picked up automatically without code changes.
 
 ## Error Handling
