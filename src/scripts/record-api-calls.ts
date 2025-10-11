@@ -2,6 +2,12 @@
 
 import { RealAnthropicService } from '../core/shared/anthropic-service';
 import { NockRecorder } from '../__tests__/shared/nock-utils';
+import * as fs from 'fs';
+import * as path from 'path';
+
+const FIXTURE_DIR = path.resolve(__dirname, '../__tests__/fixtures/anthropic');
+
+const IMPLEMENTATION_DOC_PATH = path.join(FIXTURE_DIR, 'worktree-commands.md');
 
 async function recordApiCalls(): Promise<void> {
   console.log('Starting API call recording...');
@@ -25,6 +31,16 @@ async function recordApiCalls(): Promise<void> {
       branchName
     );
     console.log('Alternative branch name:', altBranchName);
+
+    const implementationDoc = fs.readFileSync(IMPLEMENTATION_DOC_PATH, 'utf8');
+
+    const setupCommands =
+      await anthropicService.generateWorktreeSetupCommands(implementationDoc);
+    console.log('Setup commands:', setupCommands);
+
+    const buildCommands =
+      await anthropicService.generateWorktreeBuildCommands(implementationDoc);
+    console.log('Post-worktree commands:', buildCommands);
 
     recorder.stopRecording();
     console.log('Recording complete. Saved to feat-recordings.json');

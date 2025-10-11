@@ -1,6 +1,15 @@
 import { RealAnthropicService } from '../../core/shared/anthropic-service';
 import { NockRecorder } from './nock-utils';
-import * as nock from 'nock';
+import nock from 'nock';
+import * as fs from 'fs';
+import * as path from 'path';
+
+const FIXTURE_DIR = path.resolve(__dirname, '../fixtures/anthropic');
+
+function loadFixture(relativePath: string): string {
+  const fullPath = path.join(FIXTURE_DIR, relativePath);
+  return fs.readFileSync(fullPath, 'utf8');
+}
 
 describe('RealAnthropicService Unit Tests', () => {
   let originalApiKey: string | undefined;
@@ -31,7 +40,6 @@ describe('RealAnthropicService Unit Tests', () => {
       delete process.env.ANTHROPIC_API_KEY;
     }
 
-    // Check if all nock mocks were used (only if we set up mocks)
     if (process.env.ANTHROPIC_API_KEY === 'test-api-key') {
       expect(nock.isDone()).toBe(true);
     }
@@ -72,5 +80,21 @@ describe('RealAnthropicService Unit Tests', () => {
     );
 
     expect(specTitle).toBe('Add User Authentication');
+  });
+
+  it('should generate worktree setup commands via API', async () => {
+    const implementationDoc = loadFixture('worktree-commands.md');
+
+    const setupCommands =
+      await anthropicService.generateWorktreeSetupCommands(implementationDoc);
+    expect(setupCommands).toBe('npm install -g npm\nnpm install');
+  });
+
+  it('should generate worktree build commands via API', async () => {
+    const implementationDoc = loadFixture('worktree-commands.md');
+
+    const buildCommands =
+      await anthropicService.generateWorktreeBuildCommands(implementationDoc);
+    expect(buildCommands).toBe('npm run build\nnpm test');
   });
 });

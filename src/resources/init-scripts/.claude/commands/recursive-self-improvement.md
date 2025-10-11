@@ -8,7 +8,6 @@
 
 ## Guidelines for Updates
 
-- Don't edit _this_ file unless it was invoked specifically for you to improve your own self-improvement
 - Keep additions concise - only add what directly addresses user feedback
 - Don't expand beyond the specific feedback given
 - One line is often sufficient for simple guidance
@@ -17,5 +16,5 @@
 - Include examples where helpful
 - Integrate with existing sections instead of creating your own
 - Keep it generic
-  - Avoid implementation-specific technical details in workflow files. Implementation-specific details (such as language-specific details) go in docs/impls/nodejs.md.
+  - Avoid implementation-specific technical details in workflow files. Implementation-specific details (such as language-specific details) go in {{IMPL_PATH}}.
   - Focus on reusable patterns that apply across different projects

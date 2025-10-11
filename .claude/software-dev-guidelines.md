@@ -16,6 +16,8 @@
 - Set up isolated test environments rather than relying on extensive mocking
 - For API integrations, record real responses and filter sensitive data appropriately
 - Always verify that mocks are actually used in tests
+- Confirm with the user before modifying test fixtures to get local tests to pass
+- Treat recorded outputs as immutable snapshots unless we intentionally re-record them. Do not manually edit such automatically generated files just to get tests to pass.
 
 ## Service Dependency Injection
 
