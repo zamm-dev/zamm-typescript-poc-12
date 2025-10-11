@@ -10,7 +10,7 @@
     "doc": "docs"
   },
   "scripts": {
-    "build": "tsc && copyfiles -u 1 \"src/resources/**/*\" dist && mv dist/zamm.js dist/zamm",
+    "build": "tsc && copyfiles -a -u 1 \"src/resources/**/*\" dist && mv dist/zamm.js dist/zamm",
     "postbuild": "chmod +x dist/zamm",
     "build:watch": "tsc --watch",
     "start": "node dist/zamm",
