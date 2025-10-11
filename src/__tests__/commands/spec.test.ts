@@ -48,6 +48,8 @@ describe('ZAMM CLI Spec Command', () => {
       suggestSpecTitle: jest
         .fn()
         .mockResolvedValue('Auto-generated Title for Testing'),
+      generateWorktreeSetupCommands: jest.fn().mockResolvedValue(''),
+      generateWorktreeBuildCommands: jest.fn().mockResolvedValue(''),
     };
     setAnthropicService(mockAnthropicService);
   });

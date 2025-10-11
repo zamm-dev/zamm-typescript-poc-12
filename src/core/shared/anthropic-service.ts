@@ -14,6 +14,8 @@ export interface AnthropicService {
     conflictingBranchName: string
   ): Promise<string>;
   suggestSpecTitle(description: string): Promise<string>;
+  generateWorktreeSetupCommands(implementationDoc: string): Promise<string>;
+  generateWorktreeBuildCommands(implementationDoc: string): Promise<string>;
 }
 
 export class RealAnthropicService implements AnthropicService {
@@ -104,6 +106,64 @@ export class RealAnthropicService implements AnthropicService {
         'Failed to get spec title suggestion from Anthropic'
       );
     }
+  }
+
+  async generateWorktreeSetupCommands(
+    implementationDoc: string
+  ): Promise<string> {
+    const prompt = `You are an expert at onboarding developers into repositories.
+Read the implementation documentation below and extract a newline-separated list of shell commands that can be run with set -e to prepare a fresh worktree for development.
+Respond with commands only, one per line, and include nothing else. If no setup is required, respond with an empty string.
+
+${implementationDoc}`;
+
+    const response = await this.anthropic.messages.create({
+      model: 'claude-3-haiku-20240307',
+      max_tokens: 400,
+      messages: [
+        {
+          role: 'user',
+          content: prompt,
+        },
+      ],
+    });
+
+    if (response.content[0] && response.content[0].type === 'text') {
+      return response.content[0].text.trim();
+    }
+
+    throw new AnthropicError(
+      'Failed to generate worktree setup commands from Anthropic'
+    );
+  }
+
+  async generateWorktreeBuildCommands(
+    implementationDoc: string
+  ): Promise<string> {
+    const prompt = `You are helping a developer wrap up work on a repository.
+Read the implementation documentation below and extract the shell commands that should be run after finishing development in a feature worktree (e.g., build, test, lint, or verification steps).
+Respond with commands only, one per line, and include nothing else. If no post-worktree commands are required, respond with an empty string.
+
+${implementationDoc}`;
+
+    const response = await this.anthropic.messages.create({
+      model: 'claude-3-haiku-20240307',
+      max_tokens: 400,
+      messages: [
+        {
+          role: 'user',
+          content: prompt,
+        },
+      ],
+    });
+
+    if (response.content[0] && response.content[0].type === 'text') {
+      return response.content[0].text.trim();
+    }
+
+    throw new AnthropicError(
+      'Failed to generate post-worktree commands from Anthropic'
+    );
   }
 }
 

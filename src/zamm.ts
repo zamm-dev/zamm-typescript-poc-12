@@ -2,6 +2,7 @@
 
 import { Command } from 'commander';
 import chalk from 'chalk';
+import * as path from 'path';
 import { version } from '../package.json';
 import {
   organizeFile,
@@ -21,6 +22,7 @@ import {
   FeatStartOptions,
   setRedirect,
   RedirectOptions,
+  installInitScripts,
 } from './core/index';
 
 const program = new Command();
@@ -193,6 +195,29 @@ async function createSpecChangelogWithErrorHandling(
   }
 }
 
+async function initScriptsWithErrorHandling(options: {
+  impl: string;
+}): Promise<void> {
+  try {
+    const result = await installInitScripts({ implIdOrPath: options.impl });
+    const devDirDisplay =
+      path.relative(process.cwd(), result.devDir) || result.devDir;
+    const commandsDirDisplay =
+      path.relative(process.cwd(), result.claudeCommandsDir) ||
+      result.claudeCommandsDir;
+
+    console.log(
+      chalk.green(
+        `✓ Installed dev scripts to ${devDirDisplay} and Claude commands to ${commandsDirDisplay}`
+      )
+    );
+  } catch (error) {
+    const errorMessage = error instanceof Error ? error.message : String(error);
+    console.error(chalk.red(`Error: ${errorMessage}`));
+    process.exit(1);
+  }
+}
+
 const implCommand = program
   .command('impl')
   .alias('i')
@@ -221,6 +246,18 @@ implCommand
     'reference implementation ID or file path to update'
   )
   .action(recordCommitsWithErrorHandling);
+
+const initCommand = program
+  .command('init')
+  .description('Project initialization utilities');
+
+initCommand
+  .command('scripts')
+  .description(
+    'Install dev scripts and Claude commands tailored to an implementation'
+  )
+  .requiredOption('--impl <impl>', 'implementation file ID or path')
+  .action(initScriptsWithErrorHandling);
 
 async function featStartWithErrorHandling(args: string[]): Promise<void> {
   try {

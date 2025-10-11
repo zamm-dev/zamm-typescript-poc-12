@@ -12,6 +12,7 @@ export * from './shared/anthropic-service';
 export * from './commands/organize';
 export * from './commands/info';
 export * from './commands/implement';
+export * from './commands/init';
 export * from './commands/split';
 export * from './commands/feat';
 export * from './commands/spec';

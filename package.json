@@ -10,7 +10,7 @@
     "doc": "docs"
   },
   "scripts": {
-    "build": "tsc && mv dist/zamm.js dist/zamm",
+    "build": "tsc && copyfiles -u 1 \"src/resources/**/*\" dist && mv dist/zamm.js dist/zamm",
     "postbuild": "chmod +x dist/zamm",
     "build:watch": "tsc --watch",
     "start": "node dist/zamm",
@@ -38,6 +38,7 @@
     "@types/node": "^24.5.2",
     "@typescript-eslint/eslint-plugin": "^8.44.0",
     "@typescript-eslint/parser": "^8.44.0",
+    "copyfiles": "^2.4.1",
     "eslint": "^9.35.0",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-jest": "^29.0.1",
