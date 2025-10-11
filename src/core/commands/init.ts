@@ -15,6 +15,7 @@ const CLAUDE_TEMPLATE_DIR = path.join(
   '.claude',
   'commands'
 );
+const CLAUDE_ROOT_TEMPLATE_DIR = path.join(INIT_RESOURCES_DIR, '.claude');
 
 export interface InitScriptsOptions {
   implIdOrPath: string;
@@ -96,8 +97,13 @@ export async function installInitScripts(
 
   await installDevScripts(devDir, setupCommands, buildCommands);
   await installClaudeCommands(
+    CLAUDE_TEMPLATE_DIR,
     claudeCommandsDir,
     toPosixRelativePath(gitRoot, implInfo.absolutePath)
+  );
+  await installClaudeCommands(
+    CLAUDE_ROOT_TEMPLATE_DIR,
+    path.join(gitRoot, '.claude')
   );
 
   return { devDir, claudeCommandsDir };
@@ -157,29 +163,33 @@ async function installDevScripts(
 }
 
 async function installClaudeCommands(
-  targetCommandsDir: string,
-  implPathForTemplate: string
+  sourceDir: string,
+  targetDir: string,
+  implPathForTemplate?: string
 ): Promise<void> {
   const entries = fs
-    .readdirSync(CLAUDE_TEMPLATE_DIR, { withFileTypes: true })
+    .readdirSync(sourceDir, { withFileTypes: true })
     .filter(entry => entry.isFile());
 
   for (const entry of entries) {
-    const templatePath = path.join(CLAUDE_TEMPLATE_DIR, entry.name);
-    const content = await loadTemplate(templatePath);
-    const replaced = replacePlaceholder(
-      content,
-      '{{IMPL_PATH}}',
-      implPathForTemplate
-    );
+    const templatePath = path.join(sourceDir, entry.name);
+    let content = await loadTemplate(templatePath);
 
-    if (replaced.includes('{{IMPL_PATH}}')) {
-      throw new Error(
-        `Failed to replace implementation path placeholder in template ${entry.name}`
+    if (implPathForTemplate) {
+      content = replacePlaceholder(
+        content,
+        '{{IMPL_PATH}}',
+        implPathForTemplate
       );
+
+      if (content.includes('{{IMPL_PATH}}')) {
+        throw new Error(
+          `Failed to replace implementation path placeholder in template ${entry.name}`
+        );
+      }
     }
 
-    const targetPath = path.join(targetCommandsDir, entry.name);
-    writeFileEnsuringDir(targetPath, replaced);
+    const targetPath = path.join(targetDir, entry.name);
+    writeFileEnsuringDir(targetPath, content);
   }
 }
