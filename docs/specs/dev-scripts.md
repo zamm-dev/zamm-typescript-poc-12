@@ -109,3 +109,27 @@ The `dev/end-worktree.sh` script provides a standardized way to wrap up work in 
 
 > [!IMPORTANT]
 > The script should validate that it is **_not_** being run from the main/master branch and should exit with an error if attempted. This prevents accidental execution from the wrong directory.
+
+## Refresh Init Script Templates
+
+A development maintenance script should exist to synchronize the `zamm init scripts` template files (as described in [Spec DVB657](/docs/specs/cli/init/README.md)) with the current working versions in `.claude/` and `dev/`. This ensures that when `zamm init scripts` is run on new projects, they receive the latest workflow scripts and Claude command files.
+
+### Behavior
+
+The script should:
+
+1. Validate that it's being run from the Git repository root
+2. Copy all files from `.claude/` to the template resources directory, preserving directory structure
+3. Copy all files from `dev/` to the template resources directory, preserving directory structure
+4. Replace implementation-specific commands in the copied `dev/start-worktree.sh` script with the `{{WORKTREE_SETUP_COMMANDS}}` placeholder
+5. Replace implementation-specific commands in the copied `dev/end-worktree.sh` script with the `{{WORKTREE_BUILD_COMMANDS}}` placeholder
+6. Print a success message confirming which files were refreshed
+
+### Placeholder Restoration
+
+The script must identify and replace implementation-specific content with template placeholders:
+
+- In `dev/start-worktree.sh`: Replace the content under the `##### Setup worktree environment` section (after the heading) with a single line containing `{{WORKTREE_SETUP_COMMANDS}}`
+- In `dev/end-worktree.sh`: Replace the content under Step 5 (between the echo statement and Step 6) with a single line containing `{{WORKTREE_BUILD_COMMANDS}}`
+
+The script should preserve all other content, including comments, error handling, and validation logic.
