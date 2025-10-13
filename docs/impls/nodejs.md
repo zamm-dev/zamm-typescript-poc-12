@@ -41,7 +41,7 @@ src/
 │   ├── shared/             # Shared utilities and types
 │   │   ├── types.ts          # Type definitions
 │   │   ├── id-provider.ts    # ID generation logic
-│   │   ├── file-utils.ts     # File system utilities and markdown title extraction
+│   │   ├── file-utils.ts     # File system utilities
 │   │   ├── frontmatter.ts    # YAML frontmatter parsing and manipulation
 │   │   ├── file-resolver.ts  # File detection and resolution
 │   │   ├── git-utils.ts      # Git repository operations
@@ -53,7 +53,8 @@ src/
 ├── resources/              # Resource files packaged with ZAMM release
 │   └── init-scripts/       # Workflow scripts that ZAMM initializes user project with
 ├── scripts/                # Development and maintenance scripts
-│   └── record-api-calls.ts # Script to record Anthropic API responses for testing
+│   ├── record-api-calls.ts # Script to record Anthropic API responses for testing
+│   └── refresh-init-scripts.ts # Script to sync init-scripts templates with current .claude/ and dev/ files
 ├── zamm.ts                 # Main CLI entry point with Commander.js
 └── index.ts                # Library exports
 dev/                        # Development workflow scripts
