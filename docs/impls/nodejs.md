@@ -50,6 +50,8 @@ src/
 │   │   ├── anthropic-service.ts # Anthropic LLM API integration
 │   │   └── workflow-service.ts  # `.zamm/` workflow lifecycle tracking services
 │   └── index.ts            # Core module exports
+├── resources/              # Resource files packaged with ZAMM release
+│   └── init-scripts/       # Workflow scripts that ZAMM initializes user project with
 ├── scripts/                # Development and maintenance scripts
 │   └── record-api-calls.ts # Script to record Anthropic API responses for testing
 ├── zamm.ts                 # Main CLI entry point with Commander.js
