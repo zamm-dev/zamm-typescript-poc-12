@@ -2,6 +2,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 import * as os from 'os';
 import { execSync } from 'child_process';
+import { copyDirectory } from '../../core/shared/file-utils';
 
 export interface TestEnvironment {
   tempDir: string;
@@ -73,27 +74,5 @@ export function copyDirectoryFromFixture(
     fixtureSubDir
   );
   const targetDir = env.tempDir;
-  copyDirectoryRecursive(sourceDir, targetDir);
-}
-
-function copyDirectoryRecursive(source: string, target: string): void {
-  if (!fs.existsSync(source)) {
-    return;
-  }
-
-  const items = fs.readdirSync(source, { withFileTypes: true });
-
-  for (const item of items) {
-    const sourcePath = path.join(source, item.name);
-    const targetPath = path.join(target, item.name);
-
-    if (item.isDirectory()) {
-      fs.mkdirSync(targetPath, { recursive: true });
-      copyDirectoryRecursive(sourcePath, targetPath);
-    } else {
-      const dir = path.dirname(targetPath);
-      fs.mkdirSync(dir, { recursive: true });
-      fs.copyFileSync(sourcePath, targetPath);
-    }
-  }
+  copyDirectory(sourceDir, targetDir);
 }

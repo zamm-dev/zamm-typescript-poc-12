@@ -85,3 +85,40 @@ export async function getDocsDirectory(): Promise<string> {
 
   return defaultDocsPath;
 }
+
+/**
+ * Recursively copies directory contents from source to destination
+ * @param src - Source directory path
+ * @param dest - Destination directory path
+ * @param exclude - Optional array of file/directory names to exclude from copying
+ */
+export function copyDirectory(
+  src: string,
+  dest: string,
+  exclude?: string[]
+): void {
+  if (!fs.existsSync(src)) {
+    return;
+  }
+
+  if (!fs.existsSync(dest)) {
+    fs.mkdirSync(dest, { recursive: true });
+  }
+
+  const entries = fs.readdirSync(src, { withFileTypes: true });
+
+  for (const entry of entries) {
+    const srcPath = path.join(src, entry.name);
+    const destPath = path.join(dest, entry.name);
+
+    if (exclude?.includes(entry.name)) {
+      continue;
+    }
+
+    if (entry.isDirectory()) {
+      copyDirectory(srcPath, destPath, exclude);
+    } else {
+      fs.copyFileSync(srcPath, destPath);
+    }
+  }
+}

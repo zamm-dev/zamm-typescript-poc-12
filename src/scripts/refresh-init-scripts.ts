@@ -3,6 +3,7 @@
 import * as fs from 'fs';
 import * as path from 'path';
 import { execSync } from 'child_process';
+import { copyDirectory } from '../core/shared/file-utils';
 
 const TEMPLATE_DIR = 'src/resources/init-scripts';
 const CLAUDE_DIR = '.claude';
@@ -34,32 +35,6 @@ function validateGitRoot(): void {
   if (process.cwd() !== gitRoot) {
     console.error(`Error: run from the git root (${gitRoot})`);
     process.exit(1);
-  }
-}
-
-/**
- * Recursively copies directory contents
- */
-function copyDirectory(src: string, dest: string, exclude?: string[]): void {
-  if (!fs.existsSync(dest)) {
-    fs.mkdirSync(dest, { recursive: true });
-  }
-
-  const entries = fs.readdirSync(src, { withFileTypes: true });
-
-  for (const entry of entries) {
-    const srcPath = path.join(src, entry.name);
-    const destPath = path.join(dest, entry.name);
-
-    if (exclude?.includes(entry.name)) {
-      continue;
-    }
-
-    if (entry.isDirectory()) {
-      copyDirectory(srcPath, destPath, exclude);
-    } else {
-      fs.copyFileSync(srcPath, destPath);
-    }
   }
 }
 
