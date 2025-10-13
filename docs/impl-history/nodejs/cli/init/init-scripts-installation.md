@@ -2,12 +2,14 @@
 id: JUW440
 type: ref-impl
 specs:
-  - id: DVB657
-    path: /specs/cli/init/README.md
+  - id: XEY874
+    path: /spec-history/zamm-init-scripts.md
 impl:
   id: IEU463
   path: /impls/nodejs.md
 commits:
+  - sha: 0addd4a1d42e41a85bd9b39ef59f16063113e582
+    message: Document resources directory
   - sha: 8de969f0bd69a0f8f69d138584e63a35d2a6a497
     message: 'docs: add fixture-safety reminder'
   - sha: 28c0e8f9db0eddafed36f426dbe792a0d67992f1
