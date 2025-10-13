@@ -13,5 +13,6 @@ We are going to implement changes to the spec on the project implementation desc
 
 - Ask for clarification on underspecified requirements
 - When working with optional parameters, prefer simpler approaches that rely on type system guarantees
+- When implementing very generic functionality (e.g. recursive folder-copying code), put it in the appropriate file in the shared utilities module. If the file or module doesn't yet exist, you may create it. Doing this promotes code reuse, in case you discover that such generic functionality already exists.
 
 Keep in mind @.claude/software-dev-guidelines.md

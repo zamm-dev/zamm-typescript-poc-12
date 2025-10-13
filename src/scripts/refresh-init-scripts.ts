@@ -5,9 +5,14 @@ import * as path from 'path';
 import { execSync } from 'child_process';
 import { copyDirectory } from '../core/shared/file-utils';
 
-const TEMPLATE_DIR = 'src/resources/init-scripts';
+const DEFAULT_TEMPLATE_DIR = 'src/resources/init-scripts';
 const CLAUDE_DIR = '.claude';
 const DEV_DIR = 'dev';
+
+export interface RefreshOptions {
+  outputDir?: string;
+  validateGitRoot?: boolean;
+}
 
 /**
  * Validates that the script is being run from the Git repository root
@@ -20,12 +25,13 @@ function validateGitRoot(): void {
     }).trim();
 
     if (isGitRepo !== 'true') {
-      console.error('Error: must run inside a git repository');
-      process.exit(1);
+      throw new Error('Must run inside a git repository');
     }
-  } catch {
-    console.error('Error: must run inside a git repository');
-    process.exit(1);
+  } catch (error) {
+    if (error instanceof Error && error.message.includes('git repository')) {
+      throw error;
+    }
+    throw new Error('Must run inside a git repository');
   }
 
   const gitRoot = execSync('git rev-parse --show-toplevel', {
@@ -33,8 +39,7 @@ function validateGitRoot(): void {
   }).trim();
 
   if (process.cwd() !== gitRoot) {
-    console.error(`Error: run from the git root (${gitRoot})`);
-    process.exit(1);
+    throw new Error(`Must run from the git root (${gitRoot})`);
   }
 }
 
@@ -88,11 +93,9 @@ function restoreStartWorktreePlaceholder(filePath: string): void {
   }
 
   if (!foundMarker) {
-    console.error(
-      'Error: Could not find "##### Setup worktree environment" marker in start-worktree.sh'
+    throw new Error(
+      'Could not find "##### Setup worktree environment" marker in start-worktree.sh. The script structure has changed and needs manual review.'
     );
-    console.error('The script structure has changed and needs manual review');
-    process.exit(1);
   }
 
   fs.writeFileSync(filePath, output.join('\n'));
@@ -137,11 +140,9 @@ function restoreEndWorktreePlaceholder(filePath: string): void {
   }
 
   if (!foundStep5 || !foundStep6) {
-    console.error(
-      'Error: Could not find "# Step 5:" and/or "# Step 6:" markers in end-worktree.sh'
+    throw new Error(
+      'Could not find "# Step 5:" and/or "# Step 6:" markers in end-worktree.sh. The script structure has changed and needs manual review.'
     );
-    console.error('The script structure has changed and needs manual review');
-    process.exit(1);
   }
 
   // Ensure trailing newline
@@ -151,27 +152,31 @@ function restoreEndWorktreePlaceholder(filePath: string): void {
 
 /**
  * Main function to refresh init script templates
+ * @param options - Options for refreshing templates
+ * @returns The output directory where templates were written
  */
-function refreshInitScripts(): void {
-  console.log('Refreshing init script templates...');
+export function refreshInitScripts(options: RefreshOptions = {}): string {
+  const {
+    outputDir = DEFAULT_TEMPLATE_DIR,
+    validateGitRoot: shouldValidateGitRoot = true,
+  } = options;
 
-  validateGitRoot();
+  if (shouldValidateGitRoot) {
+    validateGitRoot();
+  }
 
   // Copy .claude directory (excluding settings.local.json)
-  console.log('Copying .claude/ directory...');
-  const templateClaudeDir = path.join(TEMPLATE_DIR, CLAUDE_DIR);
+  const templateClaudeDir = path.join(outputDir, CLAUDE_DIR);
   if (fs.existsSync(templateClaudeDir)) {
     fs.rmSync(templateClaudeDir, { recursive: true });
   }
   copyDirectory(CLAUDE_DIR, templateClaudeDir, ['settings.local.json']);
 
   // Restore {{IMPL_PATH}} placeholders in .claude files
-  console.log('Restoring {{IMPL_PATH}} placeholders in .claude/ files...');
   restoreImplPathPlaceholders(templateClaudeDir);
 
   // Copy dev scripts
-  console.log('Copying dev/ scripts...');
-  const templateDevDir = path.join(TEMPLATE_DIR, DEV_DIR);
+  const templateDevDir = path.join(outputDir, DEV_DIR);
   if (!fs.existsSync(templateDevDir)) {
     fs.mkdirSync(templateDevDir, { recursive: true });
   }
@@ -179,37 +184,41 @@ function refreshInitScripts(): void {
   const startWorktreeSrc = path.join(DEV_DIR, 'start-worktree.sh');
   const startWorktreeDest = path.join(templateDevDir, 'start-worktree.sh');
   fs.copyFileSync(startWorktreeSrc, startWorktreeDest);
+  fs.chmodSync(startWorktreeDest, 0o644); // Remove executable bit from template
 
   const endWorktreeSrc = path.join(DEV_DIR, 'end-worktree.sh');
   const endWorktreeDest = path.join(templateDevDir, 'end-worktree.sh');
   fs.copyFileSync(endWorktreeSrc, endWorktreeDest);
+  fs.chmodSync(endWorktreeDest, 0o644); // Remove executable bit from template
 
   // Restore placeholders
-  console.log(
-    'Restoring {{WORKTREE_SETUP_COMMANDS}} placeholder in start-worktree.sh...'
-  );
   restoreStartWorktreePlaceholder(startWorktreeDest);
-
-  console.log(
-    'Restoring {{WORKTREE_BUILD_COMMANDS}} placeholder in end-worktree.sh...'
-  );
   restoreEndWorktreePlaceholder(endWorktreeDest);
 
-  // Success message
-  console.log('');
-  console.log('Successfully refreshed init script templates:');
-  console.log('  - .claude/ directory (with {{IMPL_PATH}} placeholders)');
-  console.log(
-    '  - dev/start-worktree.sh (with {{WORKTREE_SETUP_COMMANDS}} placeholder)'
-  );
-  console.log(
-    '  - dev/end-worktree.sh (with {{WORKTREE_BUILD_COMMANDS}} placeholder)'
-  );
+  return outputDir;
 }
 
-try {
-  refreshInitScripts();
-} catch (error) {
-  console.error('Error:', error);
-  process.exit(1);
+// CLI entry point (only runs when executed directly, not when imported)
+// eslint-disable-next-line no-undef
+if (typeof require !== 'undefined' && require.main === module) {
+  try {
+    console.log('Refreshing init script templates...');
+    const outputDir = refreshInitScripts();
+    console.log('');
+    console.log('Successfully refreshed init script templates:');
+    console.log('  - .claude/ directory (with {{IMPL_PATH}} placeholders)');
+    console.log(
+      '  - dev/start-worktree.sh (with {{WORKTREE_SETUP_COMMANDS}} placeholder)'
+    );
+    console.log(
+      '  - dev/end-worktree.sh (with {{WORKTREE_BUILD_COMMANDS}} placeholder)'
+    );
+    console.log(`\nOutput directory: ${outputDir}`);
+  } catch (error) {
+    console.error(
+      'Error:',
+      error instanceof Error ? error.message : String(error)
+    );
+    process.exit(1);
+  }
 }
