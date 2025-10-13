@@ -114,6 +114,9 @@ The `dev/end-worktree.sh` script provides a standardized way to wrap up work in 
 
 A development maintenance script should exist to synchronize the `zamm init scripts` template files (as described in [Spec DVB657](/docs/specs/cli/init/README.md)) with the current working versions in `.claude/` and `dev/`. This ensures that when `zamm init scripts` is run on new projects, they receive the latest workflow scripts and Claude command files.
 
+> [!NOTE]
+> Template shell scripts in the resources directory should not be executable. The refresh script must remove the executable bit (set permissions to `0o644` or `rw-r--r--`) from copied shell script files, since these are templates that will be copied and made executable when installed via `zamm init scripts`, not actual executable scripts.
+
 ### Behavior
 
 The script should:
