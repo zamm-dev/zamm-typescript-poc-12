@@ -81,6 +81,9 @@ The build process uses `copyfiles` to copy resource files from `src/resources/` 
 - **organize/o**: Add proper YAML frontmatter to markdown files
 - **info**: Display structured information about a file by ID or path
 - **split**: Split content from a main file into new separate files with proper frontmatter
+- **init**: Project initialization utilities
+  - **init project**: Set up a new ZAMM project with the expected worktree directory structure, creating docs/README.md and docs/impls/ files with proper frontmatter
+  - **init scripts**: Install dev scripts and Claude commands tailored to an implementation
 - **impl/i**: Implementation management commands
   - **impl create**: Generate reference implementation file for a spec and implementation
   - **impl record**: Record commit hashes and messages in implementation file frontmatter
@@ -146,6 +149,7 @@ Use `expectFileMatches(testEnv, relativePath, fixtureSubDir?, replacements?)` to
 
 External services use unit tests with Jest built-in mocks and separate API tests with nock recordings.
 
+- **Use `jest.fn()` for mocks** instead of custom mock classes - this enables assertions on calls made (e.g., `expect(mockFn).toHaveBeenCalledWith(...)`)
 - **Configure ESLint properly** for Jest tests by disabling `@typescript-eslint/unbound-method` and enabling `jest/unbound-method` rules. See https://stackoverflow.com/a/70350452
 
 All network-related functionality should be recorded and replayed with `nock`. Make sure to filter out sensitive data such as API keys when you do so.

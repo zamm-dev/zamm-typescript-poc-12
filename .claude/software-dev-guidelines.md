@@ -10,7 +10,8 @@
 ## Testing Strategy
 
 - Create comprehensive test suites that verify the complete workflow
-- Use exact file content matching with fixtures rather than partial string matching
+- Use exact file content matching with fixtures rather than partial string matching (see @docs/specs/test-file-resources.md)
+- Use test framework's built-in mocks instead of custom mock classes to enable assertions on calls made
 - Use `git add -f` for test fixtures that would be ignored by `.gitignore` files
 - Consolidate related test cases into single comprehensive tests
 - Set up isolated test environments rather than relying on extensive mocking
