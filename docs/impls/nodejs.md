@@ -17,7 +17,8 @@ src/
 │   │   ├── info.test.ts      # Info command tests
 │   │   ├── implement.test.ts # Implement command tests
 │   │   ├── spec.test.ts      # Spec command tests
-│   │   └── feat.test.ts      # Feature lifecycle command tests
+│   │   ├── feat.test.ts      # Feature lifecycle command tests
+│   │   └── init-project.test.ts # Init project command tests
 │   ├── shared/             # Shared test utilities
 │   │   ├── test-utils.ts     # Test utilities with directory copying
 │   │   ├── git-test-utils.ts # Git repository setup for deterministic testing
@@ -30,14 +31,16 @@ src/
 │       ├── organize/       # Organize command test fixtures
 │       ├── implement/      # Implement command test fixtures
 │       ├── spec/           # Spec command test fixtures with before/after structure
-│       └── feat/           # Feat command test fixtures
+│       ├── feat/           # Feat command test fixtures
+│       └── init-project/   # Init project command test fixtures
 ├── core/                   # Core business logic
 │   ├── commands/           # Command-specific implementations
 │   │   ├── organize.ts       # Organize command logic
 │   │   ├── info.ts           # Info command logic
 │   │   ├── implement.ts      # Implement command logic
 │   │   ├── spec.ts           # Spec command logic
-│   │   └── feat.ts           # Feature lifecycle command logic
+│   │   ├── feat.ts           # Feature lifecycle command logic
+│   │   └── init-project.ts   # Init project command logic
 │   ├── shared/             # Shared utilities and types
 │   │   ├── types.ts          # Type definitions
 │   │   ├── id-provider.ts    # ID generation logic
@@ -48,7 +51,8 @@ src/
 │   │   ├── file-types.ts     # File type utilities for consistent error messages
 │   │   ├── commit-recorder.ts # Shared commit recording logic for impl/spec commands
 │   │   ├── anthropic-service.ts # Anthropic LLM API integration
-│   │   └── workflow-service.ts  # `.zamm/` workflow lifecycle tracking services
+│   │   ├── workflow-service.ts  # `.zamm/` workflow lifecycle tracking services
+│   │   └── prompt-utils.ts   # Terminal I/O service with singleton pattern
 │   └── index.ts            # Core module exports
 ├── resources/              # Resource files packaged with ZAMM release
 │   └── init-scripts/       # Workflow scripts that ZAMM initializes user project with
