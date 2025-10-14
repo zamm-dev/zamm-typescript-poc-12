@@ -23,6 +23,8 @@ import {
   setRedirect,
   RedirectOptions,
   installInitScripts,
+  initProject,
+  InitProjectOptions,
 } from './core/index';
 
 const program = new Command();
@@ -247,9 +249,41 @@ implCommand
   )
   .action(recordCommitsWithErrorHandling);
 
+async function initProjectWithErrorHandling(options: {
+  projectTitle?: string;
+  projectDescription?: string;
+  initialStack?: string;
+}): Promise<void> {
+  try {
+    const initOptions: InitProjectOptions = {};
+    if (options.projectTitle !== undefined) {
+      initOptions.projectTitle = options.projectTitle;
+    }
+    if (options.projectDescription !== undefined) {
+      initOptions.projectDescription = options.projectDescription;
+    }
+    if (options.initialStack !== undefined) {
+      initOptions.initialStack = options.initialStack;
+    }
+    await initProject(initOptions);
+  } catch (error) {
+    const errorMessage = error instanceof Error ? error.message : String(error);
+    console.error(chalk.red(`Error: ${errorMessage}`));
+    process.exit(1);
+  }
+}
+
 const initCommand = program
   .command('init')
   .description('Project initialization utilities');
+
+initCommand
+  .command('project')
+  .description('Set up a new ZAMM project with worktree structure')
+  .option('--project-title <title>', 'project title')
+  .option('--project-description <description>', 'project description')
+  .option('--initial-stack <stack>', 'initial stack/implementation')
+  .action(initProjectWithErrorHandling);
 
 initCommand
   .command('scripts')
