@@ -19,3 +19,7 @@
 - Keep it generic
   - Avoid implementation-specific technical details in workflow files. Implementation-specific details (such as language-specific details) go in {{IMPL_PATH}}.
   - Focus on reusable patterns that apply across different projects
+- **Put general development practices in `.claude/software-dev-guidelines.md`**, not in workflow-specific command files
+  - Workflow files describe _when_ and _how_ to execute a specific command
+  - Guidelines describe _what_ constitutes good code/process across all commands
+  - Examples: type safety rules, testing practices, commit hygiene belong in guidelines

@@ -34,20 +34,20 @@ if ! git merge-base --is-ancestor "$CURRENT_BRANCH" HEAD; then
     exit 1
 fi
 
-# Step 3: Remove the worktree directory
-echo "Removing worktree directory ../$(basename "$WORKTREE_DIR")..."
-git worktree remove "../$WORKTREE_DIR"
-
-# Step 4: Delete the local feature branch
-echo "Deleting local branch $CURRENT_BRANCH..."
-git branch -d "$CURRENT_BRANCH"
-
-# Step 5: Run implementation-specific build or verification commands
+# Step 3: Run implementation-specific build or verification commands
 echo "Running implementation-specific post-worktree commands..."
 {{WORKTREE_BUILD_COMMANDS}}
 
-# Step 6: Push to remote
+# Step 4: Push to remote
 echo "Pushing to remote..."
 git push
+
+# Step 5: Remove the worktree directory
+echo "Removing worktree directory ../$(basename "$WORKTREE_DIR")..."
+git worktree remove "../$WORKTREE_DIR"
+
+# Step 6: Delete the local feature branch
+echo "Deleting local branch $CURRENT_BRANCH..."
+git branch -d "$CURRENT_BRANCH"
 
 echo "Successfully wrapped up worktree work and merged $CURRENT_BRANCH into main!"
