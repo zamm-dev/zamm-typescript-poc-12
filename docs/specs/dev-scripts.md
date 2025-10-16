@@ -77,7 +77,17 @@ The `dev/end-worktree.sh` script provides a standardized way to wrap up work in 
    >
    > One way to verify merge success is to check if the feature branch is now an ancestor of the current HEAD using `git merge-base --is-ancestor <feature-branch> HEAD`. This will return true if the merge completed successfully.
 
-3. `git worktree remove <dir>`
+3. Run the build command for our current implementation to ensure that the main folder always has the latest binaries.
+
+   For example, if our current implementation is using NodeJS with `npm` as the package manager, we would run
+
+   ```bash
+   npm run build
+   ```
+
+4. `git push` to the remote.
+
+5. `git worktree remove <dir>`
 
    To continue the previous example, we would now run
 
@@ -87,7 +97,7 @@ The `dev/end-worktree.sh` script provides a standardized way to wrap up work in 
 
    to clean up the meta project directory structure.
 
-4. `git branch -d <feat-branch>`
+6. `git branch -d <feat-branch>`
 
    To continue the previous example, we would now run
 
@@ -96,16 +106,6 @@ The `dev/end-worktree.sh` script provides a standardized way to wrap up work in 
    ```
 
    to clean up local git branches.
-
-5. Run the build command for our current implementation to ensure that the main folder always has the latest binaries.
-
-   For example, if our current implementation is using NodeJS with `npm` as the package manager, we would run
-
-   ```bash
-   npm run build
-   ```
-
-6. `git push` to the remote.
 
 > [!IMPORTANT]
 > The script should validate that it is **_not_** being run from the main/master branch and should exit with an error if attempted. This prevents accidental execution from the wrong directory.
@@ -133,6 +133,6 @@ The script should:
 The script must identify and replace implementation-specific content with template placeholders:
 
 - In `dev/start-worktree.sh`: Replace the content under the `##### Setup worktree environment` section (after the heading) with a single line containing `{{WORKTREE_SETUP_COMMANDS}}`
-- In `dev/end-worktree.sh`: Replace the content under Step 5 (between the echo statement and Step 6) with a single line containing `{{WORKTREE_BUILD_COMMANDS}}`
+- In `dev/end-worktree.sh`: Replace the content under Step 3 (between the echo statement and Step 4) with a single line containing `{{WORKTREE_BUILD_COMMANDS}}`
 
 The script should preserve all other content, including comments, error handling, and validation logic.
