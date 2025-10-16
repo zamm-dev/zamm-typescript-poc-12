@@ -34,20 +34,20 @@ if ! git merge-base --is-ancestor "$CURRENT_BRANCH" HEAD; then
     exit 1
 fi
 
-# Step 3: Remove the worktree directory
-echo "Removing worktree directory ../$(basename "$WORKTREE_DIR")..."
-git worktree remove "../$WORKTREE_DIR"
-
-# Step 4: Delete the local feature branch
-echo "Deleting local branch $CURRENT_BRANCH..."
-git branch -d "$CURRENT_BRANCH"
-
-# Step 5: Run the build command for the NodeJS implementation
+# Step 3: Run the build command for the NodeJS implementation
 echo "Building the NodeJS project..."
 npm install && npm run build  # install in case of new dependencies
 
-# Step 6: Push to remote
+# Step 4: Push to remote
 echo "Pushing to remote..."
 git push
+
+# Step 5: Remove the worktree directory
+echo "Removing worktree directory ../$(basename "$WORKTREE_DIR")..."
+git worktree remove "../$WORKTREE_DIR"
+
+# Step 6: Delete the local feature branch
+echo "Deleting local branch $CURRENT_BRANCH..."
+git branch -d "$CURRENT_BRANCH"
 
 echo "Successfully wrapped up worktree work and merged $CURRENT_BRANCH into main!"

@@ -96,7 +96,7 @@ describe('refresh-init-scripts', () => {
     const content = fs.readFileSync(endWorktreePath, 'utf8');
 
     expect(content).toContain(
-      '# Step 5: Run implementation-specific build or verification commands'
+      '# Step 3: Run implementation-specific build or verification commands'
     );
     expect(content).toContain('{{WORKTREE_BUILD_COMMANDS}}');
     expect(content).not.toContain('npm install && npm run build');
@@ -176,7 +176,7 @@ describe('refresh-init-scripts', () => {
     );
     fs.writeFileSync(
       path.join(invalidDevDir, 'end-worktree.sh'),
-      '#!/bin/bash\n# Valid file\n# Step 5: test\necho "test"\n# Step 6: test\n',
+      '#!/bin/bash\n# Valid file\n# Step 3: test\necho "test"\n# Step 4: test\n',
       'utf8'
     );
 

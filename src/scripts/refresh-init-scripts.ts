@@ -108,40 +108,40 @@ function restoreEndWorktreePlaceholder(filePath: string): void {
   const content = fs.readFileSync(filePath, 'utf8');
   const lines = content.split('\n');
   const output: string[] = [];
-  let inStep5 = false;
-  let foundStep5 = false;
-  let foundStep6 = false;
+  let inStep3 = false;
+  let foundStep3 = false;
+  let foundStep4 = false;
 
   for (const line of lines) {
-    if (line.startsWith('# Step 5:')) {
-      // Output generic Step 5 comment
+    if (line.startsWith('# Step 3:')) {
+      // Output generic Step 3 comment
       output.push(
-        '# Step 5: Run implementation-specific build or verification commands'
+        '# Step 3: Run implementation-specific build or verification commands'
       );
-      inStep5 = true;
-      foundStep5 = true;
+      inStep3 = true;
+      foundStep3 = true;
       continue;
     }
 
-    if (line.startsWith('# Step 6:')) {
-      // Output the fixed Step 5 content before Step 6
+    if (line.startsWith('# Step 4:')) {
+      // Output the fixed Step 3 content before Step 4
       output.push(
         'echo "Running implementation-specific post-worktree commands..."'
       );
       output.push('{{WORKTREE_BUILD_COMMANDS}}');
       output.push('');
-      inStep5 = false;
-      foundStep6 = true;
+      inStep3 = false;
+      foundStep4 = true;
     }
 
-    if (!inStep5) {
+    if (!inStep3) {
       output.push(line);
     }
   }
 
-  if (!foundStep5 || !foundStep6) {
+  if (!foundStep3 || !foundStep4) {
     throw new Error(
-      'Could not find "# Step 5:" and/or "# Step 6:" markers in end-worktree.sh. The script structure has changed and needs manual review.'
+      'Could not find "# Step 3:" and/or "# Step 4:" markers in end-worktree.sh. The script structure has changed and needs manual review.'
     );
   }
 
