@@ -25,6 +25,7 @@ The command creates the following structure:
     ├── .git/
     └── docs/
         ├── README.md
+        ├── project-setup.md
         └── impls/
             └── <stack-name>.md
 ```
@@ -53,6 +54,16 @@ type: project
 
 A web-based task management application that helps teams collaborate on projects and track their progress in real-time.
 ```
+
+### `docs/project-setup.md`
+
+The project setup documentation file is a copy of the ZAMM project setup specification. This file is bundled with the ZAMM CLI and copied as-is to provide a consistent [developer experience](https://en.wikipedia.org/wiki/Developer_Experience) to newly setup projects, including:
+
+- Standardized and documented commands for formatting, linting, building, testing, and running the code
+- Git repo setup, including commit hooks and a stack-specific ignore file
+- Verification of successful setup
+
+Developers can and should customize this file for their specific implementation and tech stack.
 
 ### `docs/impls/<stack-name>.md`
 
@@ -94,7 +105,8 @@ The command creates the project meta folder structure:
 4. Create the `base/docs/` directory
 5. Create the `base/docs/impls/` directory
 6. Create the `docs/README.md` and `docs/impls/<stack-name>.md` files with proper frontmatter and content
-7. Make an initial Git commit with all the generated files and the commit message "Initial project setup"
+7. Copy `docs/project-setup.md` from the ZAMM resource bundle to `base/docs/project-setup.md`
+8. Make an initial Git commit with all the generated files and the commit message "Initial project setup"
 
 ## Error Handling
 
@@ -108,6 +120,7 @@ Upon successful completion, print a confirmation message showing:
 
 - The project meta folder that was created
 - The path to the created `docs/README.md` (relative to the base directory)
+- The path to the created `docs/project-setup.md` (relative to the base directory)
 - The path to the created implementation file (relative to the base directory)
 - Instructions to navigate into the base directory
 - A suggestion to run `zamm init scripts --impl <impl-file>` to set up the project's workflow assets
@@ -119,6 +132,7 @@ Project initialized successfully!
 
 Created:
   task-management-application/base/docs/README.md
+  task-management-application/base/docs/project-setup.md
   task-management-application/base/docs/impls/nodejs.md
 
 Next steps:

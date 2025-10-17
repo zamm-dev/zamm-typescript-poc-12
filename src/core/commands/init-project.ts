@@ -4,6 +4,11 @@ import { execSync } from 'child_process';
 import { getIdProvider } from '../shared/id-provider';
 import { getPromptService } from '../shared/prompt-utils';
 
+const PROJECT_SETUP_RESOURCE = path.resolve(
+  __dirname,
+  '../../resources/project-setup.md'
+);
+
 export interface InitProjectOptions {
   projectTitle?: string;
   projectDescription?: string;
@@ -146,6 +151,10 @@ export async function initProject(
   );
   fs.writeFileSync(implPath, implContent, 'utf8');
 
+  // Copy project-setup.md from resources
+  const projectSetupDestPath = path.join(docsPath, 'project-setup.md');
+  fs.copyFileSync(PROJECT_SETUP_RESOURCE, projectSetupDestPath);
+
   // Make initial commit
   execSync('git add -A', { cwd: basePath, stdio: 'pipe' });
   execSync('git commit -m "Initial project setup"', {
@@ -155,12 +164,14 @@ export async function initProject(
 
   // Print success message
   const readmeRelPath = path.join('docs', 'README.md');
+  const projectSetupRelPath = path.join('docs', 'project-setup.md');
   const implRelPath = path.join('docs', 'impls', `${stackFilename}.md`);
 
   console.log('Project initialized successfully!');
   console.log('');
   console.log('Created:');
   console.log(`  ${path.join(projectDirName, 'base', readmeRelPath)}`);
+  console.log(`  ${path.join(projectDirName, 'base', projectSetupRelPath)}`);
   console.log(`  ${path.join(projectDirName, 'base', implRelPath)}`);
   console.log('');
   console.log('Next steps:');
