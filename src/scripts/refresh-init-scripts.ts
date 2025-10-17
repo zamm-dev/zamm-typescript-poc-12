@@ -8,6 +8,8 @@ import { copyDirectory } from '../core/shared/file-utils';
 const DEFAULT_TEMPLATE_DIR = 'src/resources/init-scripts';
 const CLAUDE_DIR = '.claude';
 const DEV_DIR = 'dev';
+const PROJECT_SETUP_SRC = 'docs/specs/project-setup.md';
+const PROJECT_SETUP_DEST = 'src/resources/project-setup.md';
 
 export interface RefreshOptions {
   outputDir?: string;
@@ -195,6 +197,9 @@ export function refreshInitScripts(options: RefreshOptions = {}): string {
   restoreStartWorktreePlaceholder(startWorktreeDest);
   restoreEndWorktreePlaceholder(endWorktreeDest);
 
+  // Copy project-setup.md
+  fs.copyFileSync(PROJECT_SETUP_SRC, PROJECT_SETUP_DEST);
+
   return outputDir;
 }
 
@@ -213,6 +218,7 @@ if (typeof require !== 'undefined' && require.main === module) {
     console.log(
       '  - dev/end-worktree.sh (with {{WORKTREE_BUILD_COMMANDS}} placeholder)'
     );
+    console.log(`  - project-setup.md`);
     console.log(`\nOutput directory: ${outputDir}`);
   } catch (error) {
     console.error(
