@@ -55,10 +55,11 @@ src/
 │   │   └── prompt-utils.ts   # Terminal I/O service with singleton pattern
 │   └── index.ts            # Core module exports
 ├── resources/              # Resource files packaged with ZAMM release
-│   └── init-scripts/       # Workflow scripts that ZAMM initializes user project with
+│   ├── init-scripts/       # Workflow scripts that ZAMM initializes user project with
+│   └── project-setup.md    # Project setup template bundled with init-project command
 ├── scripts/                # Development and maintenance scripts
 │   ├── record-api-calls.ts # Script to record Anthropic API responses for testing
-│   └── refresh-init-scripts.ts # Script to sync init-scripts templates with current .claude/ and dev/ files
+│   └── refresh-init-scripts.ts # Script to sync init-scripts templates and project-setup.md with current specs/
 ├── zamm.ts                 # Main CLI entry point with Commander.js
 └── index.ts                # Library exports
 dev/                        # Development workflow scripts
@@ -86,7 +87,7 @@ The build process uses `copyfiles` to copy resource files from `src/resources/` 
 - **info**: Display structured information about a file by ID or path
 - **split**: Split content from a main file into new separate files with proper frontmatter
 - **init**: Project initialization utilities
-  - **init project**: Set up a new ZAMM project with the expected worktree directory structure, creating docs/README.md and docs/impls/ files with proper frontmatter
+  - **init project**: Set up a new ZAMM project with the expected worktree directory structure, creating docs/README.md, docs/project-setup.md, and docs/impls/ files with proper frontmatter
   - **init scripts**: Install dev scripts and Claude commands tailored to an implementation
 - **impl/i**: Implementation management commands
   - **impl create**: Generate reference implementation file for a spec and implementation

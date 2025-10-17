@@ -120,6 +120,7 @@ Upon successful completion, print a confirmation message showing:
 
 - The project meta folder that was created
 - The path to the created `docs/README.md` (relative to the base directory)
+- The path to the created `docs/project-setup.md` (relative to the base directory)
 - The path to the created implementation file (relative to the base directory)
 - Instructions to navigate into the base directory
 - A suggestion to run `zamm init scripts --impl <impl-file>` to set up the project's workflow assets
@@ -131,6 +132,7 @@ Project initialized successfully!
 
 Created:
   task-management-application/base/docs/README.md
+  task-management-application/base/docs/project-setup.md
   task-management-application/base/docs/impls/nodejs.md
 
 Next steps:
