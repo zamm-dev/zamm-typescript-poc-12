@@ -116,7 +116,7 @@ describe('ZAMM CLI Info Command', () => {
   });
 
   describe('formatFileInfo', () => {
-    it('should format spec file info', () => {
+    it('should format spec file info', async () => {
       const fileInfo = {
         id: 'XYZ789',
         type: 'spec',
@@ -126,13 +126,13 @@ describe('ZAMM CLI Info Command', () => {
         gitRoot: '/root',
       };
 
-      const result = formatFileInfo(fileInfo);
+      const result = await formatFileInfo(fileInfo);
       expect(result).toBe(
         'ID: XYZ789\nType: Specification\nFile Path: docs/specs/features/authentication.md'
       );
     });
 
-    it('should format project file info with implementations', () => {
+    it('should format project file info with implementations', async () => {
       const fileInfo = {
         id: 'PRJ001',
         type: 'project',
@@ -147,7 +147,7 @@ describe('ZAMM CLI Info Command', () => {
         { id: 'IMP002', name: 'Python Implementation' },
       ];
 
-      const result = formatFileInfo(fileInfo, implementations);
+      const result = await formatFileInfo(fileInfo, implementations);
       expect(result).toBe(
         `ID: PRJ001
 Type: Project
@@ -158,7 +158,7 @@ Implementations:
       );
     });
 
-    it('should format all file types correctly', () => {
+    it('should format all file types correctly', async () => {
       const testCases = [
         { type: 'project', expected: 'Project' },
         { type: 'implementation', expected: 'Implementation' },
@@ -167,7 +167,7 @@ Implementations:
         { type: 'spec', expected: 'Specification' },
       ];
 
-      testCases.forEach(({ type, expected }) => {
+      for (const { type, expected } of testCases) {
         const fileInfo = {
           id: 'TEST123',
           type,
@@ -177,9 +177,9 @@ Implementations:
           gitRoot: '/root',
         };
 
-        const result = formatFileInfo(fileInfo);
+        const result = await formatFileInfo(fileInfo);
         expect(result).toContain(`Type: ${expected}`);
-      });
+      }
     });
   });
 
@@ -299,10 +299,10 @@ Implementation:
 Type: Reference Implementation
 File Path: docs/specs/features/impl-history/multi-spec.md
 Specifications Implemented:
-  - SPEC001: /docs/specs/features/auth.md
-  - SPEC002: /docs/specs/features/login.md
+  - SPEC001: \x1b[31m/specs/features/auth.md\x1b[0m
+  - SPEC002: \x1b[31m/specs/features/login.md\x1b[0m
 Implementation:
-  - IMP001: /docs/impls/nodejs.md`
+  - IMP001: \x1b[31m/impls/nodejs.md\x1b[0m`
       );
     });
 

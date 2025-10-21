@@ -62,10 +62,10 @@ export async function getProjectImplementations(): Promise<Implementation[]> {
   return implementations.sort((a, b) => a.id.localeCompare(b.id));
 }
 
-export function formatFileInfo(
+export async function formatFileInfo(
   fileInfo: FileInfo,
   implementations?: Implementation[]
-): string {
+): Promise<string> {
   const typeFormatted = formatFileType(fileInfo.type);
   let output = `ID: ${fileInfo.id}\nType: ${typeFormatted}\nFile Path: ${fileInfo.displayPath}`;
 
@@ -80,6 +80,7 @@ export function formatFileInfo(
     try {
       const fileContent = fs.readFileSync(fileInfo.absolutePath, 'utf8');
       const { frontmatter } = parseFrontmatter(fileContent);
+      const docsDir = await getDocsDirectory();
 
       if (frontmatter.specs && Array.isArray(frontmatter.specs)) {
         const validSpecs = frontmatter.specs.filter(
@@ -91,9 +92,10 @@ export function formatFileInfo(
           output += '\nSpecifications Implemented:';
           for (const spec of validSpecs) {
             const specTyped = spec as { id: string; path: string };
-            const specPath = path.join(fileInfo.gitRoot, specTyped.path);
+            const specPath = path.join(docsDir, specTyped.path);
             const title = resolveTitleFromFile(specPath);
-            const displayText = title === specPath ? specTyped.path : title;
+            const displayText =
+              title === specPath ? `\x1b[31m${specTyped.path}\x1b[0m` : title;
             output += `\n  - ${specTyped.id}: ${displayText}`;
           }
         }
@@ -106,9 +108,10 @@ export function formatFileInfo(
         'path' in frontmatter.impl
       ) {
         const implTyped = frontmatter.impl as { id: string; path: string };
-        const implPath = path.join(fileInfo.gitRoot, implTyped.path);
+        const implPath = path.join(docsDir, implTyped.path);
         const title = resolveTitleFromFile(implPath);
-        const displayText = title === implPath ? implTyped.path : title;
+        const displayText =
+          title === implPath ? `\x1b[31m${implTyped.path}\x1b[0m` : title;
         output += '\nImplementation:';
         output += `\n  - ${implTyped.id}: ${displayText}`;
       }
@@ -147,5 +150,5 @@ export async function getInfoByIdOrPath(idOrPath: string): Promise<string> {
     implementations = await getProjectImplementations();
   }
 
-  return formatFileInfo(fileInfo, implementations);
+  return await formatFileInfo(fileInfo, implementations);
 }
