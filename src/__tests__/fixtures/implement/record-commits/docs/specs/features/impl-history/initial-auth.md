@@ -3,10 +3,10 @@ id: NOT123
 type: ref-impl
 specs:
   - id: XYZ789
-    path: /docs/specs/features/authentication.md
+    path: /specs/features/authentication.md
 impl:
   id: IMP002
-  path: /docs/impls/python.md
+  path: /impls/python.md
 commits:
   - sha: cee75f6a3aa239e7c05555348e3d0743bba4551f
     message: Test commit 3

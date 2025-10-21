@@ -3,10 +3,10 @@ id: NOT124
 type: ref-impl
 specs:
   - id: XYZ789
-    path: /docs/specs/features/authentication.md
+    path: /specs/features/authentication.md
 impl:
   id: IMP002
-  path: /docs/impls/python.md
+  path: /impls/python.md
 commits:
   - sha: a1b2c3d4e5f6789012345678901234567890abcd
     message: Add initial authentication scaffolding

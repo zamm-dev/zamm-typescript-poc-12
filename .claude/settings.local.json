@@ -36,7 +36,10 @@
       "Bash(git merge:*)",
       "Bash(grep:*)",
       "Bash(git bisect:*)",
-      "Bash(zamm spec record:*)"
+      "Bash(zamm spec record:*)",
+      "Bash(dist/zamm impl create:*)",
+      "Bash(dist/zamm impl record:*)",
+      "Bash(dist/zamm spec record:*)"
     ],
     "deny": [],
     "ask": []

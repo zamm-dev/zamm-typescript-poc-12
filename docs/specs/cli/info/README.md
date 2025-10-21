@@ -34,7 +34,12 @@ The `info` command displays structured information about a given file. The file 
   - First line of the commit message
 
 > [!NOTE]
-> **Title Fallback Behavior**: Whenever displaying file references (implementations, specifications, etc.), always prefer showing the title from the level 1 Markdown heading. Only if no title is available should the system fall back to displaying the file path.
+> **Title Fallback Behavior**: Whenever displaying file references (implementations, specifications, etc.), always prefer showing the title from the level 1 Markdown heading.
+>
+> Only if no title is available should the system fall back to displaying the file path. When displaying this fallback, the file path should be highlighted in red color in the terminal output to alert the user to the issue.
+
+> [!NOTE]
+> **Path Resolution**: File paths in the frontmatter (e.g., in `specs`, `impl` fields) are relative to the docs directory (by default `docs/`), not the git root. When resolving these paths to read titles, the command must join them with the docs directory path.
 
 ## Error handling
 
