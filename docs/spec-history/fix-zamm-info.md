@@ -2,6 +2,8 @@
 id: MQX251
 type: spec
 commits:
+  - sha: c52d6ff5159b676825d4e3b4de4e72eafeba8529
+    message: Document fix-info-path-resolution implementation
   - sha: e0d539532e3aa97886370e98ec6597a091ff9fce
     message: Fix info command spec for path resolution and missing file display
 ---
